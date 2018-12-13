@@ -3,8 +3,12 @@ import {Event} from "../Interfaces/Event";
 
 
 export class NotificationPreferences {
-    constructor(public earlierstNotificationHour: number,
-                public earlierstNotificationMinute: number,
+
+    public readonly latestNotificationHour = 17;
+    public readonly latestNotificationMinute = 0;
+
+    constructor(public earliestNotificationHour: number,
+                public earliestNotificationMinute: number,
                 public messagesDailyLimit?: Number) {}
 }
 

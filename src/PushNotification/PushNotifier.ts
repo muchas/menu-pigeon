@@ -8,6 +8,7 @@ import {PushNotificationSender} from "./PushNotificationSender";
 import {LunchOfferMessageComposer} from "../Publication/LunchOfferMessageComposer";
 import {EventNotification} from "../Event/EventNotification";
 import {EventNotificationScheduler} from "../Event/EventNotificationScheduler";
+import {LunchOfferEvent} from "../Publication/LunchOfferEvent";
 
 
 // Responsibility:
@@ -20,6 +21,7 @@ export class PushNotifier {
     private pushNotificationSender: PushNotificationSender;
     private messageComposer: LunchOfferMessageComposer;
     private scheduler: EventNotificationScheduler;
+    private distributor: EventDistributor;
 
     constructor(recipientRepository: RecipientRepository,
                 eventRepository: EventRepository,
@@ -31,80 +33,57 @@ export class PushNotifier {
         // TODO: extract dependencies?
         this.messageComposer = new LunchOfferMessageComposer();
         this.scheduler = new EventNotificationScheduler();
+        this.distributor = new EventDistributor();
     }
 
     public async notifyAll(time: Date) {
         const events = await this.eventRepository.findRelevant(time);
         const recipients = await this.recipientRepository.findAll();
-        const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
 
-        const distributor = new EventDistributor(events);
-        const distributedEvents = distributor.distribute(recipients);
-
-        const notifications = this.prepareNotifications(recipientsById, distributedEvents, time);
-        const recipientMessages = this.composeMessages(recipientsById, notifications);
-
-        this.applyMessagingLimits(recipientsById, recipientMessages);
-
-        const messages = Array
-            .from(recipientMessages.values())
+        const messages = recipients
+            .map((recipient) => this.makeMessages(recipient, events, time))
             .reduce((previous, messages) => previous.concat(messages));
 
         await this.pushNotificationSender.schedule(messages);
-
-        await this.markNotified(recipientsById, events, messages);
+        await this.markNotified(recipients, events, messages);
     }
 
-    private prepareNotifications(recipients: Map<string, Recipient>,
-                                 events: Map<string, Event[]>,
-                                 currentTime: Date): Map<string, EventNotification[]> {
-        const notifications = new Map();
+    private makeMessages(recipient: Recipient, events: Event[], time: Date): Message[] {
+        const recipientEvents = this.distributor.filterRelevantFor(recipient, events);
+        const notifications = this.prepareNotifications(recipient, recipientEvents, time);
+        const messages = this.messageComposer.compose(recipient, notifications.map(n => <LunchOfferEvent>n.event));
 
-        events.forEach((events, recipientId) => {
-            const recipient = recipients.get(recipientId);
-            const recipientNotifications = this.scheduler
-                .schedule(recipient, events)
-                .filter((n) =>
-                    n.readyTime >= currentTime &&
-                    n.expirationTime <= currentTime &&
-                    !recipient.notifiedEventIds.has(n.event.id));
-
-           notifications.set(recipientId, recipientNotifications);
-        });
-
-        return notifications;
+        return this.applyMessagingLimits(recipient, messages);
     }
 
-    private composeMessages(recipients: Map<string, Recipient>,
-                            notifications: Map<string, EventNotification[]>): Map<string, Message[]> {
-        const messages = new Map<string, Message[]>();
+    private prepareNotifications(recipient: Recipient,
+                                 events: Event[],
+                                 currentTime: Date): EventNotification[] {
+        return this.scheduler
+            .schedule(recipient, events, currentTime)
+            .filter((n) =>
+                n.readyTime <= currentTime &&
+                n.expirationTime >= currentTime &&
+                !recipient.notifiedEventIds.has(n.event.id));
+    }
 
-        notifications.forEach((notifications, recipientId) => {
-            const recipient = recipients.get(recipientId);
-            const events = notifications.map((n) => n.event);
-            const recipientMessages = this.messageComposer.compose(recipient, events);
-
-            messages.set(recipientId, recipientMessages);
-        });
-
+    private applyMessagingLimits(recipient: Recipient, messages: Message[]): Message[] {
+        // TODO: - recipient daily messages limits
+        // TODO: - take into consideration message priorities
+        // TODO: - recipient topic last notification time
         return messages;
     }
 
-    private applyMessagingLimits(recipients: Map<string, Recipient>,
-                                 messages: Map<string, Message[]>) {
-        // TODO: apply recipient daily messages limits and message priorities
-    }
-
-    private async markNotified(recipients: Map<string, Recipient>,
+    private async markNotified(recipients: Recipient[],
                                events: Event[],
                                messages: Message[]) {
+        const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
         const eventsById = new Map(events.map((e): [string, Event] => [e.id, e]));
 
-        let recipient;
-        let event;
+        let recipient, event;
 
         for (const message of messages) {
-            recipient = recipients.get(message.recipientId);
+            recipient = recipientsById.get(message.recipientId);
 
             for (const eventId of message.eventIds) {
                 event = eventsById.get(eventId);

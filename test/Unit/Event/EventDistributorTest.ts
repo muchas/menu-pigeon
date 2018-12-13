@@ -17,7 +17,7 @@ describe('EventDistributor', () => {
         });
     });
 
-    it('distribute events to recipients based on followed topics', async () => {
+    it('filterRelevantFor events to recipients based on followed topics', async () => {
         // given
         const event1 = <Event>{
             id: 'kjcblk10-9eknjsal',
@@ -46,7 +46,7 @@ describe('EventDistributor', () => {
         ];
 
         // when
-        const distributedEvents = distributor.distribute(recipients);
+        const distributedEvents = distributor.filterRelevantFor(recipients);
 
         // then
         expect(Array.from(distributedEvents.keys())).to.be.lengthOf(2);

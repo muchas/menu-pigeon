@@ -10,34 +10,16 @@ import {FollowedTopicsPolicy} from "./TargetingPolicies/FollowedTopicsPolicy";
 // TODO: - distance between event and recipient location,
 export class EventDistributor {
 
-    private readonly events: Event[];
     private readonly targetingPolicies: RecipientTargetingPolicy[];
 
-    constructor(events: Event[]) {
-        this.events = events;
+    constructor() {
         this.targetingPolicies = [
             new FollowedTopicsPolicy()
         ];
     }
 
-    public distribute(recipients: Recipient[]): Map<string, Event[]> {
-        const recipientEvents = new Map<string, Event[]>();
-
-        for (const recipient of recipients) {
-            for (const event of this.events) {
-                if (!this.shouldKnowAbout(recipient, event)) {
-                    continue;
-                }
-
-                if (recipientEvents.has(recipient.id)) {
-                    recipientEvents.get(recipient.id).push(event);
-                } else {
-                    recipientEvents.set(recipient.id, [event]);
-                }
-            }
-
-        }
-        return recipientEvents;
+    public filterRelevantFor(recipient: Recipient, events: Event[]): Event[] {
+        return events.filter((event) => this.shouldKnowAbout(recipient, event));
     }
 
     private shouldKnowAbout(recipient: Recipient, event: Event): boolean {

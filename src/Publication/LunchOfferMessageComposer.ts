@@ -25,7 +25,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
         return [
             this.createMessage(
                 recipient.id,
-            'Dzisiejszy lunch',
+            `Hej ${recipient.name}, sprawdź dzisiejszy lunch!`,
             `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`,
             'high',
             minExpirationTime)
