@@ -22,6 +22,9 @@ export class Message {
     priority: MessagePriority;
 
     @Column()
+    expirationTime: Date;
+
+    @Column()
     ttl?: number;
 
     @Column('json')

@@ -11,7 +11,8 @@ import {Recipient} from "../Recipient/Recipient";
 
 export class EventNotificationScheduler {
 
-    public schedule(recipient: Recipient, events: Event[]): EventNotification[] {
+    public schedule(recipient: Recipient,
+                    events: Event[]): EventNotification[] {
         return [];
     }
 }

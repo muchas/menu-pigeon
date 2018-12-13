@@ -9,4 +9,9 @@ export class LunchOfferEvent implements Event {
                 public eventType: string = 'LUNCH_OFFER',
                 public topics: string[],
                 public content: any) {}
+
+    get business(): Business {
+        // TODO: implement (take from content)
+        return null
+    }
 }
