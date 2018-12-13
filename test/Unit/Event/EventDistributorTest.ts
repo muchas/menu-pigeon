@@ -38,18 +38,14 @@ describe('EventDistributor', () => {
             event1, event2, event3
         ];
 
-        const distributor = new EventDistributor(events);
-        const recipient1 = new Recipient('recipient#1', 'John', ['topic-1']);
-        const recipient2 = new Recipient('recipient#2', 'Alex', ['topic-1', 'topic-2']);
-        const recipients = [
-            recipient1, recipient2
-        ];
+        const distributor = new EventDistributor();
+        const recipient = new Recipient('recipient#1', 'John', ['topic-1']);
 
         // when
-        const distributedEvents = distributor.filterRelevantFor(recipients);
+        const relevantEvents = distributor.filterRelevantFor(recipient, events);
 
         // then
-        expect(Array.from(distributedEvents.keys())).to.be.lengthOf(2);
-        expect(Array.from(distributedEvents.values())).to.deep.equal([[event1, event3], [event1, event2, event3]])
+        expect(relevantEvents).to.be.lengthOf(2);
+        expect(relevantEvents).to.deep.equal([[event1, event3]])
     });
 });
