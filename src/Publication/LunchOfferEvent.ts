@@ -1,4 +1,5 @@
 import {Event} from "../Interfaces/Event";
+import {Business, PersistedPublication} from "./Business";
 
 
 export class LunchOfferEvent implements Event {
@@ -6,12 +7,11 @@ export class LunchOfferEvent implements Event {
     constructor(public id: string,
                 public readyTime: Date,
                 public expirationTime: Date,
-                public eventType: string = 'LUNCH_OFFER',
                 public topics: string[],
-                public content: any) {}
+                public content: PersistedPublication,
+                public eventType: string = 'LUNCH_OFFER') {}
 
     get business(): Business {
-        // TODO: implement (take from content)
-        return null
+        return this.content.business;
     }
 }

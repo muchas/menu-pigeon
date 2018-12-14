@@ -7,6 +7,9 @@ import {LunchOfferEvent} from "./LunchOfferEvent";
 export class LunchOfferMessageComposer implements MessageComposer {
 
     public compose(recipient: Recipient, events: LunchOfferEvent[]): Message[] {
+        if (events.length <= 0) {
+            return [];
+        }
         if (events.length == 1) {
             const event = events[0];
             return [

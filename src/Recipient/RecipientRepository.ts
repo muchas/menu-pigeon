@@ -7,6 +7,11 @@ export class RecipientRepository {
         this.recipients = recipients;
     }
 
+    public async add(recipient: Recipient) {
+        // TODO: add to zookeeper
+        this.recipients.push(recipient);
+    }
+
     public async findAll(): Promise<Recipient[]> {
         return this.recipients;
     }

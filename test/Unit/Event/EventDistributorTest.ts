@@ -1,21 +1,10 @@
-import * as chai from 'chai';
 import {expect} from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import * as sinonChai from 'sinon-chai';
 import {EventDistributor} from "../../../src/Event/EventDistributor";
 import {Recipient} from "../../../src/Recipient/Recipient";
 import {Event} from "../../../src/Interfaces/Event";
 
 
 describe('EventDistributor', () => {
-
-    describe('distributing events', () => {
-
-        beforeEach(async function () {
-            chai.use(chaiAsPromised);
-            chai.use(sinonChai);
-        });
-    });
 
     it('filterRelevantFor events to recipients based on followed topics', async () => {
         // given
