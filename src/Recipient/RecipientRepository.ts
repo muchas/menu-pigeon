@@ -1,12 +1,13 @@
 import {Recipient} from "./Recipient";
 
 export class RecipientRepository {
+    private readonly recipients: Recipient[];
 
-    constructor() {
-
+    constructor(recipients: Recipient[]) {
+        this.recipients = recipients;
     }
 
     public async findAll(): Promise<Recipient[]> {
-        return [];
+        return this.recipients;
     }
 }
