@@ -1,6 +1,8 @@
 import {PushNotificationTransport} from "../Interfaces/PushNotificationTransport";
 import {PushNotificationRepository} from "./PushNotificationRepository";
 import {Message} from "../Entity/Message";
+import {Recipient} from "../Recipient/Recipient";
+import {PushNotification} from "../Entity/PushNotification";
 
 
 export class PushNotificationSender {
@@ -14,9 +16,22 @@ export class PushNotificationSender {
         this.notificationRepository = notificationRepository;
     }
 
-    public async schedule(messages: Message[]) {
-        // TODO: implement
-        // this.notificationRepository.storeMany(messages);
+    public async schedule(recipients: Recipient[], messages: Message[]) {
+        const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
+        let recipient;
+
+        for (const message of messages) {
+            recipient = recipientsById.get(message.recipientId);
+
+            message.pushNotifications = recipient.pushTokens.map((token) => {
+               const notification = new PushNotification();
+               notification.pushToken = token;
+               notification.message = message;
+               return notification;
+            });
+        }
+
+        await this.notificationRepository.storeMessagesToSend(messages);
     }
 
     public async sendReady() {

@@ -22,6 +22,10 @@ export class Recipient {
                 public notifiedEventIds: Set<string> = new Set(),
                 public topicLastNotification: Map<string, Date> = new Map()) {}
 
+    public get pushTokens(): string[] {
+        return this.devices.map((device) => device.pushToken);
+    }
+
     public markNotifiedAbout(event: Event) {
         this.notifiedEventIds.add(event.id);
         for (const topic of event.topics) {

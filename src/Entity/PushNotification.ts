@@ -1,5 +1,6 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Message, MessagePriority} from "./Message";
+import {PushNotificationStatus} from "../PushNotification/PushNotificationReceipt";
 
 
 @Entity()
@@ -18,7 +19,7 @@ export class PushNotification {
     createdAt: Date;
 
     @Column()
-    status: number;
+    status: PushNotificationStatus = PushNotificationStatus.SCHEDULED;
 
     @Column()
     receiptId?: string;

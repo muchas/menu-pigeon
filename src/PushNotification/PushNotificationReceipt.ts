@@ -1,7 +1,8 @@
 import {PushNotification} from "../Entity/PushNotification";
 
 export enum PushNotificationStatus {
-    SENT = 0,
+    SCHEDULED = 0,
+    SENT,
     DELIVERED,
     ERROR,
     UNKNOWN,

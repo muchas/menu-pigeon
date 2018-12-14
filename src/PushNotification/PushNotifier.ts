@@ -44,7 +44,7 @@ export class PushNotifier {
             .map((recipient) => this.makeMessages(recipient, events, time))
             .reduce((previous, messages) => previous.concat(messages));
 
-        await this.pushNotificationSender.schedule(messages);
+        await this.pushNotificationSender.schedule(recipients, messages);
         await this.markNotified(recipients, events, messages);
     }
 
@@ -61,7 +61,8 @@ export class PushNotifier {
                                  currentTime: Date): EventNotification[] {
         return this.scheduler
             .schedule(recipient, events, currentTime)
-            .filter((notification) =>
+            .filter((notification
+            ) =>
                 notification.readyTime <= currentTime &&
                 notification.expirationTime >= currentTime &&
                 !recipient.notifiedEventIds.has(notification.event.id));
