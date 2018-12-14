@@ -1,4 +1,4 @@
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {PushNotification} from "./PushNotification";
 
 export type MessagePriority = 'default' | 'normal' | 'high';
@@ -6,8 +6,8 @@ export type MessagePriority = 'default' | 'normal' | 'high';
 @Entity()
 export class Message {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
 
     @Column()
     recipientId: string;
@@ -21,13 +21,21 @@ export class Message {
     @Column()
     priority: MessagePriority;
 
-    @Column()
+    @Column('timestamp')
     expirationTime: Date;
 
-    @Column()
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @Column({
+        nullable: true,
+    })
     ttl?: number;
 
-    @Column('json')
+    @Column({
+        type: 'json',
+        nullable: true,
+    })
     data?: string;
 
     @OneToMany(type => PushNotification, notification => notification.message)

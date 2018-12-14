@@ -18,6 +18,11 @@ export class PushNotificationRepository {
 
     public async storeMessagesToSend(messages: Message[]) {
         await this.messageRepository.save(messages);
+        const notifications = messages
+            .map((message) => message.pushNotifications)
+            .reduce((prev, current) => prev.concat(current));
+
+        await this.notificationRepository.save(notifications);
     }
 
     public async findSentUnconfirmed(): Promise<PushNotification[]> {

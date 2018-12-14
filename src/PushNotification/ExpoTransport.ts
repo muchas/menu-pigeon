@@ -78,12 +78,14 @@ export class ExpoTransport implements PushNotificationTransport {
     private async *sendMessagesChunk(chunk: ExpoPushMessage[],
                                      notifications: PushNotification[]): AsyncIterableIterator<PushNotificationTicket> {
       try {
+            console.log(chunk, notifications);
             const tickets = await this.client.sendPushNotificationsAsync(chunk);
 
             for (let i=0; i<notifications.length; i++) {
                 yield new PushNotificationTicket(notifications[i], true, tickets[i].id);
             }
         } catch(e) {
+            console.error(e);
             winston.error(e);
 
             for (const notification of notifications) {

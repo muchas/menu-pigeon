@@ -2,6 +2,8 @@ import {MessageComposer} from "../Interfaces/MessageComposer";
 import {Recipient} from "../Recipient/Recipient";
 import {Message, MessagePriority} from "../Entity/Message";
 import {LunchOfferEvent} from "./LunchOfferEvent";
+import {min} from "moment";
+import * as moment from 'moment';
 
 
 export class LunchOfferMessageComposer implements MessageComposer {
@@ -22,7 +24,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
             ];
         }
 
-        const minExpirationTime = Math.min.apply(null, events.map((e) => e.expirationTime));
+        const minExpirationTime = min(events.map((e) => moment(e.expirationTime))).toDate();
         const businessCount = Array.from(new Set(events.map(e => e.business.id))).length;
 
         return [
