@@ -46,6 +46,6 @@ describe('EventDistributor', () => {
 
         // then
         expect(relevantEvents).to.be.lengthOf(2);
-        expect(relevantEvents).to.deep.equal([[event1, event3]])
+        expect(relevantEvents).to.deep.equal([event1, event3])
     });
 });

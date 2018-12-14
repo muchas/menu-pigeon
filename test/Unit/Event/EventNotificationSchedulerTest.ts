@@ -1,97 +1,170 @@
-import * as sinon from 'sinon';
-import {expect} from 'chai';
-import {SinonStubbedInstance} from 'sinon';
+import * as moment from 'moment';
 import * as chai from 'chai';
+import {expect} from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as sinonChai from 'sinon-chai';
-import {PushNotification} from "../../../src/Entity/PushNotification";
-import Expo from "expo-server-sdk";
-import {Message} from "../../../src/Entity/Message";
 import {Event} from "../../../src/Interfaces/Event";
 import {NotificationPreferences, Recipient} from "../../../src/Recipient/Recipient";
 import {EventNotificationScheduler} from "../../../src/Event/EventNotificationScheduler";
 
 
-const createPushNotification = (message: Message,
-                                token: string,
-                                status: number,
-                                receiptId?: string): PushNotification => {
-    const notification = new PushNotification();
-    notification.status = status;
-    notification.pushToken = token;
-    notification.message = message;
-    notification.receiptId = receiptId;
-    return notification;
-};
-
 describe('EventNotificationScheduler', () => {
+    let preferences: NotificationPreferences;
+    let recipient: Recipient;
+    let scheduler: EventNotificationScheduler;
+    let today;
 
-    describe('sending pushes', () => {
-        let expoClient: SinonStubbedInstance<Expo>;
-        let message: Message;
-        let pushNotification: PushNotification;
+    beforeEach(async function () {
+        chai.use(chaiAsPromised);
+        chai.use(sinonChai);
 
-        beforeEach(async function () {
-            chai.use(chaiAsPromised);
-            chai.use(sinonChai);
-
-            message = new Message();
-            message.title = 'Pretty nice title';
-            message.body = 'This is message body!';
-            message.priority = 'high';
-
-            pushNotification = createPushNotification(message, 'PUSH_TOKEN1', 0);
-
-            expoClient = sinon.createStubInstance(Expo);
-        });
+        today = moment();
+        preferences = new NotificationPreferences(12, 0);
+        recipient = new Recipient('recipient#1', 'John', [], [], preferences);
+        scheduler = new EventNotificationScheduler();
     });
 
     it('should schedule event for recipient with default preferences', async () => {
         // given
+        const event = <Event>{
+            id: 'i1uj4-n1h24-cbm19',
+            eventType: 'lunch-offer',
+            readyTime: today.set('hour', 9).toDate(),
+            expirationTime: today.set('hour', 18).toDate(),
+        };
+
+        recipient = new Recipient('recipient#2', 'Yui', [], []);
+
         // when
+        const notifications = scheduler.schedule(recipient, [event], today.toDate());
+
         // then
+        expect(notifications).to.be.lengthOf(1);
+        expect(notifications[0]).to.deep.equal({
+            event,
+            recipient,
+            readyTime: event.readyTime,
+            expirationTime: today.set('hour', 17)  // default max notification hour is set to 17
+                .set('minute', 0)
+                .set('second', 0)
+                .toDate(),
+        });
     });
 
-    it('should omit early expiration event for recipient with late preferred hour', async () => {
+    it('should omit early expiration event', async () => {
         // given
+        const event = <Event>{
+            id: 'i1uj4-n1h24-cbm19',
+            eventType: 'lunch-offer',
+            readyTime: today.set('hour', 9).toDate(),
+            expirationTime: today.set('hour', 11).toDate(),
+        };
+
         // when
+        const notifications = scheduler.schedule(recipient, [event], today.toDate());
+
         // then
+        expect(notifications).to.be.lengthOf(0);
+    });
+
+
+    it('should omit late ready event', async () => {
+        // given
+        const event = <Event>{
+            id: 'i1uj4-n1h24-cbm19',
+            eventType: 'lunch-offer',
+            readyTime: today.set('hour', 18).toDate(),
+            expirationTime: today.set('hour', 23).toDate(),
+        };
+
+        // when
+        const notifications = scheduler.schedule(recipient, [event], today.toDate());
+
+        // then
+        expect(notifications).to.be.lengthOf(0);
     });
 
     it('should schedule event on recipient preferred hour', async () => {
         // given
-        // TODO: set correct dates
         const event = <Event>{
             id: 'i1uj4-n1h24-cbm19',
             eventType: 'lunch-offer',
-            topics: ['topic-2'],
-            readyTime: new Date(),
-            expirationTime: new Date(),
+            readyTime: today.set('hour', 10).toDate(),
+            expirationTime: today
+                .set('hour', 16)
+                .set('minute', 0)
+                .toDate(),
         };
 
-        const today = new Date();
-        const preferences = new NotificationPreferences(12, 0);
-        const recipient = new Recipient('recipient#1', 'John', [], [], preferences);
-
-        const scheduler = new EventNotificationScheduler();
-
         // when
-        const notifications = scheduler.schedule(recipient, [event], today);
+        const notifications = scheduler.schedule(recipient, [event], today.toDate());
 
         // then
         expect(notifications).to.be.lengthOf(1);
-        expect(notifications[0]).to.deep.equal({event, recipient, readyTime: '', expiredTime: ''})
+        expect(notifications[0]).to.deep.equal({
+            event,
+            recipient,
+            readyTime: today
+                .set('hour', 12)
+                .set('minute', 0)
+                .set('second', 0)
+                .toDate(),
+            expirationTime: event.expirationTime
+        });
     });
 
     it('should schedule event after recipient preferred hour', async () => {
         // given
+        const event = <Event>{
+            id: 'i1uj4-n1h24-cbm19',
+            eventType: 'lunch-offer',
+            readyTime: today.set('hour', 13).toDate(),
+            expirationTime: today
+                .set('hour', 16)
+                .set('minute', 0)
+                .toDate(),
+        };
+
         // when
+        const notifications = scheduler.schedule(recipient, [event], today.toDate());
+
         // then
+        expect(notifications).to.be.lengthOf(1);
+        expect(notifications[0]).to.deep.equal({
+            event,
+            recipient,
+            readyTime: event.readyTime,
+            expirationTime: event.expirationTime
+        })
     });
 
     it('should schedule many notifications', async () => {
         // given
+        const event1 = <Event>{
+            id: 'i1uj4-n1h24-cbm19',
+            eventType: 'lunch-offer',
+            readyTime: today.set('hour', 11).toDate(),
+            expirationTime: today
+                .set('hour', 15)
+                .set('minute', 0)
+                .toDate(),
+        };
+        const event2 = <Event>{
+            id: 'lafqlkmq-akjwnfkj',
+            eventType: 'lunch-offer',
+            readyTime: today.set('hour', 10).toDate(),
+            expirationTime: today
+                .set('hour', 20)
+                .set('minute', 0)
+                .toDate(),
+        };
+
         // when
+        const notifications = scheduler.schedule(recipient, [event1, event2], today.toDate());
+
         // then
+        const readyTime = today.set('hour', 12).set('minute', 0).set('second', 0).toDate();
+        expect(notifications).to.be.lengthOf(2);
+        expect(notifications.map((n) => n.readyTime)).to.deep.equal([readyTime, readyTime]);
     });
 });

@@ -61,10 +61,10 @@ export class PushNotifier {
                                  currentTime: Date): EventNotification[] {
         return this.scheduler
             .schedule(recipient, events, currentTime)
-            .filter((n) =>
-                n.readyTime <= currentTime &&
-                n.expirationTime >= currentTime &&
-                !recipient.notifiedEventIds.has(n.event.id));
+            .filter((notification) =>
+                notification.readyTime <= currentTime &&
+                notification.expirationTime >= currentTime &&
+                !recipient.notifiedEventIds.has(notification.event.id));
     }
 
     private applyMessagingLimits(recipient: Recipient, messages: Message[]): Message[] {

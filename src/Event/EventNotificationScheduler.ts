@@ -1,6 +1,8 @@
+import * as moment from 'moment';
 import {Event} from "../Interfaces/Event";
 import {EventNotification} from "./EventNotification";
 import {NotificationPreferences, Recipient} from "../Recipient/Recipient";
+import {max, min} from "../utils";
 
 
 // Responsibility:
@@ -13,16 +15,34 @@ export class EventNotificationScheduler {
     public schedule(recipient: Recipient,
                     events: Event[],
                     targetDay: Date): EventNotification[] {
-        // TODO: implement
-        const notifications = [];
         const preferences = recipient.preferences || new NotificationPreferences(0 ,0);
 
-        // greedily schedule earliest possible time
+        const targetDayNotificationStart = moment(targetDay)
+            .set('hour', preferences.earliestNotificationHour)
+            .set('minute', preferences.earliestNotificationMinute)
+            .set('second', 0)
+            .toDate();
+
+        const targetDayNotificationEnd = moment(targetDay)
+            .set('hour', preferences.latestNotificationHour)
+            .set('minute', preferences.latestNotificationMinute)
+            .set('second', 0)
+            .toDate();
+
+        const notifications = [];
 
         for (const event of events) {
-            if (event.expirationTime) {
+            if (event.expirationTime < targetDayNotificationStart || event.readyTime > targetDayNotificationEnd) {
                 continue;
             }
+
+            // greedily schedule earliest possible time
+            const readyTime = max(event.readyTime, targetDayNotificationStart);
+            const expirationTime = min(event.expirationTime, targetDayNotificationEnd);
+
+            notifications.push(
+                new EventNotification(readyTime, expirationTime, event, recipient)
+            );
         }
 
         return notifications;

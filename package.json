@@ -2,6 +2,7 @@
    "dependencies": {
       "@types/node": "^10.12.12",
       "expo-server-sdk": "^3.1.0",
+      "moment": "^2.23.0",
       "node-zookeeper-client": "^0.2.2",
       "pg": "^7.3.0",
       "queue": "git+ssh://git@github.com:budziam/menu-queue-node.git#master",

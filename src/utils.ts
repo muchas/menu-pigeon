@@ -9,3 +9,7 @@ export async function toArray<T>(generator: AsyncIterableIterator<T>): Promise<T
 
     return output;
 }
+
+
+export const max = (a, b) => a > b ? a : b;
+export const min = (a, b) => a < b ? a : b;
