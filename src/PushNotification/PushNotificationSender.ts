@@ -7,21 +7,14 @@ import {PushNotification} from "../Entity/PushNotification";
 
 export class PushNotificationSender {
 
-    private transport: PushNotificationTransport;
-    private notificationRepository: PushNotificationRepository;
-
-    constructor(transport: PushNotificationTransport,
-                notificationRepository: PushNotificationRepository) {
-        this.transport = transport;
-        this.notificationRepository = notificationRepository;
-    }
+    constructor(private transport: PushNotificationTransport,
+                private notificationRepository: PushNotificationRepository) {}
 
     public async schedule(recipients: Recipient[], messages: Message[]) {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
-        let recipient;
 
         for (const message of messages) {
-            recipient = recipientsById.get(message.recipientId);
+            const recipient = recipientsById.get(message.recipientId);
 
             message.pushNotifications = recipient.pushTokens.map((token) => {
                const notification = new PushNotification();

@@ -11,58 +11,52 @@ import {EventNotificationScheduler} from "../Event/EventNotificationScheduler";
 import {LunchOfferEvent} from "../Publication/LunchOfferEvent";
 
 
-// Responsibility:
-// notify recipients about relevant events with push notifications
-
+/**
+ * Responsibility:
+ * notify recipients about relevant events with push notifications
+ */
 export class PushNotifier {
 
-    private recipientRepository: RecipientRepository;
-    private eventRepository: EventRepository;
-    private pushNotificationSender: PushNotificationSender;
     private messageComposer: LunchOfferMessageComposer;
     private scheduler: EventNotificationScheduler;
     private distributor: EventDistributor;
 
-    constructor(recipientRepository: RecipientRepository,
-                eventRepository: EventRepository,
-                pushNotificationSender: PushNotificationSender) {
-        this.recipientRepository = recipientRepository;
-        this.eventRepository = eventRepository;
-        this.pushNotificationSender = pushNotificationSender;
-
-        // TODO: extract dependencies?
+    constructor(private recipientRepository: RecipientRepository,
+                private eventRepository: EventRepository,
+                private pushNotificationSender: PushNotificationSender) {
         this.messageComposer = new LunchOfferMessageComposer();
         this.scheduler = new EventNotificationScheduler();
         this.distributor = new EventDistributor();
     }
 
-    public async notifyAll(time: Date) {
-        const events = await this.eventRepository.findRelevant(time);
+    public async notifyAll(currentTime: Date) {
+        const events = await this.eventRepository.findRelevant(currentTime);
         const recipients = await this.recipientRepository.findAll();
 
         const messages = recipients
-            .map((recipient) => this.makeMessages(recipient, events, time))
-            .reduce((previous, messages) => previous.concat(messages));
+            .map((recipient) => this.makeMessages(recipient, events, currentTime))
+            .reduce((previous, messages) => previous.concat(messages), []);
 
         await this.pushNotificationSender.schedule(recipients, messages);
         await this.markNotified(recipients, events, messages);
     }
 
-    private makeMessages(recipient: Recipient, events: Event[], time: Date): Message[] {
+    private makeMessages(recipient: Recipient, events: Event[], currentTime: Date): Message[] {
         const recipientEvents = this.distributor.filterRelevantFor(recipient, events);
-        const notifications = this.prepareNotifications(recipient, recipientEvents, time);
-        const messages = this.messageComposer.compose(recipient, notifications.map(n => <LunchOfferEvent>n.event));
+        const notifications = this.prepareNotifications(recipient, recipientEvents, currentTime);
+        const messages = this.messageComposer.compose(recipient, notifications.map(n => n.event as LunchOfferEvent));
 
         return this.applyMessagingLimits(recipient, messages);
     }
 
-    private prepareNotifications(recipient: Recipient,
-                                 events: Event[],
-                                 currentTime: Date): EventNotification[] {
+    private prepareNotifications(
+        recipient: Recipient,
+        events: Event[],
+        currentTime: Date
+    ): EventNotification[] {
         return this.scheduler
             .schedule(recipient, events, currentTime)
-            .filter((notification
-            ) =>
+            .filter((notification) =>
                 notification.readyTime <= currentTime &&
                 notification.expirationTime >= currentTime &&
                 !recipient.notifiedEventIds.has(notification.event.id));

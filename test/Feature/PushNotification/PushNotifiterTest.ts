@@ -11,7 +11,7 @@ import {EventRepository} from "../../../src/Event/EventRepository";
 import {PushNotificationSender} from "../../../src/PushNotification/PushNotificationSender";
 import {LunchOfferEvent} from "../../../src/Publication/LunchOfferEvent";
 import {Event} from "../../../src/Interfaces/Event";
-import {Business, PersistedPublication} from "../../../src/Publication/Business";
+import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
 
 
 describe('PushNotifier', () => {
@@ -29,11 +29,6 @@ describe('PushNotifier', () => {
     let publication3: PersistedPublication;
     let publication4: PersistedPublication;
 
-    let business1: Business;
-    let business2: Business;
-    let business3: Business;
-    let business4: Business;
-
     beforeEach(async function () {
         chai.use(chaiAsPromised);
         chai.use(sinonChai);
@@ -41,15 +36,10 @@ describe('PushNotifier', () => {
         today = moment();
         const morning = today.toDate();
 
-        business1 = new Business('1', 'Bococa Bistro');
-        business2 = new Business('2', 'I Love Coffee Kawiarnia');
-        business3 = new Business('3', 'Lunch Bar Majeranek');
-        business4 = new Business('4', 'Bistro Maro');
-
-        publication1 = new PersistedPublication(1, business1);
-        publication2 = new PersistedPublication(2, business2);
-        publication3 = new PersistedPublication(3, business3);
-        publication4 = new PersistedPublication(4, business4);
+        publication1 = new PersistedPublication(1, '1', 'Bococa Bistro', [], morning);
+        publication2 = new PersistedPublication(2, '2', 'I Love Coffee Kawiarnia', [], morning);
+        publication3 = new PersistedPublication(3, '3', 'Lunch Bar Majeranek', [], morning);
+        publication4 = new PersistedPublication(4, '4', 'Bistro Maro', [], morning);
 
         event1 = new LunchOfferEvent('e#1', morning, morning, ['business-1'], publication1);
         event2 = new LunchOfferEvent('e#2', morning, morning, ['business-2'], publication2);
@@ -70,13 +60,12 @@ describe('PushNotifier', () => {
         const recipients = [recipient1, recipient2, recipient3];
         const recipientRepository = new RecipientRepository(recipients);
         const sender = sinon.createStubInstance(PushNotificationSender);
-        // @ts-ignore
-        const notifier = new PushNotifier(recipientRepository, eventRepository, sender);
+        const notifier = new PushNotifier(recipientRepository, eventRepository, sender as any);
 
         // when
         await notifier.notifyAll(today.toDate());
 
         // then
-        expect(sender.schedule).to.have.been.calledOnceWith(recipients, []);
+        expect(sender.schedule).to.have.been.calledOnceWith(recipients);
     });
 });

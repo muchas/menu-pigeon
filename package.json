@@ -1,6 +1,7 @@
 {
    "dependencies": {
       "@types/node": "^10.12.12",
+      "@types/uuid": "^3.4.4",
       "expo-server-sdk": "^3.1.0",
       "moment": "^2.23.0",
       "node-zookeeper-client": "^0.2.2",
@@ -8,7 +9,8 @@
       "queue": "git+ssh://git@github.com:budziam/menu-queue-node.git#master",
       "reflect-metadata": "^0.1.10",
       "string-argv": "^0.1.1",
-      "typeorm": "0.2.9"
+      "typeorm": "0.2.9",
+      "uuid": "^3.3.2"
    },
    "devDependencies": {
       "@types/chai": "^4.1.4",
@@ -41,7 +43,8 @@
       "functions": 40,
       "lines": 50,
       "reporter": [
-         "text-summary"
+         "text-summary",
+         "lcov"
       ],
       "all": true,
       "extension": [

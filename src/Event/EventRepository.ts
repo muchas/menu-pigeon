@@ -8,8 +8,8 @@ export class EventRepository {
         this.events = events;
     }
 
-    public async add(event: Event) {
-        this.events.push(event);
+    public async addMany(events: Event[]) {
+        this.events = this.events.concat(events);
         // TODO: add to zookeeper
     }
 
@@ -18,4 +18,6 @@ export class EventRepository {
             (event) => event.readyTime <= time && event.expirationTime >= time
         );
     }
+
+
 }

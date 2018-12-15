@@ -1,5 +1,5 @@
 import {Event} from "../Interfaces/Event";
-import {Business, PersistedPublication} from "./Business";
+import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
 
 
 export class LunchOfferEvent implements Event {
@@ -11,7 +11,11 @@ export class LunchOfferEvent implements Event {
                 public content: PersistedPublication,
                 public eventType: string = 'LUNCH_OFFER') {}
 
-    get business(): Business {
-        return this.content.business;
+    get businessId(): string {
+        return this.content.businessId;
+    }
+
+    get businessName(): string {
+        return this.content.businessName;
     }
 }

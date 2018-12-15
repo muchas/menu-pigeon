@@ -1,26 +1,33 @@
-import {Device} from "./Device";
+import {RecipientDevice} from "./RecipientDevice";
 import {Event} from "../Interfaces/Event";
+import {NotificationLevel, NotificationPreferences} from "queue/lib/Messages/Recipient";
 
 
-export class NotificationPreferences {
 
-    public readonly latestNotificationHour = 17;
-    public readonly latestNotificationMinute = 0;
+export class RecipientPreferences implements NotificationPreferences {
 
-    constructor(public earliestNotificationHour: number,
-                public earliestNotificationMinute: number,
-                public messagesDailyLimit?: Number) {}
+    public readonly latestHour = 17;
+    public readonly latestMinute = 0;
+
+    constructor(public earliestHour: number,
+                public earliestMinute: number,
+                public level: NotificationLevel) {}
 }
 
 
 export class Recipient {
+
+    public followedTopics: Set<string>;
+
     constructor(public id: string,
                 public name: string,
-                public followedTopics: string[] = [],
-                public devices: Device[] = [],
-                public preferences?: NotificationPreferences,
+                followedTopics: string[] = [],
+                public devices: RecipientDevice[] = [],
+                public preferences?: RecipientPreferences,
                 public notifiedEventIds: Set<string> = new Set(),
-                public topicLastNotification: Map<string, Date> = new Map()) {}
+                public topicLastNotification: Map<string, Date> = new Map()) {
+        this.followedTopics = new Set(followedTopics);
+    }
 
     public get pushTokens(): string[] {
         return this.devices.map((device) => device.pushToken);
@@ -31,5 +38,13 @@ export class Recipient {
         for (const topic of event.topics) {
             this.topicLastNotification.set(topic, new Date());
         }
+    }
+
+    public follow(topic: string) {
+        return this.followedTopics.add(topic);
+    }
+
+    public unfollow(topic: string) {
+        return this.followedTopics.delete(topic);
     }
 }

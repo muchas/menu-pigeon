@@ -4,12 +4,13 @@ import {expect} from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as sinonChai from 'sinon-chai';
 import {Event} from "../../../src/Interfaces/Event";
-import {NotificationPreferences, Recipient} from "../../../src/Recipient/Recipient";
+import {RecipientPreferences, Recipient} from "../../../src/Recipient/Recipient";
 import {EventNotificationScheduler} from "../../../src/Event/EventNotificationScheduler";
+import {NotificationLevel} from "queue/lib/Messages/Recipient";
 
 
 describe('EventNotificationScheduler', () => {
-    let preferences: NotificationPreferences;
+    let preferences: RecipientPreferences;
     let recipient: Recipient;
     let scheduler: EventNotificationScheduler;
     let today;
@@ -19,7 +20,7 @@ describe('EventNotificationScheduler', () => {
         chai.use(sinonChai);
 
         today = moment();
-        preferences = new NotificationPreferences(12, 0);
+        preferences = new RecipientPreferences(12, 0, NotificationLevel.Often);
         recipient = new Recipient('recipient#1', 'John', [], [], preferences);
         scheduler = new EventNotificationScheduler();
     });

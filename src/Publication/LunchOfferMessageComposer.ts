@@ -17,15 +17,15 @@ export class LunchOfferMessageComposer implements MessageComposer {
             return [
                 this.createMessage(
                     recipient.id,
-                    `${event.business.name} opublikowali ofertę lunchową`,
-                    'Kliknij, aby sprawdzić szczegóły',
+                    `Czas na lunch`,
+                    `Hej ${recipient.name}, ${event.businessName} opublikował nową ofertę. Kliknij, aby sprawdzić szczegóły.`,
                     'high',
                     event.expirationTime)
             ];
         }
 
         const minExpirationTime = min(events.map((e) => moment(e.expirationTime))).toDate();
-        const businessCount = Array.from(new Set(events.map(e => e.business.id))).length;
+        const businessCount = Array.from(new Set(events.map(e => e.businessId))).length;
 
         return [
             this.createMessage(
