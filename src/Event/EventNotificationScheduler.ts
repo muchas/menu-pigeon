@@ -1,8 +1,8 @@
-import * as moment from 'moment';
-import {Event} from '../Interfaces/Event';
-import {EventNotification} from './EventNotification';
-import {Recipient} from '../Recipient/Recipient';
-import {max, min} from '../utils';
+import * as moment from "moment";
+import { Event } from "../Interfaces/Event";
+import { EventNotification } from "./EventNotification";
+import { Recipient } from "../Recipient/Recipient";
+import { max, min } from "../utils";
 
 /**
  * Responsibility:
@@ -12,21 +12,23 @@ import {max, min} from '../utils';
  */
 export class EventNotificationScheduler {
 
-    public schedule(recipient: Recipient,
-                    events: Event[],
-                    targetDay: Date): EventNotification[] {
+    public schedule(
+        recipient: Recipient,
+        events: Event[],
+        targetDay: Date
+    ): EventNotification[] {
         const preferences = recipient.preferences;
 
         const targetDayNotificationStart = moment(targetDay)
-            .set('hour', preferences.earliestHour)
-            .set('minute', preferences.earliestMinute)
-            .set('second', 0)
+            .set("hour", preferences.earliestHour)
+            .set("minute", preferences.earliestMinute)
+            .set("second", 0)
             .toDate();
 
         const targetDayNotificationEnd = moment(targetDay)
-            .set('hour', preferences.latestHour)
-            .set('minute', preferences.latestMinute)
-            .set('second', 0)
+            .set("hour", preferences.latestHour)
+            .set("minute", preferences.latestMinute)
+            .set("second", 0)
             .toDate();
 
         const notifications = [];

@@ -1,11 +1,11 @@
-import {Event} from '../Interfaces/Event';
-import {injectable} from 'inversify';
+import { Event } from "../Interfaces/Event";
+import { injectable } from "inversify";
 
 @injectable()
 export class EventRepository {
-    private events: Event[];
+    private readonly events: Event[];
 
-    constructor(events: Event[] = []) {
+    public constructor(events: Event[] = []) {
         this.events = events;
     }
 

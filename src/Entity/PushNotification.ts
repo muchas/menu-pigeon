@@ -1,6 +1,6 @@
-import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {Message, MessagePriority} from './Message';
-import {PushNotificationStatus} from '../PushNotification/PushNotificationReceipt';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Message, MessagePriority } from "./Message";
+import { PushNotificationStatus } from "../PushNotification/PushNotificationReceipt";
 
 @Entity()
 export class PushNotification {
@@ -12,7 +12,7 @@ export class PushNotification {
     public pushToken: string;
 
     @Column({
-        type: 'timestamp',
+        type: "timestamp",
         nullable: true,
     })
     public sentAt?: Date;
@@ -29,13 +29,13 @@ export class PushNotification {
     public receiptId?: string;
 
     @Column({
-        type: 'json',
+        type: "json",
         nullable: true,
     })
     public data?: string;
 
     @Column({
-        type: 'json',
+        type: "json",
         nullable: true,
     })
     public errors?: string;
@@ -43,15 +43,15 @@ export class PushNotification {
     @ManyToOne(type => Message, message => message.pushNotifications)
     public message: Message;
 
-    get title(): string {
+    public get title(): string {
         return this.message.title;
     }
 
-    get body(): string {
+    public get body(): string {
         return this.message.body;
     }
 
-    get priority(): MessagePriority {
+    public get priority(): MessagePriority {
         return this.message.priority;
     }
 }

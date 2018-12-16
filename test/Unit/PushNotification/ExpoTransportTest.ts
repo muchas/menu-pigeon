@@ -1,14 +1,13 @@
-import * as sinon from 'sinon';
-import {SinonStubbedInstance} from 'sinon';
-import {expect} from 'chai';
-import {ExpoTransport} from '../../../src/PushNotification/ExpoTransport';
-import {PushNotification} from '../../../src/Entity/PushNotification';
-import Expo from 'expo-server-sdk';
-import {Message} from '../../../src/Entity/Message';
-import {toArray} from '../../../src/utils';
-import {PushNotificationStatus} from '../../../src/PushNotification/PushNotificationReceipt';
-import {setup} from '../../utils';
-import {Container} from 'inversify';
+import * as sinon from "sinon";
+import { SinonStubbedInstance } from "sinon";
+import { expect } from "chai";
+import { ExpoTransport } from "../../../src/PushNotification/ExpoTransport";
+import { PushNotification } from "../../../src/Entity/PushNotification";
+import Expo from "expo-server-sdk";
+import { Message } from "../../../src/Entity/Message";
+import { toArray } from "../../../src/utils";
+import { PushNotificationStatus } from "../../../src/PushNotification/PushNotificationReceipt";
+import { setup } from "../../utils";
 
 const createPushNotification = (message: Message,
                                 token: string,
@@ -22,31 +21,30 @@ const createPushNotification = (message: Message,
     return notification;
 };
 
-describe('ExpoTransport', () => {
-    let container: Container;
+describe("ExpoTransport", () => {
     let expoClient: SinonStubbedInstance<Expo>;
 
     beforeEach(() => {
-        container = setup();
+        setup();
         expoClient = sinon.createStubInstance(Expo);
     });
 
-    describe('sending pushes', () => {
+    describe("sending pushes", () => {
         let message: Message;
         let pushNotification: PushNotification;
 
         beforeEach(() => {
             message = new Message();
-            message.title = 'Pretty nice title';
-            message.body = 'This is message body!';
-            message.priority = 'high';
+            message.title = "Pretty nice title";
+            message.body = "This is message body!";
+            message.priority = "high";
 
-            pushNotification = createPushNotification(message, 'PUSH_TOKEN1', 0);
+            pushNotification = createPushNotification(message, "PUSH_TOKEN1", 0);
         });
 
-        it('should send push notification asynchronously', async () => {
+        it("should send push notification asynchronously", async () => {
             // given
-            expoClient.sendPushNotificationsAsync.returns([{id: 'receipt#1'}]);
+            expoClient.sendPushNotificationsAsync.returns([{id: "receipt#1"}]);
             const transport = new ExpoTransport(expoClient);
 
             // when
@@ -63,10 +61,10 @@ describe('ExpoTransport', () => {
             expect(expoClient.sendPushNotificationsAsync).to.have.been.calledOnceWith([expectedExpoPush]);
             expect(ticket.sentSuccessfully).to.be.true;
             expect(ticket.notification).to.equal(pushNotification);
-            expect(ticket.receiptId).to.equal('receipt#1');
+            expect(ticket.receiptId).to.equal("receipt#1");
         });
 
-        it('should return failed ticket in case of exception', async () => {
+        it("should return failed ticket in case of exception", async () => {
             // given
             expoClient.sendPushNotificationsAsync.throws(new Error());
 
@@ -80,11 +78,11 @@ describe('ExpoTransport', () => {
             expect(ticket.notification).to.equal(pushNotification);
         });
 
-        it('should send chunks in case of many notifications', async () => {
+        it("should send chunks in case of many notifications", async () => {
             // given
-            const chunk = [{to: 'PUSH_TOKEN1'}, {to: 'PUSH_TOKEN2'}];
+            const chunk = [{to: "PUSH_TOKEN1"}, {to: "PUSH_TOKEN2"}];
             const chunks = [chunk];
-            const receiptId = 'RECEIPT_ID';
+            const receiptId = "RECEIPT_ID";
 
             expoClient.chunkPushNotifications.returns(chunks);
             expoClient.sendPushNotificationsAsync.returns([{id: receiptId}, {id: receiptId}]);
@@ -92,7 +90,7 @@ describe('ExpoTransport', () => {
             const transport = new ExpoTransport(expoClient);
 
             const notification1 = pushNotification;
-            const notification2 = createPushNotification(message, 'PUSH_TOKEN2', 0);
+            const notification2 = createPushNotification(message, "PUSH_TOKEN2", 0);
 
             const notifications = [notification1, notification2];
 
@@ -121,28 +119,28 @@ describe('ExpoTransport', () => {
         });
     });
 
-    describe('confirming push statuses', () => {
+    describe("confirming push statuses", () => {
         let message: Message;
         let pushNotification: PushNotification;
 
         beforeEach(() => {
             message = new Message();
-            message.title = 'Pretty nice title';
-            message.body = 'This is message body!';
-            message.priority = 'high';
+            message.title = "Pretty nice title";
+            message.body = "This is message body!";
+            message.priority = "high";
 
-            pushNotification = createPushNotification(message, 'PUSH_TOKEN1', 1, 'receipt#1');
+            pushNotification = createPushNotification(message, "PUSH_TOKEN1", 1, "receipt#1");
         });
 
-        it('should send chunks of receiptIds', async () => {
+        it("should send chunks of receiptIds", async () => {
             // given
-            const chunk1 = ['receipt#1', 'receipt#2'];
-            const chunk2 = ['receipt#3'];
+            const chunk1 = ["receipt#1", "receipt#2"];
+            const chunk2 = ["receipt#3"];
             const chunks = [chunk1, chunk2];
             const returnedReceipts = [
-                {status: 'ok', details: {time: 'xxx'}},
-                {status: 'error', details: {error: 'yyy'}},
-                {status: 'ok', details: {time: 'zzz'}},
+                {status: "ok", details: {time: "xxx"}},
+                {status: "error", details: {error: "yyy"}},
+                {status: "ok", details: {time: "zzz"}},
             ];
             expoClient.chunkPushNotificationReceiptIds.returns(chunks);
             expoClient.getPushNotificationReceiptsAsync.onCall(0).returns(returnedReceipts.slice(0, 2));
@@ -151,8 +149,8 @@ describe('ExpoTransport', () => {
             const transport = new ExpoTransport(expoClient);
 
             const notification1 = pushNotification;
-            const notification2 = createPushNotification(message, 'PUSH_TOKEN2', 1, 'receipt#2');
-            const notification3 = createPushNotification(message, 'PUSH_TOKEN3', 1, 'receipt#3');
+            const notification2 = createPushNotification(message, "PUSH_TOKEN2", 1, "receipt#2");
+            const notification3 = createPushNotification(message, "PUSH_TOKEN3", 1, "receipt#3");
             const notifications = [notification1, notification2, notification3];
 
             // when
@@ -160,12 +158,12 @@ describe('ExpoTransport', () => {
 
             // then
             expect(expoClient.chunkPushNotificationReceiptIds).to.have.been.calledOnceWith(
-                ['receipt#1', 'receipt#2', 'receipt#3']
+                ["receipt#1", "receipt#2", "receipt#3"]
             );
             expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(
-                ['receipt#1', 'receipt#2']
+                ["receipt#1", "receipt#2"]
             );
-            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(['receipt#3']);
+            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(["receipt#3"]);
             expect(receipts).to.be.lengthOf(3);
             expect(receipts.map(r => r.notification)).to.deep.equal(notifications);
             expect(receipts.map(r => r.fetchedSuccessfully)).to.deep.equal([true, true, true]);
@@ -175,7 +173,7 @@ describe('ExpoTransport', () => {
             expect(receipts.map(r => r.data)).to.deep.equal(returnedReceipts.map(r => r.details));
         });
 
-        it('should return failed receipt in case of exception', async () => {
+        it("should return failed receipt in case of exception", async () => {
             // given
             const chunk = [pushNotification.receiptId];
             const chunks = [chunk];

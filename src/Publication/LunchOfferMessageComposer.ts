@@ -1,10 +1,10 @@
-import {MessageComposer} from '../Interfaces/MessageComposer';
-import {Recipient} from '../Recipient/Recipient';
-import {Message, MessagePriority} from '../Entity/Message';
-import {LunchOfferEvent} from './LunchOfferEvent';
-import * as moment from 'moment';
-import {min} from 'moment';
-import {capitalize} from '../utils';
+import { MessageComposer } from "../Interfaces/MessageComposer";
+import { Recipient } from "../Recipient/Recipient";
+import { Message, MessagePriority } from "../Entity/Message";
+import { LunchOfferEvent } from "./LunchOfferEvent";
+import * as moment from "moment";
+import { min } from "moment";
+import { capitalize } from "../utils";
 
 export class LunchOfferMessageComposer implements MessageComposer {
 
@@ -17,10 +17,10 @@ export class LunchOfferMessageComposer implements MessageComposer {
             return [
                 this.createMessage(
                     recipient.id,
-                    `Czas na lunch`,
+                    "Czas na lunch",
                     `${this.makeGreeting(recipient)}${event.businessName} opublikował nową ofertę.
                     Kliknij, aby sprawdzić szczegóły.`,
-                    'high',
+                    "high",
                     event.expirationTime
                 ),
             ];
@@ -32,10 +32,10 @@ export class LunchOfferMessageComposer implements MessageComposer {
         return [
             this.createMessage(
                 recipient.id,
-            `${this.makeGreeting(recipient)}sprawdź dzisiejszy lunch!`,
-            `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`,
-            'high',
-            minExpirationTime),
+                `${this.makeGreeting(recipient)}sprawdź dzisiejszy lunch!`,
+                `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`,
+                "high",
+                minExpirationTime),
         ];
     }
 
@@ -43,7 +43,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
         if (recipient.name) {
             return `Hej ${recipient.name}, `;
         }
-        return '';
+        return "";
     }
 
     private createMessage(recipientId: string,

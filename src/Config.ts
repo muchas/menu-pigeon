@@ -1,7 +1,7 @@
 export default class Config {
     private readonly values: any;
 
-    constructor(initial: object = {}) {
+    public constructor(initial: object = {}) {
         this.values = initial;
     }
 

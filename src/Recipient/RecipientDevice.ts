@@ -1,7 +1,9 @@
-import {Device} from 'queue/lib/Messages/Recipient';
+import { Device } from "queue/lib/Messages/Recipient";
 
 export class RecipientDevice implements Device {
-
-    constructor(public pushToken: string,
-                public readonly createdAt: Date) {}
+    public constructor(
+        public pushToken: string,
+        public readonly createdAt: Date
+    ) {
+    }
 }

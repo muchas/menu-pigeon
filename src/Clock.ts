@@ -7,8 +7,8 @@ export abstract class Clock {
 
     public async abstract performAction();
 
-    public start() {
-        this.tick();
+    public async start() {
+        return this.tick();
     }
 
     public async tick() {
@@ -18,6 +18,6 @@ export abstract class Clock {
         }
 
         await this.performAction();
-        setTimeout(() => this.tick(), this.period);
+        setTimeout(async () => this.tick(), this.period);
     }
 }

@@ -1,14 +1,14 @@
-import {Consumer, Job} from 'queue';
-import {RecipientUpsert} from 'queue/lib/Messages/RecipientUpsert';
-import {RecipientRepository} from './RecipientRepository';
-import {Recipient, RecipientPreferences} from './Recipient';
-import {RecipientDevice} from './RecipientDevice';
-import {NotifierClock} from '../PushNotification/NotifierClock';
+import { Consumer, Job } from "queue";
+import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
+import { RecipientRepository } from "./RecipientRepository";
+import { Recipient, RecipientPreferences } from "./Recipient";
+import { RecipientDevice } from "./RecipientDevice";
+import { NotifierClock } from "../PushNotification/NotifierClock";
 
 export class RecipientUpsertConsumer implements Consumer {
 
-    constructor(private recipientRepository: RecipientRepository,
-                private notifierClock: NotifierClock) {}
+    public constructor(private readonly recipientRepository: RecipientRepository,
+                       private readonly notifierClock: NotifierClock) {}
 
     public async consume(job: Job<RecipientUpsert>): Promise<void> {
         const {id, name, devices, followedTopics, preferences} = job.message;
