@@ -1,9 +1,9 @@
 import Timeout = NodeJS.Timeout;
 
 export abstract class Clock {
+    protected period: number = 10;
 
     private lastTimeout: Timeout;
-    protected period: number = 10;
 
     public async abstract performAction();
 

@@ -3,7 +3,7 @@ import {RecipientUpsert} from 'queue/lib/Messages/RecipientUpsert';
 import {RecipientRepository} from './RecipientRepository';
 import {Recipient, RecipientPreferences} from './Recipient';
 import {RecipientDevice} from './RecipientDevice';
-import {NotifierClock} from "../PushNotification/NotifierClock";
+import {NotifierClock} from '../PushNotification/NotifierClock';
 
 export class RecipientUpsertConsumer implements Consumer {
 

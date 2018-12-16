@@ -1,7 +1,7 @@
 import {Consumer, Job} from 'queue';
 import {TopicFollow} from 'queue/lib/Messages/TopicFollow';
 import {RecipientRepository} from './RecipientRepository';
-import {NotifierClock} from "../PushNotification/NotifierClock";
+import {NotifierClock} from '../PushNotification/NotifierClock';
 
 export class TopicFollowConsumer implements Consumer {
 

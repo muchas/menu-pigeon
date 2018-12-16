@@ -1,7 +1,6 @@
-import {Clock} from "../Clock";
-import {PushNotifier} from "./PushNotifier";
-import {injectable} from "inversify";
-
+import {Clock} from '../Clock';
+import {PushNotifier} from './PushNotifier';
+import {injectable} from 'inversify';
 
 @injectable()
 export class NotifierClock extends Clock {

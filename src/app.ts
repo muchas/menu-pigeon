@@ -13,7 +13,7 @@ import {RecipientDeleted} from 'queue/lib/Messages/RecipientDeleted';
 import {TopicFollow} from 'queue/lib/Messages/TopicFollow';
 import * as winston from 'winston';
 import {createContainer} from './inversify.config';
-import {NotifierClock} from "./PushNotification/NotifierClock";
+import {NotifierClock} from './PushNotification/NotifierClock';
 
 const container = createContainer();
 const config = container.get<Config>(Config);

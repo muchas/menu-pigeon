@@ -3,8 +3,8 @@ import {EventRepository} from '../Event/EventRepository';
 import {LunchOfferEventFactory} from './LunchOfferEventFactory';
 import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
 import {injectable} from 'inversify';
-import {NotifierClock} from "../PushNotification/NotifierClock";
-import * as winston from "winston";
+import {NotifierClock} from '../PushNotification/NotifierClock';
+import * as winston from 'winston';
 
 @injectable()
 export class PersistedPublicationConsumer implements Consumer {
