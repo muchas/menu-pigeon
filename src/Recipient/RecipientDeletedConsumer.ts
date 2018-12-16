@@ -1,7 +1,9 @@
 import {Consumer, Job} from 'queue';
 import {RecipientRepository} from './RecipientRepository';
 import {RecipientDeleted} from 'queue/lib/Messages/RecipientDeleted';
+import {injectable} from 'inversify';
 
+@injectable()
 export class RecipientDeletedConsumer implements Consumer {
 
     constructor(private recipientRepository: RecipientRepository) {}

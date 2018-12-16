@@ -2,8 +2,8 @@ import {MessageComposer} from '../Interfaces/MessageComposer';
 import {Recipient} from '../Recipient/Recipient';
 import {Message, MessagePriority} from '../Entity/Message';
 import {LunchOfferEvent} from './LunchOfferEvent';
-import {min} from 'moment';
 import * as moment from 'moment';
+import {min} from 'moment';
 
 export class LunchOfferMessageComposer implements MessageComposer {
 

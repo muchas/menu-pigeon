@@ -3,7 +3,9 @@ import {PushNotificationTicket} from './PushNotificationTicket';
 import {PushNotificationReceipt, PushNotificationStatus} from './PushNotificationReceipt';
 import {Message} from '../Entity/Message';
 import {Connection, Repository} from 'typeorm';
+import {injectable} from 'inversify';
 
+@injectable()
 export class PushNotificationRepository {
     private connection: Connection;
     private messageRepository: Repository<Message>;
