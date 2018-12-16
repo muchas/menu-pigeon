@@ -18,13 +18,17 @@ export class Recipient {
 
     public followedTopics: Set<string>;
 
-    constructor(public id: string,
-                public name?: string,
-                followedTopics: string[] = [],
-                public devices: RecipientDevice[] = [],
-                public preferences?: RecipientPreferences,
-                public notifiedEventIds: Set<string> = new Set(),
-                public topicLastNotification: Map<string, Date> = new Map()) {
+    constructor(
+        public id: string,
+        public name?: string,
+        followedTopics: string[] = [],
+        public devices: RecipientDevice[] = [],
+        public preferences: RecipientPreferences = new RecipientPreferences(
+            9, 0, NotificationLevel.Daily
+        ),
+        public notifiedEventIds: Set<string> = new Set(),
+        public topicLastNotification: Map<string, Date> = new Map()
+    ) {
         this.followedTopics = new Set(followedTopics);
     }
 
