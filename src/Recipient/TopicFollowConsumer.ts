@@ -1,7 +1,7 @@
 import {Consumer, Job} from 'queue';
 import {TopicFollow} from 'queue/lib/Messages/TopicFollow';
 import {RecipientRepository} from './RecipientRepository';
-import {Clock} from "../Clock";
+import {Clock} from '../Clock';
 
 export class TopicFollowConsumer implements Consumer {
 
