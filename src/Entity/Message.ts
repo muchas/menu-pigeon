@@ -4,7 +4,8 @@ import {PushNotification} from './PushNotification';
 export type MessagePriority = 'default' | 'normal' | 'high';
 export interface MessageData {
     eventIds?: string[];
-
+    eventType?: string;
+    topics?: string[];
 }
 
 
@@ -39,14 +40,33 @@ export class Message {
 
     @Column({
         type: 'json',
-        default: {},
     })
-    public data: MessageData;
+    public data: MessageData = {};
 
     @OneToMany(type => PushNotification, notification => notification.message)
     public pushNotifications: PushNotification[];
 
     get eventIds(): string[] {
         return this.data.eventIds || [];
+    }
+
+    get topics(): string[] {
+        return this.data.topics || [];
+    }
+
+    get eventType(): string {
+        return this.data.eventType || '';
+    }
+
+    public setTopics(topics: string[]) {
+        this.data.topics = topics;
+    }
+
+    public setEventIds(eventIds: string[]) {
+        this.data.eventIds = eventIds;
+    }
+
+    public setEventType(eventType: string) {
+        this.data.eventType = eventType;
     }
 }

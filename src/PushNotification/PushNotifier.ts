@@ -51,7 +51,7 @@ export class PushNotifier {
         const notifications = this.prepareNotifications(recipient, recipientEvents, currentTime);
         const messages = this.messageComposer.compose(recipient, notifications.map(n => n.event as LunchOfferEvent));
 
-        return this.throttle(recipient, messages);
+        return this.throttleService.throttle(recipient, messages)
     }
 
     private prepareNotifications(
@@ -65,13 +65,6 @@ export class PushNotifier {
                 notification.readyTime <= currentTime &&
                 notification.expirationTime >= currentTime &&
                 !recipient.notifiedEventIds.has(notification.event.id));
-    }
-
-    private throttle(recipient: Recipient, messages: Message[]): Message[] {
-        // TODO: - recipient daily messages limits
-        // TODO: - take into consideration message priorities
-        // TODO: - recipient topic last notification time
-        return messages;
     }
 
     private async markNotified(recipients: Recipient[],
