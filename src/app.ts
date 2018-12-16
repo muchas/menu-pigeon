@@ -20,7 +20,7 @@ import {ExpoTransport} from './PushNotification/ExpoTransport';
 import Expo from 'expo-server-sdk';
 import {PushNotificationRepository} from './PushNotification/PushNotificationRepository';
 import * as winston from 'winston';
-import {Clock} from "./Clock";
+import {Clock} from './Clock';
 
 env(__dirname + '/../.env');
 
