@@ -4,6 +4,7 @@
       "@types/uuid": "^3.4.4",
       "dotenv": "^6.2.0",
       "expo-server-sdk": "^3.1.0",
+      "inversify": "^5.0.1",
       "moment": "^2.23.0",
       "node-env-file": "^0.1.8",
       "node-zookeeper-client": "^0.2.2",
@@ -45,10 +46,10 @@
    },
    "nyc": {
       "check-coverage": true,
-      "statements": 50,
-      "branches": 46,
+      "statements": 49,
+      "branches": 20,
       "functions": 40,
-      "lines": 50,
+      "lines": 49,
       "reporter": [
          "text-summary",
          "lcov"

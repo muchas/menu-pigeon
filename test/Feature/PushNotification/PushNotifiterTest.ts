@@ -1,9 +1,6 @@
-import * as chai from 'chai';
 import {expect} from 'chai';
 import * as sinon from 'sinon';
 import * as moment from 'moment';
-import * as chaiAsPromised from 'chai-as-promised';
-import * as sinonChai from 'sinon-chai';
 import {Recipient} from '../../../src/Recipient/Recipient';
 import {PushNotifier} from '../../../src/PushNotification/PushNotifier';
 import {RecipientRepository} from '../../../src/Recipient/RecipientRepository';
@@ -12,9 +9,12 @@ import {PushNotificationSender} from '../../../src/PushNotification/PushNotifica
 import {LunchOfferEvent} from '../../../src/Publication/LunchOfferEvent';
 import {Event} from '../../../src/Interfaces/Event';
 import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
+import {setup} from '../../utils';
+import {Container} from 'inversify';
 
 describe('PushNotifier', () => {
 
+    let container: Container;
     let event1: Event;
     let event2: Event;
     let event3: Event;
@@ -28,9 +28,8 @@ describe('PushNotifier', () => {
     let publication3: PersistedPublication;
     let publication4: PersistedPublication;
 
-    beforeEach(async () => {
-        chai.use(chaiAsPromised);
-        chai.use(sinonChai);
+    beforeEach(() => {
+        container = setup();
 
         today = moment();
         const morning = today.toDate();

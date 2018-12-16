@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import {Event} from '../Interfaces/Event';
 import {EventNotification} from './EventNotification';
-import {RecipientPreferences, Recipient} from '../Recipient/Recipient';
+import {Recipient, RecipientPreferences} from '../Recipient/Recipient';
 import {max, min} from '../utils';
 import {NotificationLevel} from 'queue/lib/Messages/Recipient';
 

@@ -5,7 +5,9 @@ import Expo, {ExpoPushMessage, ExpoPushReceiptId} from 'expo-server-sdk';
 import {PushNotificationTicket} from './PushNotificationTicket';
 import {PushNotificationReceipt, PushNotificationStatus} from './PushNotificationReceipt';
 import {toArray} from '../utils';
+import {injectable} from 'inversify';
 
+@injectable()
 export class ExpoTransport implements PushNotificationTransport {
 
     private client: Expo;
