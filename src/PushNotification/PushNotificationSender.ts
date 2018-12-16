@@ -3,7 +3,7 @@ import {PushNotificationRepository} from './PushNotificationRepository';
 import {Message} from '../Entity/Message';
 import {Recipient} from '../Recipient/Recipient';
 import {PushNotification} from '../Entity/PushNotification';
-import {injectable} from "inversify";
+import {injectable} from 'inversify';
 
 @injectable()
 export class PushNotificationSender {

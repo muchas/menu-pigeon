@@ -5,10 +5,10 @@ import Config from './Config';
 import {MessageGateCollection, Queue, QueueConnection} from 'queue';
 import {RecipientRepository} from './Recipient/RecipientRepository';
 import {EventRepository} from './Event/EventRepository';
-import {PushNotificationSender} from "./PushNotification/PushNotificationSender";
-import {ExpoTransport} from "./PushNotification/ExpoTransport";
-import {PushNotificationRepository} from "./PushNotification/PushNotificationRepository";
-import Expo from "expo-server-sdk";
+import {PushNotificationSender} from './PushNotification/PushNotificationSender';
+import {ExpoTransport} from './PushNotification/ExpoTransport';
+import {PushNotificationRepository} from './PushNotification/PushNotificationRepository';
+import Expo from 'expo-server-sdk';
 
 export const createContainer = (): Container => {
     env(__dirname + '/../.env');
