@@ -40,7 +40,7 @@ createConnection()
             container.get<TopicFollowConsumer>(TopicFollowConsumer)
         );
 
-        notifierClock.start();
+        await notifierClock.start();
 
         await queue.consume(
             `${config.get("APP_NAME")}.default`,
