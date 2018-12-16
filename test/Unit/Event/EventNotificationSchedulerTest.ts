@@ -3,11 +3,10 @@ import * as chai from 'chai';
 import {expect} from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as sinonChai from 'sinon-chai';
-import {Event} from "../../../src/Interfaces/Event";
-import {RecipientPreferences, Recipient} from "../../../src/Recipient/Recipient";
-import {EventNotificationScheduler} from "../../../src/Event/EventNotificationScheduler";
-import {NotificationLevel} from "queue/lib/Messages/Recipient";
-
+import {Event} from '../../../src/Interfaces/Event';
+import {RecipientPreferences, Recipient} from '../../../src/Recipient/Recipient';
+import {EventNotificationScheduler} from '../../../src/Event/EventNotificationScheduler';
+import {NotificationLevel} from 'queue/lib/Messages/Recipient';
 
 describe('EventNotificationScheduler', () => {
     let preferences: RecipientPreferences;
@@ -15,7 +14,7 @@ describe('EventNotificationScheduler', () => {
     let scheduler: EventNotificationScheduler;
     let today;
 
-    beforeEach(async function () {
+    beforeEach(async () => {
         chai.use(chaiAsPromised);
         chai.use(sinonChai);
 
@@ -27,12 +26,12 @@ describe('EventNotificationScheduler', () => {
 
     it('should schedule event for recipient with default preferences', async () => {
         // given
-        const event = <Event>{
+        const event = {
             id: 'i1uj4-n1h24-cbm19',
             eventType: 'lunch-offer',
             readyTime: today.set('hour', 9).toDate(),
             expirationTime: today.set('hour', 18).toDate(),
-        };
+        } as Event;
 
         recipient = new Recipient('recipient#2', 'Yui', [], []);
 
@@ -54,12 +53,12 @@ describe('EventNotificationScheduler', () => {
 
     it('should omit early expiration event', async () => {
         // given
-        const event = <Event>{
+        const event = {
             id: 'i1uj4-n1h24-cbm19',
             eventType: 'lunch-offer',
             readyTime: today.set('hour', 9).toDate(),
             expirationTime: today.set('hour', 11).toDate(),
-        };
+        } as Event;
 
         // when
         const notifications = scheduler.schedule(recipient, [event], today.toDate());
@@ -68,15 +67,14 @@ describe('EventNotificationScheduler', () => {
         expect(notifications).to.be.lengthOf(0);
     });
 
-
     it('should omit late ready event', async () => {
         // given
-        const event = <Event>{
+        const event = {
             id: 'i1uj4-n1h24-cbm19',
             eventType: 'lunch-offer',
             readyTime: today.set('hour', 18).toDate(),
             expirationTime: today.set('hour', 23).toDate(),
-        };
+        } as Event;
 
         // when
         const notifications = scheduler.schedule(recipient, [event], today.toDate());
@@ -87,7 +85,7 @@ describe('EventNotificationScheduler', () => {
 
     it('should schedule event on recipient preferred hour', async () => {
         // given
-        const event = <Event>{
+        const event = {
             id: 'i1uj4-n1h24-cbm19',
             eventType: 'lunch-offer',
             readyTime: today.set('hour', 10).toDate(),
@@ -95,7 +93,7 @@ describe('EventNotificationScheduler', () => {
                 .set('hour', 16)
                 .set('minute', 0)
                 .toDate(),
-        };
+        } as Event;
 
         // when
         const notifications = scheduler.schedule(recipient, [event], today.toDate());
@@ -110,13 +108,13 @@ describe('EventNotificationScheduler', () => {
                 .set('minute', 0)
                 .set('second', 0)
                 .toDate(),
-            expirationTime: event.expirationTime
+            expirationTime: event.expirationTime,
         });
     });
 
     it('should schedule event after recipient preferred hour', async () => {
         // given
-        const event = <Event>{
+        const event = {
             id: 'i1uj4-n1h24-cbm19',
             eventType: 'lunch-offer',
             readyTime: today.set('hour', 13).toDate(),
@@ -124,7 +122,7 @@ describe('EventNotificationScheduler', () => {
                 .set('hour', 16)
                 .set('minute', 0)
                 .toDate(),
-        };
+        } as Event;
 
         // when
         const notifications = scheduler.schedule(recipient, [event], today.toDate());
@@ -135,13 +133,13 @@ describe('EventNotificationScheduler', () => {
             event,
             recipient,
             readyTime: event.readyTime,
-            expirationTime: event.expirationTime
-        })
+            expirationTime: event.expirationTime,
+        });
     });
 
     it('should schedule many notifications', async () => {
         // given
-        const event1 = <Event>{
+        const event1 = {
             id: 'i1uj4-n1h24-cbm19',
             eventType: 'lunch-offer',
             readyTime: today.set('hour', 11).toDate(),
@@ -149,8 +147,8 @@ describe('EventNotificationScheduler', () => {
                 .set('hour', 15)
                 .set('minute', 0)
                 .toDate(),
-        };
-        const event2 = <Event>{
+        } as Event;
+        const event2 = {
             id: 'lafqlkmq-akjwnfkj',
             eventType: 'lunch-offer',
             readyTime: today.set('hour', 10).toDate(),
@@ -158,7 +156,7 @@ describe('EventNotificationScheduler', () => {
                 .set('hour', 20)
                 .set('minute', 0)
                 .toDate(),
-        };
+        } as Event;
 
         // when
         const notifications = scheduler.schedule(recipient, [event1, event2], today.toDate());

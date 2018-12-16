@@ -1,4 +1,4 @@
-import {PushNotification} from "../Entity/PushNotification";
+import {PushNotification} from '../Entity/PushNotification';
 
 export enum PushNotificationStatus {
     SCHEDULED = 0,
@@ -8,11 +8,10 @@ export enum PushNotificationStatus {
     UNKNOWN,
 }
 
-
 export class PushNotificationReceipt {
 
     constructor(public notification: PushNotification,
                 public fetchedSuccessfully: boolean = true,
                 public status?: PushNotificationStatus,
-                public data?: Object) {}
+                public data?: object) {}
 }

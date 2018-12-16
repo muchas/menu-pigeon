@@ -1,7 +1,6 @@
-import {Consumer, Job} from "queue";
-import {TopicFollow} from "queue/lib/Messages/TopicFollow";
-import {RecipientRepository} from "./RecipientRepository";
-
+import {Consumer, Job} from 'queue';
+import {TopicFollow} from 'queue/lib/Messages/TopicFollow';
+import {RecipientRepository} from './RecipientRepository';
 
 export class TopicFollowConsumer implements Consumer {
 

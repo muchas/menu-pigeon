@@ -1,19 +1,16 @@
-import {RecipientDevice} from "./RecipientDevice";
-import {Event} from "../Interfaces/Event";
-import {NotificationLevel, NotificationPreferences} from "queue/lib/Messages/Recipient";
-
-
+import {RecipientDevice} from './RecipientDevice';
+import {Event} from '../Interfaces/Event';
+import {NotificationLevel, NotificationPreferences} from 'queue/lib/Messages/Recipient';
 
 export class RecipientPreferences implements NotificationPreferences {
 
-    public readonly latestHour = 17;
-    public readonly latestMinute = 0;
+    public readonly latestHour: number = 17;
+    public readonly latestMinute: number = 0;
 
     constructor(public earliestHour: number,
                 public earliestMinute: number,
                 public level: NotificationLevel) {}
 }
-
 
 export class Recipient {
 

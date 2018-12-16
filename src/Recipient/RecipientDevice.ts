@@ -1,5 +1,4 @@
-import {Device} from "queue/lib/Messages/Recipient";
-
+import {Device} from 'queue/lib/Messages/Recipient';
 
 export class RecipientDevice implements Device {
 

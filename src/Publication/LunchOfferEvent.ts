@@ -1,6 +1,5 @@
-import {Event} from "../Interfaces/Event";
-import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
-
+import {Event} from '../Interfaces/Event';
+import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
 
 export class LunchOfferEvent implements Event {
 

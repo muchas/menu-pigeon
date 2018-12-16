@@ -1,8 +1,7 @@
-import {Consumer, Job} from "queue";
-import {EventRepository} from "../Event/EventRepository";
-import {LunchOfferEventFactory} from "./LunchOfferEventFactory";
-import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
-
+import {Consumer, Job} from 'queue';
+import {EventRepository} from '../Event/EventRepository';
+import {LunchOfferEventFactory} from './LunchOfferEventFactory';
+import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
 
 export class PersistedPublicationConsumer implements Consumer {
     private factory: LunchOfferEventFactory;

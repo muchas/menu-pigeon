@@ -1,24 +1,25 @@
 import * as env from 'node-env-file';
-import "reflect-metadata";
-import {createConnection} from "typeorm";
-import {Consumer, MessageGateCollection, Queue, QueueConnection, SingleConsumer} from "queue";
-import {setupLogging} from "./logging";
-import Config from "./Config";
-import {PersistedPublicationConsumer} from "./Publication/PersistedPublicationConsumer";
-import {RecipientDeletedConsumer} from "./Recipient/RecipientDeletedConsumer";
-import {RecipientUpsertConsumer} from "./Recipient/RecipientUpsertConsumer";
-import {TopicFollowConsumer} from "./Recipient/TopicFollowConsumer";
-import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
-import {RecipientUpsert} from "queue/lib/Messages/RecipientUpsert";
-import {RecipientDeleted} from "queue/lib/Messages/RecipientDeleted";
-import {TopicFollow} from "queue/lib/Messages/TopicFollow";
-import {EventRepository} from "./Event/EventRepository";
-import {RecipientRepository} from "./Recipient/RecipientRepository";
-import {PushNotifier} from "./PushNotification/PushNotifier";
-import {PushNotificationSender} from "./PushNotification/PushNotificationSender";
-import {ExpoTransport} from "./PushNotification/ExpoTransport";
-import Expo from "expo-server-sdk";
-import {PushNotificationRepository} from "./PushNotification/PushNotificationRepository";
+import 'reflect-metadata';
+import {createConnection} from 'typeorm';
+import {Consumer, MessageGateCollection, Queue, QueueConnection, SingleConsumer} from 'queue';
+import {setupLogging} from './logging';
+import Config from './Config';
+import {PersistedPublicationConsumer} from './Publication/PersistedPublicationConsumer';
+import {RecipientDeletedConsumer} from './Recipient/RecipientDeletedConsumer';
+import {RecipientUpsertConsumer} from './Recipient/RecipientUpsertConsumer';
+import {TopicFollowConsumer} from './Recipient/TopicFollowConsumer';
+import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
+import {RecipientUpsert} from 'queue/lib/Messages/RecipientUpsert';
+import {RecipientDeleted} from 'queue/lib/Messages/RecipientDeleted';
+import {TopicFollow} from 'queue/lib/Messages/TopicFollow';
+import {EventRepository} from './Event/EventRepository';
+import {RecipientRepository} from './Recipient/RecipientRepository';
+import {PushNotifier} from './PushNotification/PushNotifier';
+import {PushNotificationSender} from './PushNotification/PushNotificationSender';
+import {ExpoTransport} from './PushNotification/ExpoTransport';
+import Expo from 'expo-server-sdk';
+import {PushNotificationRepository} from './PushNotification/PushNotificationRepository';
+import * as winston from 'winston';
 
 env(__dirname + '/../.env');
 
@@ -66,11 +67,11 @@ createConnection().then(async connection => {
     const recipientDeletedConsumer = new SingleConsumer(new RecipientDeletedConsumer(recipientRepository));
     const topicFollowConsumer = new SingleConsumer(new TopicFollowConsumer(recipientRepository));
 
-    await queue.consume(`${config.get('APP_NAME').default}`, new Map<Function, Consumer>([
+    await queue.consume(`${config.get('APP_NAME').default}`, new Map<any, Consumer>([
         [PersistedPublication, persistedPublicationConsumer],
         [RecipientUpsert, recipientUpsertConsumer],
         [RecipientDeleted, recipientDeletedConsumer],
-        [TopicFollow, topicFollowConsumer]
+        [TopicFollow, topicFollowConsumer],
     ]));
 
-}).catch(error => console.log(error));
+}).catch(error => winston.error(error));

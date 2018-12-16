@@ -1,9 +1,8 @@
-import {Consumer, Job} from "queue";
-import {RecipientUpsert} from "queue/lib/Messages/RecipientUpsert";
-import {RecipientRepository} from "./RecipientRepository";
-import {Recipient, RecipientPreferences} from "./Recipient";
-import {RecipientDevice} from "./RecipientDevice";
-
+import {Consumer, Job} from 'queue';
+import {RecipientUpsert} from 'queue/lib/Messages/RecipientUpsert';
+import {RecipientRepository} from './RecipientRepository';
+import {Recipient, RecipientPreferences} from './Recipient';
+import {RecipientDevice} from './RecipientDevice';
 
 export class RecipientUpsertConsumer implements Consumer {
 
@@ -18,9 +17,9 @@ export class RecipientUpsertConsumer implements Consumer {
             preferences.earliestHour, preferences.earliestMinute, preferences.level
         );
         const recipient = new Recipient(
-            id, name, [], recipientDevices, recipientPreferences,
+            id, name, [], recipientDevices, recipientPreferences
         );
 
-        await this.recipientRepository.upsert(recipient)
+        await this.recipientRepository.upsert(recipient);
     }
 }

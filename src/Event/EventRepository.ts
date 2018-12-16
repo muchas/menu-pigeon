@@ -1,5 +1,4 @@
-import {Event} from "../Interfaces/Event";
-
+import {Event} from '../Interfaces/Event';
 
 export class EventRepository {
     private events: Event[];
@@ -18,6 +17,5 @@ export class EventRepository {
             (event) => event.readyTime <= time && event.expirationTime >= time
         );
     }
-
 
 }

@@ -1,19 +1,19 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import * as moment from 'moment';
-import {Event} from "./Interfaces/Event";
-import {EventRepository} from "./Event/EventRepository";
-import {LunchOfferEvent} from "./Publication/LunchOfferEvent";
-import {Recipient} from "./Recipient/Recipient";
-import {PushNotificationSender} from "./PushNotification/PushNotificationSender";
-import {ExpoTransport} from "./PushNotification/ExpoTransport";
-import {PushNotifier} from "./PushNotification/PushNotifier";
-import {createConnection} from "typeorm";
-import {RecipientRepository} from "./Recipient/RecipientRepository";
-import Expo from "expo-server-sdk";
-import {PushNotificationRepository} from "./PushNotification/PushNotificationRepository";
-import {RecipientDevice} from "./Recipient/RecipientDevice";
-import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
-
+import {Event} from './Interfaces/Event';
+import {EventRepository} from './Event/EventRepository';
+import {LunchOfferEvent} from './Publication/LunchOfferEvent';
+import {Recipient} from './Recipient/Recipient';
+import {PushNotificationSender} from './PushNotification/PushNotificationSender';
+import {ExpoTransport} from './PushNotification/ExpoTransport';
+import {PushNotifier} from './PushNotification/PushNotifier';
+import {createConnection} from 'typeorm';
+import {RecipientRepository} from './Recipient/RecipientRepository';
+import Expo from 'expo-server-sdk';
+import {PushNotificationRepository} from './PushNotification/PushNotificationRepository';
+import {RecipientDevice} from './Recipient/RecipientDevice';
+import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
+import * as winston from 'winston';
 
 createConnection().then(async connection => {
     let event1: Event;
@@ -32,10 +32,18 @@ createConnection().then(async connection => {
     today = moment();
     const morning = today.toDate();
 
-    publication1 = new PersistedPublication(1, '1', 'Bococa Bistro', [], morning);
-    publication2 = new PersistedPublication(2, '2', 'I Love Coffee Kawiarnia', [], morning);
-    publication3 = new PersistedPublication(3, '3', 'Lunch Bar Majeranek', [], morning);
-    publication4 = new PersistedPublication(4, '4', 'Bistro Maro', [], morning);
+    publication1 = new PersistedPublication(
+        1, '1', 'Bococa Bistro', [], morning
+    );
+    publication2 = new PersistedPublication(
+        2, '2', 'I Love Coffee Kawiarnia', [], morning
+    );
+    publication3 = new PersistedPublication(
+        3, '3', 'Lunch Bar Majeranek', [], morning
+    );
+    publication4 = new PersistedPublication(
+        4, '4', 'Bistro Maro', [], morning
+    );
 
     event1 = new LunchOfferEvent('e#1', morning, morning, ['business-1'], publication1);
     event2 = new LunchOfferEvent('e#2', morning, morning, ['business-2'], publication2);
@@ -47,13 +55,23 @@ createConnection().then(async connection => {
     eventRepository = new EventRepository(events);
 
     const device3 = new RecipientDevice('ExponentPushToken[EQuFAcMoN2eE64nHElSquf]', morning);
-    const recipient1 = new Recipient('r#1', 'Iza', ['business-2', 'business-3', 'business-4'], [device3]);
+    const recipient1 = new Recipient(
+        'r#1',
+        'Iza',
+        ['business-2', 'business-3', 'business-4'],
+        [device3]
+    );
 
     const device2 = new RecipientDevice('ExponentPushToken[dtdyV1PhS9NpKWze4p29VE]', morning);
     const recipient2 = new Recipient('r#2', 'Michal', ['business-3'], [device2]);
 
     const device1 = new RecipientDevice('ExponentPushToken[tLEWtTPeOvkhYxrVxIvE7q]', morning);
-    const recipient3 = new Recipient('r#3', 'Sławek', ['business-1', 'business-2', 'business-3', 'business-4'], [device1]);
+    const recipient3 = new Recipient(
+        'r#3',
+        'Sławek',
+        ['business-1', 'business-2', 'business-3', 'business-4'],
+        [device1]
+    );
 
     const recipients = [recipient1, recipient2, recipient3];
     const recipientRepository = new RecipientRepository(recipients);
@@ -68,4 +86,4 @@ createConnection().then(async connection => {
 
     await sender.sendReady();
 
-}).catch(error => console.log(error));
+}).catch(error => winston.error(error));

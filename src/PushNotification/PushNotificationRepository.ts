@@ -1,9 +1,8 @@
-import {PushNotification} from "../Entity/PushNotification";
-import {PushNotificationTicket} from "./PushNotificationTicket";
-import {PushNotificationReceipt, PushNotificationStatus} from "./PushNotificationReceipt";
-import {Message} from "../Entity/Message";
-import {Connection, Repository} from "typeorm";
-
+import {PushNotification} from '../Entity/PushNotification';
+import {PushNotificationTicket} from './PushNotificationTicket';
+import {PushNotificationReceipt, PushNotificationStatus} from './PushNotificationReceipt';
+import {Message} from '../Entity/Message';
+import {Connection, Repository} from 'typeorm';
 
 export class PushNotificationRepository {
     private connection: Connection;
@@ -31,17 +30,17 @@ export class PushNotificationRepository {
             where: {
                 status: PushNotificationStatus.SENT,
             },
-            relations: ["message"],
+            relations: ['message'],
         });
     }
 
     public async findReadyToSend(): Promise<PushNotification[]> {
         return await this.notificationRepository
-            .createQueryBuilder("notification")
-            .innerJoinAndSelect("notification.message", "message")
-            .where("notification.status = :status", {status: PushNotificationStatus.SCHEDULED})
-            .andWhere("notification.sentAt is NULL")
-            .andWhere("message.expirationTime <= NOW()")
+            .createQueryBuilder('notification')
+            .innerJoinAndSelect('notification.message', 'message')
+            .where('notification.status = :status', {status: PushNotificationStatus.SCHEDULED})
+            .andWhere('notification.sentAt is NULL')
+            .andWhere('message.expirationTime <= NOW()')
             .getMany();
     }
 
@@ -64,4 +63,3 @@ export class PushNotificationRepository {
         }
     }
 }
-

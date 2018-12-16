@@ -1,9 +1,8 @@
-import {PushNotificationTransport} from "../Interfaces/PushNotificationTransport";
-import {PushNotificationRepository} from "./PushNotificationRepository";
-import {Message} from "../Entity/Message";
-import {Recipient} from "../Recipient/Recipient";
-import {PushNotification} from "../Entity/PushNotification";
-
+import {PushNotificationTransport} from '../Interfaces/PushNotificationTransport';
+import {PushNotificationRepository} from './PushNotificationRepository';
+import {Message} from '../Entity/Message';
+import {Recipient} from '../Recipient/Recipient';
+import {PushNotification} from '../Entity/PushNotification';
 
 export class PushNotificationSender {
 
@@ -35,4 +34,3 @@ export class PushNotificationSender {
         }
     }
 }
-

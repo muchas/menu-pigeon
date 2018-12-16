@@ -1,10 +1,9 @@
-import {MessageComposer} from "../Interfaces/MessageComposer";
-import {Recipient} from "../Recipient/Recipient";
-import {Message, MessagePriority} from "../Entity/Message";
-import {LunchOfferEvent} from "./LunchOfferEvent";
-import {min} from "moment";
+import {MessageComposer} from '../Interfaces/MessageComposer';
+import {Recipient} from '../Recipient/Recipient';
+import {Message, MessagePriority} from '../Entity/Message';
+import {LunchOfferEvent} from './LunchOfferEvent';
+import {min} from 'moment';
 import * as moment from 'moment';
-
 
 export class LunchOfferMessageComposer implements MessageComposer {
 
@@ -12,15 +11,17 @@ export class LunchOfferMessageComposer implements MessageComposer {
         if (events.length <= 0) {
             return [];
         }
-        if (events.length == 1) {
+        if (events.length === 1) {
             const event = events[0];
             return [
                 this.createMessage(
                     recipient.id,
                     `Czas na lunch`,
-                    `Hej ${recipient.name}, ${event.businessName} opublikował nową ofertę. Kliknij, aby sprawdzić szczegóły.`,
+                    `Hej ${recipient.name}, ${event.businessName} opublikował nową ofertę.
+                    Kliknij, aby sprawdzić szczegóły.`,
                     'high',
-                    event.expirationTime)
+                    event.expirationTime
+                ),
             ];
         }
 
@@ -33,8 +34,8 @@ export class LunchOfferMessageComposer implements MessageComposer {
             `Hej ${recipient.name}, sprawdź dzisiejszy lunch!`,
             `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`,
             'high',
-            minExpirationTime)
-        ]
+            minExpirationTime),
+        ];
     }
 
     private createMessage(recipientId: string,
@@ -49,6 +50,6 @@ export class LunchOfferMessageComposer implements MessageComposer {
         message.body = body;
         message.priority = priority;
         message.expirationTime = expirationTime;
-        return message
+        return message;
     }
 }

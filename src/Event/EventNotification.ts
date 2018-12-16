@@ -1,5 +1,5 @@
-import {Event} from "../Interfaces/Event";
-import {Recipient} from "../Recipient/Recipient";
+import {Event} from '../Interfaces/Event';
+import {Recipient} from '../Recipient/Recipient';
 
 export class EventNotification {
 

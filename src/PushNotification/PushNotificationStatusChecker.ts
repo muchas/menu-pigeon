@@ -1,6 +1,5 @@
-import {PushNotificationRepository} from "./PushNotificationRepository";
-import {PushNotificationTransport} from "../Interfaces/PushNotificationTransport";
-
+import {PushNotificationRepository} from './PushNotificationRepository';
+import {PushNotificationTransport} from '../Interfaces/PushNotificationTransport';
 
 export class PushNotificationStatusChecker {
     private transport: PushNotificationTransport;

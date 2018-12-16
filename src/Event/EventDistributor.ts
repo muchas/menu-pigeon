@@ -1,8 +1,7 @@
-import {Event} from "../Interfaces/Event";
-import {Recipient} from "../Recipient/Recipient";
-import {RecipientTargetingPolicy} from "../Interfaces/RecipientTargetingPolicy";
-import {FollowedTopicsPolicy} from "./TargetingPolicies/FollowedTopicsPolicy";
-
+import {Event} from '../Interfaces/Event';
+import {Recipient} from '../Recipient/Recipient';
+import {RecipientTargetingPolicy} from '../Interfaces/RecipientTargetingPolicy';
+import {FollowedTopicsPolicy} from './TargetingPolicies/FollowedTopicsPolicy';
 
 /**
  * Responsibility: targeting recipients
@@ -13,7 +12,7 @@ import {FollowedTopicsPolicy} from "./TargetingPolicies/FollowedTopicsPolicy";
 export class EventDistributor {
 
     private readonly targetingPolicies: RecipientTargetingPolicy[] = [
-        new FollowedTopicsPolicy()
+        new FollowedTopicsPolicy(),
     ];
 
     public filterRelevantFor(recipient: Recipient, events: Event[]): Event[] {

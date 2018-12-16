@@ -1,15 +1,14 @@
-import {RecipientRepository} from "../Recipient/RecipientRepository";
-import {EventRepository} from "../Event/EventRepository";
-import {EventDistributor} from "../Event/EventDistributor";
-import {Recipient} from "../Recipient/Recipient";
-import {Message} from "../Entity/Message";
-import {Event} from "../Interfaces/Event";
-import {PushNotificationSender} from "./PushNotificationSender";
-import {LunchOfferMessageComposer} from "../Publication/LunchOfferMessageComposer";
-import {EventNotification} from "../Event/EventNotification";
-import {EventNotificationScheduler} from "../Event/EventNotificationScheduler";
-import {LunchOfferEvent} from "../Publication/LunchOfferEvent";
-
+import {RecipientRepository} from '../Recipient/RecipientRepository';
+import {EventRepository} from '../Event/EventRepository';
+import {EventDistributor} from '../Event/EventDistributor';
+import {Recipient} from '../Recipient/Recipient';
+import {Message} from '../Entity/Message';
+import {Event} from '../Interfaces/Event';
+import {PushNotificationSender} from './PushNotificationSender';
+import {LunchOfferMessageComposer} from '../Publication/LunchOfferMessageComposer';
+import {EventNotification} from '../Event/EventNotification';
+import {EventNotificationScheduler} from '../Event/EventNotificationScheduler';
+import {LunchOfferEvent} from '../Publication/LunchOfferEvent';
 
 /**
  * Responsibility:
@@ -30,14 +29,12 @@ export class PushNotifier {
     }
 
     public async notifyAll(currentTime: Date) {
-        console.log('notifyAll ' + currentTime);
-
         const events = await this.eventRepository.findRelevant(currentTime);
         const recipients = await this.recipientRepository.findAll();
 
         const messages = recipients
             .map((recipient) => this.makeMessages(recipient, events, currentTime))
-            .reduce((previous, messages) => previous.concat(messages), []);
+            .reduce((previous, current) => previous.concat(current), []);
 
         await this.pushNotificationSender.schedule(recipients, messages);
         await this.markNotified(recipients, events, messages);
@@ -77,13 +74,11 @@ export class PushNotifier {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
         const eventsById = new Map(events.map((e): [string, Event] => [e.id, e]));
 
-        let recipient, event;
-
         for (const message of messages) {
-            recipient = recipientsById.get(message.recipientId);
+            const recipient = recipientsById.get(message.recipientId);
 
             for (const eventId of message.eventIds) {
-                event = eventsById.get(eventId);
+                const event = eventsById.get(eventId);
                 recipient.markNotifiedAbout(event);
             }
         }

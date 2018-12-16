@@ -1,4 +1,4 @@
-import {Recipient} from "./Recipient";
+import {Recipient} from './Recipient';
 
 export class RecipientRepository {
     private recipients: Recipient[];

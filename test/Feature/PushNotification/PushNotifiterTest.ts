@@ -4,15 +4,14 @@ import * as sinon from 'sinon';
 import * as moment from 'moment';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as sinonChai from 'sinon-chai';
-import {Recipient} from "../../../src/Recipient/Recipient";
-import {PushNotifier} from "../../../src/PushNotification/PushNotifier";
-import {RecipientRepository} from "../../../src/Recipient/RecipientRepository";
-import {EventRepository} from "../../../src/Event/EventRepository";
-import {PushNotificationSender} from "../../../src/PushNotification/PushNotificationSender";
-import {LunchOfferEvent} from "../../../src/Publication/LunchOfferEvent";
-import {Event} from "../../../src/Interfaces/Event";
-import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
-
+import {Recipient} from '../../../src/Recipient/Recipient';
+import {PushNotifier} from '../../../src/PushNotification/PushNotifier';
+import {RecipientRepository} from '../../../src/Recipient/RecipientRepository';
+import {EventRepository} from '../../../src/Event/EventRepository';
+import {PushNotificationSender} from '../../../src/PushNotification/PushNotificationSender';
+import {LunchOfferEvent} from '../../../src/Publication/LunchOfferEvent';
+import {Event} from '../../../src/Interfaces/Event';
+import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
 
 describe('PushNotifier', () => {
 
@@ -29,7 +28,7 @@ describe('PushNotifier', () => {
     let publication3: PersistedPublication;
     let publication4: PersistedPublication;
 
-    beforeEach(async function () {
+    beforeEach(async () => {
         chai.use(chaiAsPromised);
         chai.use(sinonChai);
 

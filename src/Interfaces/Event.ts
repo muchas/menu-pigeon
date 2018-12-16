@@ -1,4 +1,4 @@
-import {Location} from "./Location";
+import {Location} from './Location';
 
 export interface Event {
     id: string;
@@ -6,6 +6,6 @@ export interface Event {
     topics: string[];
     readyTime: Date;
     expirationTime: Date;
-    location?: Location,
+    location?: Location;
     content?: any;
 }

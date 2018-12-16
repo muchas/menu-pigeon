@@ -1,9 +1,8 @@
 import * as moment from 'moment';
-import {LunchOfferEvent} from "./LunchOfferEvent";
-import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
-import {Moment} from "moment";
-import * as uuid from "uuid";
-
+import {LunchOfferEvent} from './LunchOfferEvent';
+import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
+import {Moment} from 'moment';
+import * as uuid from 'uuid';
 
 export class LunchOfferEventFactory {
 
@@ -28,6 +27,6 @@ export class LunchOfferEventFactory {
     }
 
     private getPublicationTopics(publication: PersistedPublication): string[] {
-        return [`business-${publication.businessName}`]
+        return [`business-${publication.businessName}`];
     }
 }

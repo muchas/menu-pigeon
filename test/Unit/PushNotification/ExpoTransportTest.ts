@@ -2,15 +2,14 @@ import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as sinonChai from 'sinon-chai';
-import {expect} from "chai";
-import {ExpoTransport} from "../../../src/PushNotification/ExpoTransport";
-import {PushNotification} from "../../../src/Entity/PushNotification";
-import Expo from "expo-server-sdk";
-import {Message} from "../../../src/Entity/Message";
-import {SinonStubbedInstance} from "sinon";
-import {toArray} from "../../../src/utils";
-import {PushNotificationStatus} from "../../../src/PushNotification/PushNotificationReceipt";
-
+import {expect} from 'chai';
+import {ExpoTransport} from '../../../src/PushNotification/ExpoTransport';
+import {PushNotification} from '../../../src/Entity/PushNotification';
+import Expo from 'expo-server-sdk';
+import {Message} from '../../../src/Entity/Message';
+import {SinonStubbedInstance} from 'sinon';
+import {toArray} from '../../../src/utils';
+import {PushNotificationStatus} from '../../../src/PushNotification/PushNotificationReceipt';
 
 const createPushNotification = (message: Message,
                                 token: string,
@@ -31,7 +30,7 @@ describe('ExpoTransport', () => {
         let message: Message;
         let pushNotification: PushNotification;
 
-        beforeEach(async function () {
+        beforeEach(async () => {
             chai.use(chaiAsPromised);
             chai.use(sinonChai);
 
@@ -58,7 +57,7 @@ describe('ExpoTransport', () => {
               to: pushNotification.pushToken,
               title: message.title,
               body: message.body,
-              priority: message.priority
+              priority: message.priority,
             };
 
             expect(expoClient.sendPushNotificationsAsync).to.have.been.calledOnceWith([expectedExpoPush]);
@@ -88,7 +87,7 @@ describe('ExpoTransport', () => {
             const receiptId = 'RECEIPT_ID';
 
             expoClient.chunkPushNotifications.returns(chunks);
-            expoClient.sendPushNotificationsAsync.returns([{id:receiptId}, {id: receiptId}]);
+            expoClient.sendPushNotificationsAsync.returns([{id: receiptId}, {id: receiptId}]);
 
             const transport = new ExpoTransport(expoClient);
 
@@ -105,13 +104,13 @@ describe('ExpoTransport', () => {
                 to: notification1.pushToken,
                 title: message.title,
                 body: message.body,
-                priority: message.priority
+                priority: message.priority,
             };
             const expectedPush2 = {
                 to: notification2.pushToken,
                 title: message.title,
                 body: message.body,
-                priority: message.priority
+                priority: message.priority,
             };
 
             expect(expoClient.chunkPushNotifications).to.have.been.calledWith([expectedPush1, expectedPush2]);
@@ -127,7 +126,7 @@ describe('ExpoTransport', () => {
         let message: Message;
         let pushNotification: PushNotification;
 
-        beforeEach(async function () {
+        beforeEach(async () => {
             chai.use(chaiAsPromised);
             chai.use(sinonChai);
 
@@ -149,7 +148,7 @@ describe('ExpoTransport', () => {
             const returnedReceipts = [
                 {status: 'ok', details: {time: 'xxx'}},
                 {status: 'error', details: {error: 'yyy'}},
-                {status: 'ok', details: {time: 'zzz'}}
+                {status: 'ok', details: {time: 'zzz'}},
             ];
             expoClient.chunkPushNotificationReceiptIds.returns(chunks);
             expoClient.getPushNotificationReceiptsAsync.onCall(0).returns(returnedReceipts.slice(0, 2));
@@ -166,13 +165,19 @@ describe('ExpoTransport', () => {
             const receipts = await toArray(transport.confirmStatuses(notifications));
 
             // then
-            expect(expoClient.chunkPushNotificationReceiptIds).to.have.been.calledOnceWith(['receipt#1', 'receipt#2', 'receipt#3']);
-            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(['receipt#1', 'receipt#2']);
+            expect(expoClient.chunkPushNotificationReceiptIds).to.have.been.calledOnceWith(
+                ['receipt#1', 'receipt#2', 'receipt#3']
+            );
+            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(
+                ['receipt#1', 'receipt#2']
+            );
             expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(['receipt#3']);
             expect(receipts).to.be.lengthOf(3);
             expect(receipts.map(r => r.notification)).to.deep.equal(notifications);
             expect(receipts.map(r => r.fetchedSuccessfully)).to.deep.equal([true, true, true]);
-            expect(receipts.map(r => r.status)).to.deep.equal([PushNotificationStatus.DELIVERED, PushNotificationStatus.ERROR, PushNotificationStatus.DELIVERED]);
+            expect(receipts.map(r => r.status)).to.deep.equal(
+                [PushNotificationStatus.DELIVERED, PushNotificationStatus.ERROR, PushNotificationStatus.DELIVERED]
+            );
             expect(receipts.map(r => r.data)).to.deep.equal(returnedReceipts.map(r => r.details));
         });
 

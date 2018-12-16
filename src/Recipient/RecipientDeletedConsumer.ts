@@ -1,7 +1,6 @@
-import {Consumer, Job} from "queue";
-import {RecipientRepository} from "./RecipientRepository";
-import {RecipientDeleted} from "queue/lib/Messages/RecipientDeleted";
-
+import {Consumer, Job} from 'queue';
+import {RecipientRepository} from './RecipientRepository';
+import {RecipientDeleted} from 'queue/lib/Messages/RecipientDeleted';
 
 export class RecipientDeletedConsumer implements Consumer {
 
