@@ -11,10 +11,9 @@ import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
 import {RecipientUpsert} from 'queue/lib/Messages/RecipientUpsert';
 import {RecipientDeleted} from 'queue/lib/Messages/RecipientDeleted';
 import {TopicFollow} from 'queue/lib/Messages/TopicFollow';
-import {PushNotifier} from './PushNotification/PushNotifier';
 import * as winston from 'winston';
-import {Clock} from './Clock';
 import {createContainer} from './inversify.config';
+import {NotifierClock} from "./PushNotification/NotifierClock";
 
 const container = createContainer();
 const config = container.get<Config>(Config);
@@ -26,8 +25,7 @@ createConnection()
         container.bind(Connection).toConstantValue(connection);
 
         const queue = container.get<Queue>(Queue);
-        const notifier = container.get<PushNotifier>(PushNotifier);
-        const notifierClock = new Clock(() => notifier.notifyAll(new Date()), 10 * 1000);
+        const notifierClock = container.get<NotifierClock>(NotifierClock);
 
         const persistedPublicationConsumer = new SingleConsumer(
             container.get<PersistedPublicationConsumer>(PersistedPublicationConsumer)
@@ -42,7 +40,7 @@ createConnection()
             container.get<TopicFollowConsumer>(TopicFollowConsumer)
         );
 
-        notifierClock.tick();
+        notifierClock.start();
 
         await queue.consume(
             `${config.get('APP_NAME')}.default`,

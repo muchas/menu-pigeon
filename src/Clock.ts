@@ -1,23 +1,23 @@
 import Timeout = NodeJS.Timeout;
 
-export class Clock {
+export abstract class Clock {
 
     private lastTimeout: Timeout;
+    protected period: number = 10;
 
-    constructor(private action: () => any,
-                private period: number) {}
+    public async abstract performAction();
 
     public start() {
         this.tick();
     }
 
-    public tick() {
+    public async tick() {
         if (this.lastTimeout !== undefined) {
            clearTimeout(this.lastTimeout);
            this.lastTimeout = undefined;
         }
 
-        this.action();
+        await this.performAction();
         setTimeout(() => this.tick(), this.period);
     }
 }
