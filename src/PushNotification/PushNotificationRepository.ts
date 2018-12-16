@@ -17,6 +17,7 @@ export class PushNotificationRepository {
     }
 
     public async storeMessagesToSend(messages: Message[]) {
+        // TODO: move to MessageRepository?
         await this.messageRepository.save(messages);
         const notifications = messages
             .map((message) => message.pushNotifications)
