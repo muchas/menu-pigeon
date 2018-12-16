@@ -1,19 +1,22 @@
 import 'reflect-metadata';
 import * as moment from 'moment';
-import {Event} from './Interfaces/Event';
-import {EventRepository} from './Event/EventRepository';
-import {LunchOfferEvent} from './Publication/LunchOfferEvent';
-import {Recipient} from './Recipient/Recipient';
-import {PushNotificationSender} from './PushNotification/PushNotificationSender';
-import {ExpoTransport} from './PushNotification/ExpoTransport';
-import {PushNotifier} from './PushNotification/PushNotifier';
+import {Event} from '../../src/Interfaces/Event';
+import {EventRepository} from '../../src/Event/EventRepository';
+import {LunchOfferEvent} from '../../src/Publication/LunchOfferEvent';
+import {Recipient} from '../../src/Recipient/Recipient';
+import {PushNotificationSender} from '../../src/PushNotification/PushNotificationSender';
+import {ExpoTransport} from '../../src/PushNotification/ExpoTransport';
+import {PushNotifier} from '../../src/PushNotification/PushNotifier';
 import {createConnection} from 'typeorm';
-import {RecipientRepository} from './Recipient/RecipientRepository';
+import {RecipientRepository} from '../../src/Recipient/RecipientRepository';
 import Expo from 'expo-server-sdk';
-import {PushNotificationRepository} from './PushNotification/PushNotificationRepository';
-import {RecipientDevice} from './Recipient/RecipientDevice';
+import {PushNotificationRepository} from '../../src/PushNotification/PushNotificationRepository';
+import {RecipientDevice} from '../../src/Recipient/RecipientDevice';
 import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
 import * as winston from 'winston';
+
+// TODO: make test out of it with .skip()
+// TODO: input publications / recipients with consumers
 
 createConnection().then(async connection => {
     let event1: Event;

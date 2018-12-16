@@ -9,7 +9,6 @@ export class EventRepository {
 
     public async addMany(events: Event[]) {
         this.events = this.events.concat(events);
-        // TODO: add to zookeeper
     }
 
     public async findRelevant(time: Date): Promise<Event[]> {
