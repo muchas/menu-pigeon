@@ -37,15 +37,17 @@
    "scripts": {
       "start": "ts-node src/app.ts",
       "build": "tsc",
-      "test": "nyc mocha",
-      "test-watch": "mocha --watch --watch-extensions ts",
+      "test": "mocha",
+      "watch": "mocha --watch --watch-extensions ts",
+      "coverage": "nyc mocha",
+      "junit": "MOCHA_FILE=test-results/mocha/results.xml nyc mocha --reporter mocha-junit-reporter",
       "lint": "tslint -p tsconfig.json -t stylish",
       "lint-fix": "tslint -p tsconfig.json -t stylish --fix"
    },
    "nyc": {
       "check-coverage": true,
       "statements": 50,
-      "branches": 50,
+      "branches": 46,
       "functions": 40,
       "lines": 50,
       "reporter": [
