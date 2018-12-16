@@ -1,11 +1,11 @@
-import {Clock} from '../Clock';
-import {PushNotifier} from './PushNotifier';
-import {injectable} from 'inversify';
+import { Clock } from "../Clock";
+import { PushNotifier } from "./PushNotifier";
+import { injectable } from "inversify";
 
 @injectable()
 export class NotifierClock extends Clock {
 
-    constructor(private notifier: PushNotifier) {
+    public constructor(private readonly notifier: PushNotifier) {
         super();
         this.period = 10 * 1000;
     }

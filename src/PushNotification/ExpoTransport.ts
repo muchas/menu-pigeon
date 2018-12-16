@@ -1,18 +1,18 @@
-import * as winston from 'winston';
-import {PushNotificationTransport} from '../Interfaces/PushNotificationTransport';
-import {PushNotification} from '../Entity/PushNotification';
-import Expo, {ExpoPushMessage, ExpoPushReceiptId} from 'expo-server-sdk';
-import {PushNotificationTicket} from './PushNotificationTicket';
-import {PushNotificationReceipt, PushNotificationStatus} from './PushNotificationReceipt';
-import {toArray} from '../utils';
-import {injectable} from 'inversify';
+import * as winston from "winston";
+import { PushNotificationTransport } from "../Interfaces/PushNotificationTransport";
+import { PushNotification } from "../Entity/PushNotification";
+import Expo, { ExpoPushMessage, ExpoPushReceiptId } from "expo-server-sdk";
+import { PushNotificationTicket } from "./PushNotificationTicket";
+import { PushNotificationReceipt, PushNotificationStatus } from "./PushNotificationReceipt";
+import { toArray } from "../utils";
+import { injectable } from "inversify";
 
 @injectable()
 export class ExpoTransport implements PushNotificationTransport {
 
-    private client: Expo;
+    private readonly client: Expo;
 
-    constructor(client: Expo) {
+    public constructor(client: Expo) {
         this.client = client;
     }
 
@@ -101,9 +101,9 @@ export class ExpoTransport implements PushNotificationTransport {
 
     private toInternalStatus(status: string): PushNotificationStatus {
         switch (status) {
-            case 'ok':
+            case "ok":
                 return PushNotificationStatus.DELIVERED;
-            case 'error':
+            case "error":
                 return PushNotificationStatus.ERROR;
         }
         return PushNotificationStatus.UNKNOWN;

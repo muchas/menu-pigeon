@@ -1,4 +1,4 @@
-import {Location} from './Location';
+import { Location } from "./Location";
 
 export interface Event {
     id: string;

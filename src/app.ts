@@ -1,19 +1,19 @@
-import 'reflect-metadata';
-import {Connection, createConnection} from 'typeorm';
-import {Consumer, Queue, SingleConsumer} from 'queue';
-import {setupLogging} from './logging';
-import Config from './Config';
-import {PersistedPublicationConsumer} from './Publication/PersistedPublicationConsumer';
-import {RecipientDeletedConsumer} from './Recipient/RecipientDeletedConsumer';
-import {RecipientUpsertConsumer} from './Recipient/RecipientUpsertConsumer';
-import {TopicFollowConsumer} from './Recipient/TopicFollowConsumer';
-import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
-import {RecipientUpsert} from 'queue/lib/Messages/RecipientUpsert';
-import {RecipientDeleted} from 'queue/lib/Messages/RecipientDeleted';
-import {TopicFollow} from 'queue/lib/Messages/TopicFollow';
-import * as winston from 'winston';
-import {createContainer} from './inversify.config';
-import {NotifierClock} from './PushNotification/NotifierClock';
+import "reflect-metadata";
+import { Connection, createConnection } from "typeorm";
+import { Consumer, Queue, SingleConsumer } from "queue";
+import { setupLogging } from "./logging";
+import Config from "./Config";
+import { PersistedPublicationConsumer } from "./Publication/PersistedPublicationConsumer";
+import { RecipientDeletedConsumer } from "./Recipient/RecipientDeletedConsumer";
+import { RecipientUpsertConsumer } from "./Recipient/RecipientUpsertConsumer";
+import { TopicFollowConsumer } from "./Recipient/TopicFollowConsumer";
+import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
+import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
+import { RecipientDeleted } from "queue/lib/Messages/RecipientDeleted";
+import { TopicFollow } from "queue/lib/Messages/TopicFollow";
+import * as winston from "winston";
+import { createContainer } from "./inversify.config";
+import { NotifierClock } from "./PushNotification/NotifierClock";
 
 const container = createContainer();
 const config = container.get<Config>(Config);
@@ -43,7 +43,7 @@ createConnection()
         notifierClock.start();
 
         await queue.consume(
-            `${config.get('APP_NAME')}.default`,
+            `${config.get("APP_NAME")}.default`,
             new Map<any, Consumer>([
                 [PersistedPublication, persistedPublicationConsumer],
                 [RecipientUpsert, recipientUpsertConsumer],

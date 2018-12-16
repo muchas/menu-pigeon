@@ -2,12 +2,8 @@
   "lintOptions": {
     "typeCheck": true
   },
-  "extends": "tslint:recommended",
+  "extends": "tslint:all",
   "rules": {
-    "quotemark": [
-      true,
-      "single"
-    ],
     "max-classes-per-file": false,
     "ordered-imports": false,
     "completed-docs": false,
@@ -16,6 +12,39 @@
     "arrow-parens": false,
     "radix": false,
     "interface-name": false,
+    "no-parameter-properties": false,
+    "file-name-casing": false,
+    "prefer-function-over-method": false,
+    "no-any": false,
+    "no-default-export": false,
+    "no-null-keyword": false,
+    "prefer-template": false,
+    "no-magic-numbers": false,
+    "newline-before-return": false,
+    "newline-per-chained-call": false,
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": false,
+    "no-duplicate-imports": false,
+    "no-unsafe-any": false,
+    "comment-format": {
+      "options": ["check-space"]
+    },
+    "no-require-imports": false,
+    "strict-boolean-expressions": false,
+    "match-default-export-name": false,
+    "deprecation": false,
+    "no-import-side-effect": false,
+    "await-promise": false,
+    "binary-expression-operand-order": false,
+    "no-inferrable-types": false,
+    "no-unbound-method": false,
+    "no-void-expression": false,
+    "no-use-before-declare": false,
+    "switch-default": false,
+    "restrict-plus-operands": false,
+    "no-inferred-empty-object-type": false,
+    "no-unnecessary-callback-wrapper": false,
+    "return-undefined": false,
     "variable-name": [
       true,
       "ban-keywords",
@@ -40,6 +69,11 @@
         "asyncArrow": "always"
       }
     ],
+    "member-ordering": {
+      "options": {
+        "order": "statics-first"
+      }
+    },
     "typedef": [
       true,
       "parameter",

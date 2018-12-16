@@ -1,9 +1,9 @@
-import {Recipient} from './Recipient';
-import {injectable} from 'inversify';
+import { Recipient } from "./Recipient";
+import { injectable } from "inversify";
 
 @injectable()
 export class RecipientRepository {
-    constructor(private recipients: Recipient[] = []) {
+    public constructor(private recipients: Recipient[] = []) {
     }
 
     public addMany(recipients: Recipient[]) {

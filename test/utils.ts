@@ -1,19 +1,19 @@
-import * as chai from 'chai';
-import * as winston from 'winston';
-import * as chaiAsPromised from 'chai-as-promised';
-import * as sinonChai from 'sinon-chai';
-import * as sinon from 'sinon';
-import {SinonStubbedInstance} from 'sinon';
-import {Queue} from 'queue';
-import {Container} from 'inversify';
-import {createContainer} from '../src/inversify.config';
-import {Connection, createConnection} from 'typeorm';
+import * as chai from "chai";
+import * as winston from "winston";
+import * as chaiAsPromised from "chai-as-promised";
+import * as sinonChai from "sinon-chai";
+import * as sinon from "sinon";
+import { SinonStubbedInstance } from "sinon";
+import { Queue } from "queue";
+import { Container } from "inversify";
+import { createContainer } from "../src/inversify.config";
+import { Connection, createConnection } from "typeorm";
 
 export const setup = (): Container => {
     chai.use(chaiAsPromised);
     chai.use(sinonChai);
     // @ts-ignore
-    winston.level = 'nope';
+    winston.level = "nope";
 
     return createContainer();
 };

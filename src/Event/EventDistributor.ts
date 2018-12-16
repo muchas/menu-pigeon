@@ -1,7 +1,7 @@
-import {Event} from '../Interfaces/Event';
-import {Recipient} from '../Recipient/Recipient';
-import {RecipientTargetingPolicy} from '../Interfaces/RecipientTargetingPolicy';
-import {FollowedTopicsPolicy} from './TargetingPolicies/FollowedTopicsPolicy';
+import { Event } from "../Interfaces/Event";
+import { Recipient } from "../Recipient/Recipient";
+import { RecipientTargetingPolicy } from "../Interfaces/RecipientTargetingPolicy";
+import { FollowedTopicsPolicy } from "./TargetingPolicies/FollowedTopicsPolicy";
 
 /**
  * Responsibility: targeting recipients

@@ -1,13 +1,15 @@
-import {PushNotificationTransport} from '../Interfaces/PushNotificationTransport';
-import {PushNotificationRepository} from './PushNotificationRepository';
-import {Message} from '../Entity/Message';
-import {Recipient} from '../Recipient/Recipient';
-import {PushNotification} from '../Entity/PushNotification';
+import { PushNotificationTransport } from "../Interfaces/PushNotificationTransport";
+import { PushNotificationRepository } from "./PushNotificationRepository";
+import { Message } from "../Entity/Message";
+import { Recipient } from "../Recipient/Recipient";
+import { PushNotification } from "../Entity/PushNotification";
 
 export class PushNotificationSender {
-
-    constructor(private transport: PushNotificationTransport,
-                private notificationRepository: PushNotificationRepository) {}
+    public constructor(
+        private readonly transport: PushNotificationTransport,
+        private readonly notificationRepository: PushNotificationRepository
+    ) {
+    }
 
     public async schedule(recipients: Recipient[], messages: Message[]) {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
@@ -16,10 +18,10 @@ export class PushNotificationSender {
             const recipient = recipientsById.get(message.recipientId);
 
             message.pushNotifications = recipient.pushTokens.map((token) => {
-               const notification = new PushNotification();
-               notification.pushToken = token;
-               notification.message = message;
-               return notification;
+                const notification = new PushNotification();
+                notification.pushToken = token;
+                notification.message = message;
+                return notification;
             });
         }
 

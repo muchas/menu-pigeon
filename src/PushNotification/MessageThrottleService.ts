@@ -1,15 +1,15 @@
-import {Recipient} from '../Recipient/Recipient';
-import {Message} from '../Entity/Message';
-import {LUNCH_EVENT_TYPE} from '../Publication/constants';
-import {NotificationLevel} from 'queue/lib/Messages/Recipient';
-import * as moment from 'moment';
-import {DurationInputArg2} from 'moment';
+import { Recipient } from "../Recipient/Recipient";
+import { Message } from "../Entity/Message";
+import { LUNCH_EVENT_TYPE } from "../Publication/constants";
+import { NotificationLevel } from "queue/lib/Messages/Recipient";
+import * as moment from "moment";
+import { DurationInputArg2 } from "moment";
 
 interface MessageThrottleRule {
     filter(recipient: Recipient, messages: Message[]): Message[];
 }
 
-class NeverMessageRule implements  MessageThrottleRule {
+class NeverMessageRule implements MessageThrottleRule {
     public filter(recipient: Recipient, messages: Message[]): Message[] {
         if (recipient.preferences.level === NotificationLevel.Never) {
             return [];
@@ -20,12 +20,15 @@ class NeverMessageRule implements  MessageThrottleRule {
 
 class FrequencyMessageRule implements MessageThrottleRule {
 
-    constructor(private notificationLevel: NotificationLevel,
-                private unit: DurationInputArg2) {}
+    public constructor(
+        private readonly notificationLevel: NotificationLevel,
+        private readonly unit: DurationInputArg2
+    ) {
+    }
 
     public filter(recipient: Recipient, messages: Message[]): Message[] {
         if (recipient.preferences.level === this.notificationLevel && recipient.lastNotificationTime) {
-            const weekAgo = moment().subtract('1', this.unit);
+            const weekAgo = moment().subtract("1", this.unit);
             if (recipient.lastNotificationTime <= weekAgo) {
                 return messages.length > 0 ? [messages[0]] : messages;
             } else {
@@ -55,12 +58,12 @@ class LunchMessageRule implements MessageThrottleRule {
 export class MessageThrottleService {
     private readonly rules: MessageThrottleRule[];
 
-    constructor() {
+    public constructor() {
         this.rules = [
             new NeverMessageRule(),
-            new FrequencyMessageRule(NotificationLevel.Seldom, 'week'),
-            new FrequencyMessageRule(NotificationLevel.Daily, 'day'),
-            new FrequencyMessageRule(NotificationLevel.Often, 'hour'),
+            new FrequencyMessageRule(NotificationLevel.Seldom, "week"),
+            new FrequencyMessageRule(NotificationLevel.Daily, "day"),
+            new FrequencyMessageRule(NotificationLevel.Often, "hour"),
             new LunchMessageRule(),
         ];
     }

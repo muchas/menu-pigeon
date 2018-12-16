@@ -1,7 +1,7 @@
-import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {PushNotification} from './PushNotification';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { PushNotification } from "./PushNotification";
 
-export type MessagePriority = 'default' | 'normal' | 'high';
+export type MessagePriority = "default" | "normal" | "high";
 export interface MessageData {
     eventIds?: string[];
     eventType?: string;
@@ -11,7 +11,7 @@ export interface MessageData {
 @Entity()
 export class Message {
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn("uuid")
     public id: string;
 
     @Column()
@@ -26,7 +26,7 @@ export class Message {
     @Column()
     public priority: MessagePriority;
 
-    @Column('timestamp')
+    @Column("timestamp")
     public expirationTime: Date;
 
     @CreateDateColumn()
@@ -38,23 +38,23 @@ export class Message {
     public ttl?: number;
 
     @Column({
-        type: 'json',
+        type: "json",
     })
     public data: MessageData = {};
 
     @OneToMany(type => PushNotification, notification => notification.message)
     public pushNotifications: PushNotification[];
 
-    get eventIds(): string[] {
+    public get eventIds(): string[] {
         return this.data.eventIds || [];
     }
 
-    get topics(): string[] {
+    public get topics(): string[] {
         return this.data.topics || [];
     }
 
-    get eventType(): string {
-        return this.data.eventType || '';
+    public get eventType(): string {
+        return this.data.eventType || "";
     }
 
     public setTopics(topics: string[]) {

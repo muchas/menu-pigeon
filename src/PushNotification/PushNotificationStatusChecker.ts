@@ -1,14 +1,11 @@
-import {PushNotificationRepository} from './PushNotificationRepository';
-import {PushNotificationTransport} from '../Interfaces/PushNotificationTransport';
+import { PushNotificationRepository } from "./PushNotificationRepository";
+import { PushNotificationTransport } from "../Interfaces/PushNotificationTransport";
 
 export class PushNotificationStatusChecker {
-    private transport: PushNotificationTransport;
-    private notificationRepository: PushNotificationRepository;
-
-    constructor(transport: PushNotificationTransport,
-                notificationRepository: PushNotificationRepository) {
-        this.transport = transport;
-        this.notificationRepository = notificationRepository;
+    public constructor(
+        private readonly transport: PushNotificationTransport,
+        private readonly notificationRepository: PushNotificationRepository
+    ) {
     }
 
     public async updateStatus() {
