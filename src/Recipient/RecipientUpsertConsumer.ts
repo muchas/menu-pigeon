@@ -11,7 +11,7 @@ export class RecipientUpsertConsumer implements Consumer {
                 private notifierClock: Clock) {}
 
     public async consume(job: Job<RecipientUpsert>): Promise<void> {
-        const {id, name, devices, preferences} = job.message;
+        const {id, name, devices, followedTopics, preferences} = job.message;
         const recipientDevices = devices.map(
             (device) => new RecipientDevice(device.pushToken, new Date())
         );
@@ -19,7 +19,7 @@ export class RecipientUpsertConsumer implements Consumer {
             preferences.earliestHour, preferences.earliestMinute, preferences.level
         );
         const recipient = new Recipient(
-            id, name, [], recipientDevices, recipientPreferences
+            id, name, followedTopics, recipientDevices, recipientPreferences
         );
 
         await this.recipientRepository.upsert(recipient);

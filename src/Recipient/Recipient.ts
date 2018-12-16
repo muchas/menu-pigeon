@@ -1,6 +1,8 @@
 import {RecipientDevice} from './RecipientDevice';
 import {Event} from '../Interfaces/Event';
 import {NotificationLevel, NotificationPreferences} from 'queue/lib/Messages/Recipient';
+import {max, Moment} from 'moment';
+import * as moment from 'moment';
 
 export class RecipientPreferences implements NotificationPreferences {
 
@@ -16,13 +18,17 @@ export class Recipient {
 
     public followedTopics: Set<string>;
 
-    constructor(public id: string,
-                public name: string,
-                followedTopics: string[] = [],
-                public devices: RecipientDevice[] = [],
-                public preferences?: RecipientPreferences,
-                public notifiedEventIds: Set<string> = new Set(),
-                public topicLastNotification: Map<string, Date> = new Map()) {
+    constructor(
+        public id: string,
+        public name?: string,
+        followedTopics: string[] = [],
+        public devices: RecipientDevice[] = [],
+        public preferences: RecipientPreferences = new RecipientPreferences(
+            9, 0, NotificationLevel.Daily
+        ),
+        public notifiedEventIds: Set<string> = new Set(),
+        public topicLastNotification: Map<string, Date> = new Map()
+    ) {
         this.followedTopics = new Set(followedTopics);
     }
 
@@ -30,10 +36,18 @@ export class Recipient {
         return this.devices.map((device) => device.pushToken);
     }
 
-    public markNotifiedAbout(event: Event) {
+    public get lastNotificationTime(): Moment | void {
+        const dates = Array.from(this.topicLastNotification.values());
+        if (dates.length === 0) {
+            return;
+        }
+        return max(dates.map((date) => moment(date)));
+    }
+
+    public markNotifiedAbout(event: Event, notificationTime: Date = new Date()) {
         this.notifiedEventIds.add(event.id);
         for (const topic of event.topics) {
-            this.topicLastNotification.set(topic, new Date());
+            this.topicLastNotification.set(topic, notificationTime);
         }
     }
 

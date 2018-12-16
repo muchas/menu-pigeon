@@ -4,6 +4,7 @@ import {Message, MessagePriority} from '../Entity/Message';
 import {LunchOfferEvent} from './LunchOfferEvent';
 import * as moment from 'moment';
 import {min} from 'moment';
+import {capitalize} from '../utils';
 
 export class LunchOfferMessageComposer implements MessageComposer {
 
@@ -17,7 +18,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
                 this.createMessage(
                     recipient.id,
                     `Czas na lunch`,
-                    `Hej ${recipient.name}, ${event.businessName} opublikował nową ofertę.
+                    `${this.makeGreeting(recipient)}${event.businessName} opublikował nową ofertę.
                     Kliknij, aby sprawdzić szczegóły.`,
                     'high',
                     event.expirationTime
@@ -31,11 +32,18 @@ export class LunchOfferMessageComposer implements MessageComposer {
         return [
             this.createMessage(
                 recipient.id,
-            `Hej ${recipient.name}, sprawdź dzisiejszy lunch!`,
+            `${this.makeGreeting(recipient)}sprawdź dzisiejszy lunch!`,
             `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`,
             'high',
             minExpirationTime),
         ];
+    }
+
+    private makeGreeting(recipient: Recipient): string {
+        if (recipient.name) {
+            return `Hej ${recipient.name}, `;
+        }
+        return '';
     }
 
     private createMessage(recipientId: string,
@@ -43,11 +51,10 @@ export class LunchOfferMessageComposer implements MessageComposer {
                           body: string,
                           priority: MessagePriority,
                           expirationTime: Date): Message {
-        // TODO: extract to Message constructor
         const message = new Message();
         message.recipientId = recipientId;
-        message.title = title;
-        message.body = body;
+        message.title = capitalize(title);
+        message.body = capitalize(body);
         message.priority = priority;
         message.expirationTime = expirationTime;
         return message;

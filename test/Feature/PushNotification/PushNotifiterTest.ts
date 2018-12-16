@@ -1,3 +1,4 @@
+import {setup} from '../../utils';
 import {expect} from 'chai';
 import * as sinon from 'sinon';
 import * as moment from 'moment';
@@ -9,7 +10,6 @@ import {PushNotificationSender} from '../../../src/PushNotification/PushNotifica
 import {LunchOfferEvent} from '../../../src/Publication/LunchOfferEvent';
 import {Event} from '../../../src/Interfaces/Event';
 import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
-import {setup} from '../../utils';
 import {Container} from 'inversify';
 
 describe('PushNotifier', () => {

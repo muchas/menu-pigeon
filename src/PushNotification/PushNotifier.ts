@@ -9,6 +9,7 @@ import {LunchOfferMessageComposer} from '../Publication/LunchOfferMessageCompose
 import {EventNotification} from '../Event/EventNotification';
 import {EventNotificationScheduler} from '../Event/EventNotificationScheduler';
 import {LunchOfferEvent} from '../Publication/LunchOfferEvent';
+import {MessageThrottleService} from './MessageThrottleService';
 import {injectable} from 'inversify';
 
 /**
@@ -21,6 +22,7 @@ export class PushNotifier {
     private messageComposer: LunchOfferMessageComposer;
     private scheduler: EventNotificationScheduler;
     private distributor: EventDistributor;
+    private throttleService: MessageThrottleService;
 
     constructor(private recipientRepository: RecipientRepository,
                 private eventRepository: EventRepository,
@@ -28,10 +30,10 @@ export class PushNotifier {
         this.messageComposer = new LunchOfferMessageComposer();
         this.scheduler = new EventNotificationScheduler();
         this.distributor = new EventDistributor();
+        this.throttleService = new MessageThrottleService();
     }
 
     public async notifyAll(currentTime: Date) {
-        // console.log('notify all ' + currentTime);
         const events = await this.eventRepository.findRelevant(currentTime);
         const recipients = await this.recipientRepository.findAll();
 
@@ -48,7 +50,7 @@ export class PushNotifier {
         const notifications = this.prepareNotifications(recipient, recipientEvents, currentTime);
         const messages = this.messageComposer.compose(recipient, notifications.map(n => n.event as LunchOfferEvent));
 
-        return this.applyMessagingLimits(recipient, messages);
+        return this.throttleService.throttle(recipient, messages);
     }
 
     private prepareNotifications(
@@ -62,13 +64,6 @@ export class PushNotifier {
                 notification.readyTime <= currentTime &&
                 notification.expirationTime >= currentTime &&
                 !recipient.notifiedEventIds.has(notification.event.id));
-    }
-
-    private applyMessagingLimits(recipient: Recipient, messages: Message[]): Message[] {
-        // TODO: - recipient daily messages limits
-        // TODO: - take into consideration message priorities
-        // TODO: - recipient topic last notification time
-        return messages;
     }
 
     private async markNotified(recipients: Recipient[],

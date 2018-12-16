@@ -2,6 +2,11 @@ import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} fro
 import {PushNotification} from './PushNotification';
 
 export type MessagePriority = 'default' | 'normal' | 'high';
+export interface MessageData {
+    eventIds?: string[];
+    eventType?: string;
+    topics?: string[];
+}
 
 @Entity()
 export class Message {
@@ -34,14 +39,33 @@ export class Message {
 
     @Column({
         type: 'json',
-        nullable: true,
     })
-    public data?: string;
+    public data: MessageData = {};
 
     @OneToMany(type => PushNotification, notification => notification.message)
     public pushNotifications: PushNotification[];
 
     get eventIds(): string[] {
-        return [];
+        return this.data.eventIds || [];
+    }
+
+    get topics(): string[] {
+        return this.data.topics || [];
+    }
+
+    get eventType(): string {
+        return this.data.eventType || '';
+    }
+
+    public setTopics(topics: string[]) {
+        this.data.topics = topics;
+    }
+
+    public setEventIds(eventIds: string[]) {
+        this.data.eventIds = eventIds;
+    }
+
+    public setEventType(eventType: string) {
+        this.data.eventType = eventType;
     }
 }

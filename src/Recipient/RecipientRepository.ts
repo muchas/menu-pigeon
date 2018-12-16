@@ -12,13 +12,13 @@ export class RecipientRepository {
     public async upsert(recipient: Recipient) {
         const existingRecipient = this.recipients.find((r) => r.id === recipient.id);
         if (existingRecipient !== null) {
-            recipient.followedTopics = existingRecipient.followedTopics;
             recipient.notifiedEventIds = existingRecipient.notifiedEventIds;
             recipient.topicLastNotification = existingRecipient.topicLastNotification;
+
+            await this.remove(existingRecipient.id);
         }
 
         this.recipients.push(recipient);
-        // TODO: add to zookeeper
     }
 
     public async remove(id: string)  {
