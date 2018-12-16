@@ -30,6 +30,8 @@ export class PushNotifier {
     }
 
     public async notifyAll(currentTime: Date) {
+        console.log('notifyAll ' + currentTime);
+
         const events = await this.eventRepository.findRelevant(currentTime);
         const recipients = await this.recipientRepository.findAll();
 
