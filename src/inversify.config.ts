@@ -5,6 +5,10 @@ import Config from './Config';
 import {MessageGateCollection, Queue, QueueConnection} from 'queue';
 import {RecipientRepository} from './Recipient/RecipientRepository';
 import {EventRepository} from './Event/EventRepository';
+import {PushNotificationSender} from "./PushNotification/PushNotificationSender";
+import {ExpoTransport} from "./PushNotification/ExpoTransport";
+import {PushNotificationRepository} from "./PushNotification/PushNotificationRepository";
+import Expo from "expo-server-sdk";
 
 export const createContainer = (): Container => {
     env(__dirname + '/../.env');
@@ -47,6 +51,14 @@ export const createContainer = (): Container => {
 
     container.bind(RecipientRepository).toSelf().inSingletonScope();
     container.bind(EventRepository).toSelf().inSingletonScope();
+    container.bind(PushNotificationSender).toDynamicValue(
+        () => {
+            const transport = container.get<ExpoTransport>(ExpoTransport);
+            const repository = container.get<PushNotificationRepository>(PushNotificationRepository);
+            return new PushNotificationSender(transport, repository);
+        }
+    );
+    container.bind(Expo).toDynamicValue(() => new Expo());
 
     return container;
 };

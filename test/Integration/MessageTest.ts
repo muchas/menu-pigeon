@@ -22,7 +22,7 @@ describe('Push notification integration test', () => {
         container.bind(Connection).toConstantValue(connection);
     });
 
-    it.skip('should send expo push notification', async () => {
+    it.only('should send expo push notification', async () => {
         let event1: Event;
         let event2: Event;
         let event3: Event;

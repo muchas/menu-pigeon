@@ -1,9 +1,8 @@
 import * as moment from 'moment';
 import {Event} from '../Interfaces/Event';
 import {EventNotification} from './EventNotification';
-import {Recipient, RecipientPreferences} from '../Recipient/Recipient';
+import {Recipient} from '../Recipient/Recipient';
 import {max, min} from '../utils';
-import {NotificationLevel} from 'queue/lib/Messages/Recipient';
 
 /**
  * Responsibility:
@@ -16,8 +15,7 @@ export class EventNotificationScheduler {
     public schedule(recipient: Recipient,
                     events: Event[],
                     targetDay: Date): EventNotification[] {
-        const defaultPreferences = new RecipientPreferences(9, 0, NotificationLevel.Daily);
-        const preferences = recipient.preferences || defaultPreferences;
+        const preferences = recipient.preferences;
 
         const targetDayNotificationStart = moment(targetDay)
             .set('hour', preferences.earliestHour)
