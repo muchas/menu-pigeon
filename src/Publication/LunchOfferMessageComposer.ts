@@ -4,6 +4,7 @@ import {Message, MessagePriority} from '../Entity/Message';
 import {LunchOfferEvent} from './LunchOfferEvent';
 import * as moment from 'moment';
 import {min} from 'moment';
+import {capitalize} from "../utils";
 
 export class LunchOfferMessageComposer implements MessageComposer {
 
@@ -52,14 +53,10 @@ export class LunchOfferMessageComposer implements MessageComposer {
                           expirationTime: Date): Message {
         const message = new Message();
         message.recipientId = recipientId;
-        message.title = this.capitalize(title);
-        message.body = this.capitalize(body);
+        message.title = capitalize(title);
+        message.body = capitalize(body);
         message.priority = priority;
         message.expirationTime = expirationTime;
         return message;
-    }
-
-    private capitalize(s: string): string {
-        return s.charAt(0).toUpperCase() + s.substr(1);
     }
 }
