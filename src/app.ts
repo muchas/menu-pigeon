@@ -72,7 +72,9 @@ createConnection().then(async connection => {
     const recipientDeletedConsumer = new SingleConsumer(
         new RecipientDeletedConsumer(recipientRepository)
     );
-    const topicFollowConsumer = new SingleConsumer(new TopicFollowConsumer(recipientRepository));
+    const topicFollowConsumer = new SingleConsumer(
+        new TopicFollowConsumer(recipientRepository, notifierClock)
+    );
 
     notifierClock.tick();
 
