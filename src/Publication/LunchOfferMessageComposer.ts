@@ -4,7 +4,7 @@ import {Message, MessagePriority} from '../Entity/Message';
 import {LunchOfferEvent} from './LunchOfferEvent';
 import * as moment from 'moment';
 import {min} from 'moment';
-import {capitalize} from "../utils";
+import {capitalize} from '../utils';
 
 export class LunchOfferMessageComposer implements MessageComposer {
 
