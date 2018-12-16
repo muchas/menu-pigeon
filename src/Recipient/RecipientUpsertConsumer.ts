@@ -3,10 +3,12 @@ import {RecipientUpsert} from 'queue/lib/Messages/RecipientUpsert';
 import {RecipientRepository} from './RecipientRepository';
 import {Recipient, RecipientPreferences} from './Recipient';
 import {RecipientDevice} from './RecipientDevice';
+import {Clock} from "../Clock";
 
 export class RecipientUpsertConsumer implements Consumer {
 
-    constructor(private recipientRepository: RecipientRepository) {}
+    constructor(private recipientRepository: RecipientRepository,
+                private notifierClock: Clock) {}
 
     public async consume(job: Job<RecipientUpsert>): Promise<void> {
         const {id, name, devices, preferences} = job.message;
@@ -21,5 +23,7 @@ export class RecipientUpsertConsumer implements Consumer {
         );
 
         await this.recipientRepository.upsert(recipient);
+
+        this.notifierClock.tick();
     }
 }

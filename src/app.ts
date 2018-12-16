@@ -20,6 +20,7 @@ import {ExpoTransport} from './PushNotification/ExpoTransport';
 import Expo from 'expo-server-sdk';
 import {PushNotificationRepository} from './PushNotification/PushNotificationRepository';
 import * as winston from 'winston';
+import {Clock} from "./Clock";
 
 env(__dirname + '/../.env');
 
@@ -60,12 +61,20 @@ createConnection().then(async connection => {
     const sender = new PushNotificationSender(transport, notificationRepository);
     const notifier = new PushNotifier(recipientRepository, eventRepository, sender);
 
-    setInterval(() => notifier.notifyAll(new Date()), 10 * 1000);
+    const notifierClock = new Clock(() => notifier.notifyAll(new Date()), 10 * 1000);
 
-    const persistedPublicationConsumer = new SingleConsumer(new PersistedPublicationConsumer(eventRepository));
-    const recipientUpsertConsumer = new SingleConsumer(new RecipientUpsertConsumer(recipientRepository));
-    const recipientDeletedConsumer = new SingleConsumer(new RecipientDeletedConsumer(recipientRepository));
+    const persistedPublicationConsumer = new SingleConsumer(
+        new PersistedPublicationConsumer(eventRepository, notifierClock)
+    );
+    const recipientUpsertConsumer = new SingleConsumer(
+        new RecipientUpsertConsumer(recipientRepository, notifierClock)
+    );
+    const recipientDeletedConsumer = new SingleConsumer(
+        new RecipientDeletedConsumer(recipientRepository)
+    );
     const topicFollowConsumer = new SingleConsumer(new TopicFollowConsumer(recipientRepository));
+
+    notifierClock.tick();
 
     await queue.consume(`${config.get('APP_NAME').default}`, new Map<any, Consumer>([
         [PersistedPublication, persistedPublicationConsumer],
