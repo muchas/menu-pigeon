@@ -21,7 +21,6 @@ const config = container.get<Config>(Config);
 
 setupLogging(config);
 
-
 createConnection()
     .then(async connection => {
         container.bind(Connection).toConstantValue(connection);

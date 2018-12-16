@@ -1,15 +1,13 @@
-import {Recipient} from "../Recipient/Recipient";
-import {Message} from "../Entity/Message";
-import {LUNCH_EVENT_TYPE} from "../Publication/constants";
-import {NotificationLevel} from "queue/lib/Messages/Recipient";
+import {Recipient} from '../Recipient/Recipient';
+import {Message} from '../Entity/Message';
+import {LUNCH_EVENT_TYPE} from '../Publication/constants';
+import {NotificationLevel} from 'queue/lib/Messages/Recipient';
 import * as moment from 'moment';
-import {DurationInputArg2} from "moment";
-
+import {DurationInputArg2} from 'moment';
 
 interface MessageThrottleRule {
     filter(recipient: Recipient, messages: Message[]): Message[];
 }
-
 
 class NeverMessageRule implements  MessageThrottleRule {
     public filter(recipient: Recipient, messages: Message[]): Message[] {
@@ -19,7 +17,6 @@ class NeverMessageRule implements  MessageThrottleRule {
         return messages;
     }
 }
-
 
 class FrequencyMessageRule implements MessageThrottleRule {
 
@@ -39,7 +36,6 @@ class FrequencyMessageRule implements MessageThrottleRule {
     }
 }
 
-
 class LunchMessageRule implements MessageThrottleRule {
 
     public filter(recipient: Recipient, messages: Message[]): Message[] {
@@ -52,7 +48,7 @@ class LunchMessageRule implements MessageThrottleRule {
                 lunchEncountered = true;
             }
             return true;
-        })
+        });
     }
 }
 
@@ -66,7 +62,7 @@ export class MessageThrottleService {
             new FrequencyMessageRule(NotificationLevel.Daily, 'day'),
             new FrequencyMessageRule(NotificationLevel.Often, 'hour'),
             new LunchMessageRule(),
-        ]
+        ];
     }
 
     public throttle(recipient: Recipient, messages: Message[]): Message[] {

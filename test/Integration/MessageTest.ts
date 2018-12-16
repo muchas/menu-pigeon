@@ -15,7 +15,6 @@ import {RecipientDevice} from '../../src/Recipient/RecipientDevice';
 import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
 import * as winston from 'winston';
 
-
 describe('Push notification integration test', () => {
 
     it.skip('should send expo push notification', async () => {

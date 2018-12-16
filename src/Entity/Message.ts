@@ -8,7 +8,6 @@ export interface MessageData {
     topics?: string[];
 }
 
-
 @Entity()
 export class Message {
 

@@ -1,19 +1,18 @@
-import {setup} from "../../utils";
+import {setup} from '../../utils';
 import * as chai from 'chai';
 import {expect} from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as sinonChai from 'sinon-chai';
 import {Recipient, RecipientPreferences} from '../../../src/Recipient/Recipient';
 import {NotificationLevel} from 'queue/lib/Messages/Recipient';
-import {MessageThrottleService} from "../../../src/PushNotification/MessageThrottleService";
-import {Message} from "../../../src/Entity/Message";
-import {LunchOffer} from "queue/lib/Messages/Publication";
-import {Container} from "inversify";
-import {LUNCH_EVENT_TYPE} from "../../../src/Publication/constants";
-import moment = require("moment");
+import {MessageThrottleService} from '../../../src/PushNotification/MessageThrottleService';
+import {Message} from '../../../src/Entity/Message';
+import {LunchOffer} from 'queue/lib/Messages/Publication';
+import {Container} from 'inversify';
+import {LUNCH_EVENT_TYPE} from '../../../src/Publication/constants';
+import moment = require('moment');
 
-
-const createMessage = (id: string, topics: string[] = [], eventType='default') => {
+const createMessage = (id: string, topics: string[] = [], eventType= 'default') => {
     const message = new Message();
     message.id = id;
     message.title = 'Hej John, lunch dnia!';
@@ -22,7 +21,6 @@ const createMessage = (id: string, topics: string[] = [], eventType='default') =
     message.setEventType(eventType);
     return message;
 };
-
 
 describe('MessageThrottleService', () => {
     let container: Container;
@@ -77,7 +75,7 @@ describe('MessageThrottleService', () => {
         const messages = [
             createMessage('#1', [], 'default'),
             createMessage('#2', [], LUNCH_EVENT_TYPE),
-            createMessage('#3', [], 'other')
+            createMessage('#3', [], 'other'),
         ];
 
         const event = {
@@ -106,7 +104,7 @@ describe('MessageThrottleService', () => {
         const messages = [
             createMessage('#1', [], 'default'),
             createMessage('#2', [], LUNCH_EVENT_TYPE),
-            createMessage('#3', [], 'other')
+            createMessage('#3', [], 'other'),
         ];
 
         const event = {
@@ -134,7 +132,7 @@ describe('MessageThrottleService', () => {
         const messages = [
             createMessage('#1', [], 'default'),
             createMessage('#2', [], LUNCH_EVENT_TYPE),
-            createMessage('#3', [], 'other')
+            createMessage('#3', [], 'other'),
         ];
 
         const event = {
@@ -156,7 +154,6 @@ describe('MessageThrottleService', () => {
         expect(throttledMessages[0].id).to.equal('#1');
     });
 
-
     it('should receive at most one per hour if often', async () => {
         // given
         const hourAgo = moment().subtract('1', 'hour').toDate();
@@ -164,7 +161,7 @@ describe('MessageThrottleService', () => {
         const messages = [
             createMessage('#1', [], 'default'),
             createMessage('#2', [], LUNCH_EVENT_TYPE),
-            createMessage('#3', [], 'other')
+            createMessage('#3', [], 'other'),
         ];
 
         const event = {

@@ -9,9 +9,8 @@ import {LunchOfferMessageComposer} from '../Publication/LunchOfferMessageCompose
 import {EventNotification} from '../Event/EventNotification';
 import {EventNotificationScheduler} from '../Event/EventNotificationScheduler';
 import {LunchOfferEvent} from '../Publication/LunchOfferEvent';
-import {MessageThrottleService} from "./MessageThrottleService";
+import {MessageThrottleService} from './MessageThrottleService';
 import {injectable} from 'inversify';
-
 
 /**
  * Responsibility:
@@ -51,7 +50,7 @@ export class PushNotifier {
         const notifications = this.prepareNotifications(recipient, recipientEvents, currentTime);
         const messages = this.messageComposer.compose(recipient, notifications.map(n => n.event as LunchOfferEvent));
 
-        return this.throttleService.throttle(recipient, messages)
+        return this.throttleService.throttle(recipient, messages);
     }
 
     private prepareNotifications(
