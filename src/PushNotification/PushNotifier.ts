@@ -10,11 +10,14 @@ import {EventNotification} from '../Event/EventNotification';
 import {EventNotificationScheduler} from '../Event/EventNotificationScheduler';
 import {LunchOfferEvent} from '../Publication/LunchOfferEvent';
 import {MessageThrottleService} from "./MessageThrottleService";
+import {injectable} from 'inversify';
+
 
 /**
  * Responsibility:
  * notify recipients about relevant events with push notifications
  */
+@injectable()
 export class PushNotifier {
 
     private messageComposer: LunchOfferMessageComposer;

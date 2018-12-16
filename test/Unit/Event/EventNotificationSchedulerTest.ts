@@ -1,22 +1,21 @@
 import * as moment from 'moment';
-import * as chai from 'chai';
 import {expect} from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import * as sinonChai from 'sinon-chai';
 import {Event} from '../../../src/Interfaces/Event';
-import {RecipientPreferences, Recipient} from '../../../src/Recipient/Recipient';
+import {Recipient, RecipientPreferences} from '../../../src/Recipient/Recipient';
 import {EventNotificationScheduler} from '../../../src/Event/EventNotificationScheduler';
 import {NotificationLevel} from 'queue/lib/Messages/Recipient';
+import {setup} from '../../utils';
+import {Container} from 'inversify';
 
 describe('EventNotificationScheduler', () => {
+    let container: Container;
     let preferences: RecipientPreferences;
     let recipient: Recipient;
     let scheduler: EventNotificationScheduler;
     let today;
 
-    beforeEach(async () => {
-        chai.use(chaiAsPromised);
-        chai.use(sinonChai);
+    beforeEach(() => {
+        container = setup();
 
         today = moment();
         preferences = new RecipientPreferences(12, 0, NotificationLevel.Often);

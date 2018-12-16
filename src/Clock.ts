@@ -1,6 +1,5 @@
 import Timeout = NodeJS.Timeout;
 
-
 export class Clock {
 
     private lastTimeout: Timeout;

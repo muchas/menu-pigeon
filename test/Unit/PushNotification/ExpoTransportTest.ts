@@ -1,15 +1,14 @@
 import * as sinon from 'sinon';
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import * as sinonChai from 'sinon-chai';
+import {SinonStubbedInstance} from 'sinon';
 import {expect} from 'chai';
 import {ExpoTransport} from '../../../src/PushNotification/ExpoTransport';
 import {PushNotification} from '../../../src/Entity/PushNotification';
 import Expo from 'expo-server-sdk';
 import {Message} from '../../../src/Entity/Message';
-import {SinonStubbedInstance} from 'sinon';
 import {toArray} from '../../../src/utils';
 import {PushNotificationStatus} from '../../../src/PushNotification/PushNotificationReceipt';
+import {setup} from '../../utils';
+import {Container} from 'inversify';
 
 const createPushNotification = (message: Message,
                                 token: string,
@@ -24,24 +23,25 @@ const createPushNotification = (message: Message,
 };
 
 describe('ExpoTransport', () => {
+    let container: Container;
+    let expoClient: SinonStubbedInstance<Expo>;
+
+    beforeEach(() => {
+        container = setup();
+        expoClient = sinon.createStubInstance(Expo);
+    });
 
     describe('sending pushes', () => {
-        let expoClient: SinonStubbedInstance<Expo>;
         let message: Message;
         let pushNotification: PushNotification;
 
-        beforeEach(async () => {
-            chai.use(chaiAsPromised);
-            chai.use(sinonChai);
-
+        beforeEach(() => {
             message = new Message();
             message.title = 'Pretty nice title';
             message.body = 'This is message body!';
             message.priority = 'high';
 
             pushNotification = createPushNotification(message, 'PUSH_TOKEN1', 0);
-
-            expoClient = sinon.createStubInstance(Expo);
         });
 
         it('should send push notification asynchronously', async () => {
@@ -122,16 +122,10 @@ describe('ExpoTransport', () => {
     });
 
     describe('confirming push statuses', () => {
-        let expoClient: SinonStubbedInstance<Expo>;
         let message: Message;
         let pushNotification: PushNotification;
 
-        beforeEach(async () => {
-            chai.use(chaiAsPromised);
-            chai.use(sinonChai);
-
-            expoClient = sinon.createStubInstance(Expo);
-
+        beforeEach(() => {
             message = new Message();
             message.title = 'Pretty nice title';
             message.body = 'This is message body!';

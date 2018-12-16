@@ -3,7 +3,7 @@ import {RecipientUpsert} from 'queue/lib/Messages/RecipientUpsert';
 import {RecipientRepository} from './RecipientRepository';
 import {Recipient, RecipientPreferences} from './Recipient';
 import {RecipientDevice} from './RecipientDevice';
-import {Clock} from "../Clock";
+import {Clock} from '../Clock';
 
 export class RecipientUpsertConsumer implements Consumer {
 

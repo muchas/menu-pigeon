@@ -3,7 +3,9 @@ import {EventRepository} from '../Event/EventRepository';
 import {LunchOfferEventFactory} from './LunchOfferEventFactory';
 import {PersistedPublication} from 'queue/lib/Messages/PersistedPublication';
 import {Clock} from '../Clock';
+import {injectable} from 'inversify';
 
+@injectable()
 export class PersistedPublicationConsumer implements Consumer {
     private factory: LunchOfferEventFactory;
 

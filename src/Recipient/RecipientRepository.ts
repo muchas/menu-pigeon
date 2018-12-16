@@ -1,9 +1,11 @@
 import {Recipient} from './Recipient';
+import {injectable} from 'inversify';
 
+@injectable()
 export class RecipientRepository {
     private recipients: Recipient[];
 
-    constructor(recipients: Recipient[]) {
+    constructor(recipients: Recipient[] = []) {
         this.recipients = recipients;
     }
 
