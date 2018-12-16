@@ -29,7 +29,6 @@ export class PushNotifier {
     }
 
     public async notifyAll(currentTime: Date) {
-        console.log('notify all ' + currentTime);
         const events = await this.eventRepository.findRelevant(currentTime);
         const recipients = await this.recipientRepository.findAll();
 
@@ -46,7 +45,7 @@ export class PushNotifier {
         const notifications = this.prepareNotifications(recipient, recipientEvents, currentTime);
         const messages = this.messageComposer.compose(recipient, notifications.map(n => n.event as LunchOfferEvent));
 
-        return this.applyMessagingLimits(recipient, messages);
+        return this.throttle(recipient, messages);
     }
 
     private prepareNotifications(
@@ -62,7 +61,7 @@ export class PushNotifier {
                 !recipient.notifiedEventIds.has(notification.event.id));
     }
 
-    private applyMessagingLimits(recipient: Recipient, messages: Message[]): Message[] {
+    private throttle(recipient: Recipient, messages: Message[]): Message[] {
         // TODO: - recipient daily messages limits
         // TODO: - take into consideration message priorities
         // TODO: - recipient topic last notification time
