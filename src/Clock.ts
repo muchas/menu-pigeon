@@ -8,6 +8,10 @@ export class Clock {
     constructor(private action: () => any,
                 private period: number) {}
 
+    public start() {
+        this.tick();
+    }
+
     public tick() {
         if (this.lastTimeout !== undefined) {
            clearTimeout(this.lastTimeout);

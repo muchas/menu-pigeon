@@ -76,7 +76,7 @@ createConnection().then(async connection => {
         new TopicFollowConsumer(recipientRepository, notifierClock)
     );
 
-    notifierClock.tick();
+    notifierClock.start();
 
     await queue.consume(`${config.get('APP_NAME').default}`, new Map<any, Consumer>([
         [PersistedPublication, persistedPublicationConsumer],

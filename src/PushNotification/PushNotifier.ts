@@ -9,6 +9,7 @@ import {LunchOfferMessageComposer} from '../Publication/LunchOfferMessageCompose
 import {EventNotification} from '../Event/EventNotification';
 import {EventNotificationScheduler} from '../Event/EventNotificationScheduler';
 import {LunchOfferEvent} from '../Publication/LunchOfferEvent';
+import {MessageThrottleService} from "./MessageThrottleService";
 
 /**
  * Responsibility:
@@ -19,6 +20,7 @@ export class PushNotifier {
     private messageComposer: LunchOfferMessageComposer;
     private scheduler: EventNotificationScheduler;
     private distributor: EventDistributor;
+    private throttleService: MessageThrottleService;
 
     constructor(private recipientRepository: RecipientRepository,
                 private eventRepository: EventRepository,
@@ -26,6 +28,7 @@ export class PushNotifier {
         this.messageComposer = new LunchOfferMessageComposer();
         this.scheduler = new EventNotificationScheduler();
         this.distributor = new EventDistributor();
+        this.throttleService = new MessageThrottleService();
     }
 
     public async notifyAll(currentTime: Date) {

@@ -17,7 +17,7 @@ export class Recipient {
     public followedTopics: Set<string>;
 
     constructor(public id: string,
-                public name: string,
+                public name?: string,
                 followedTopics: string[] = [],
                 public devices: RecipientDevice[] = [],
                 public preferences?: RecipientPreferences,
