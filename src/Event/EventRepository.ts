@@ -9,8 +9,8 @@ export class EventRepository {
         this.events = events;
     }
 
-    public async addMany(events: Event[]) {
-        this.events = this.events.concat(events);
+    public addMany(events: Event[]) {
+        this.events.push(...events);
     }
 
     public async findRelevant(time: Date): Promise<Event[]> {

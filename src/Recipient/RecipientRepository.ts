@@ -3,10 +3,11 @@ import {injectable} from 'inversify';
 
 @injectable()
 export class RecipientRepository {
-    private recipients: Recipient[];
+    constructor(private recipients: Recipient[] = []) {
+    }
 
-    constructor(recipients: Recipient[] = []) {
-        this.recipients = recipients;
+    public addMany(recipients: Recipient[]) {
+        this.recipients.push(...recipients);
     }
 
     public async upsert(recipient: Recipient) {
@@ -21,7 +22,7 @@ export class RecipientRepository {
         this.recipients.push(recipient);
     }
 
-    public async remove(id: string)  {
+    public async remove(id: string) {
         this.recipients = this.recipients.filter((r) => r.id !== id);
     }
 

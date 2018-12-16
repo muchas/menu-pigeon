@@ -3,6 +3,8 @@ import {Container} from 'inversify';
 import * as env from 'node-env-file';
 import Config from './Config';
 import {MessageGateCollection, Queue, QueueConnection} from 'queue';
+import {RecipientRepository} from './Recipient/RecipientRepository';
+import {EventRepository} from './Event/EventRepository';
 
 export const createContainer = (): Container => {
     env(__dirname + '/../.env');
@@ -42,6 +44,9 @@ export const createContainer = (): Container => {
             );
         })
         .inSingletonScope();
+
+    container.bind(RecipientRepository).toSelf().inSingletonScope();
+    container.bind(EventRepository).toSelf().inSingletonScope();
 
     return container;
 };
