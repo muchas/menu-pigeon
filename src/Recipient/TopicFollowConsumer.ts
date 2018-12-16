@@ -1,12 +1,12 @@
 import {Consumer, Job} from 'queue';
 import {TopicFollow} from 'queue/lib/Messages/TopicFollow';
 import {RecipientRepository} from './RecipientRepository';
-import {Clock} from '../Clock';
+import {NotifierClock} from '../PushNotification/NotifierClock';
 
 export class TopicFollowConsumer implements Consumer {
 
     constructor(private recipientRepository: RecipientRepository,
-                private notifierClock: Clock) {}
+                private notifierClock: NotifierClock) {}
 
     public async consume(job: Job<TopicFollow>) {
         const {topicName, recipientId} = job.message;
@@ -21,6 +21,6 @@ export class TopicFollowConsumer implements Consumer {
             recipient.unfollow(topicName);
         }
 
-        this.notifierClock.tick();
+        await this.notifierClock.tick();
     }
 }
