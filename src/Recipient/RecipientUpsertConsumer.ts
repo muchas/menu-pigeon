@@ -5,6 +5,7 @@ import { Recipient, RecipientPreferences } from "./Recipient";
 import { RecipientDevice } from "./RecipientDevice";
 import { NotifierClock } from "../PushNotification/NotifierClock";
 import { injectable } from "inversify";
+import * as winston from "winston";
 
 @injectable()
 export class RecipientUpsertConsumer implements Consumer {
@@ -14,6 +15,12 @@ export class RecipientUpsertConsumer implements Consumer {
 
     public async consume(job: Job<RecipientUpsert>): Promise<void> {
         const {id, name, devices, followedTopics, preferences} = job.message;
+
+        winston.info("Consumption of recipient upsert started", {
+            recipient_id: id,
+            message_body: job.body,
+        });
+
         const recipientDevices = devices.map(
             (device) => new RecipientDevice(device.pushToken, new Date())
         );
@@ -26,5 +33,10 @@ export class RecipientUpsertConsumer implements Consumer {
 
         await this.recipientRepository.upsert(recipient);
         await this.notifierClock.tick();
+
+        winston.info("Consumption of recipient upsert finished", {
+           recipient_id: id,
+           message_body: job.body,
+        });
     }
 }

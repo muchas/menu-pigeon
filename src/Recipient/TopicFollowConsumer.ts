@@ -3,6 +3,7 @@ import { TopicFollow } from "queue/lib/Messages/TopicFollow";
 import { RecipientRepository } from "./RecipientRepository";
 import { NotifierClock } from "../PushNotification/NotifierClock";
 import { injectable } from "inversify";
+import * as winston from "winston";
 
 @injectable()
 export class TopicFollowConsumer implements Consumer {
@@ -15,8 +16,17 @@ export class TopicFollowConsumer implements Consumer {
 
     public async consume(job: Job<TopicFollow>) {
         const {topicName, recipientId} = job.message;
+
+        winston.info("Consumption of topic follow started", {
+            recipient_id: recipientId,
+            topic: topicName,
+        });
+
         const recipient = await this.recipientRepository.findOne(recipientId);
         if (!recipient) {
+            winston.warn("Topic follow: recipient not found", {
+                recipient_id: recipientId,
+            });
             return;
         }
 
@@ -27,5 +37,10 @@ export class TopicFollowConsumer implements Consumer {
         }
 
         await this.notifierClock.tick();
+
+        winston.info("Consumption of topic follow finished", {
+            recipient_id: recipientId,
+            topic: topicName,
+        });
     }
 }

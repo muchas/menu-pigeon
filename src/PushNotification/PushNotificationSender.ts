@@ -4,6 +4,7 @@ import { Message } from "../Entity/Message";
 import { Recipient } from "../Recipient/Recipient";
 import { PushNotification } from "../Entity/PushNotification";
 import { injectable } from "inversify";
+import * as winston from "winston";
 
 @injectable()
 export class PushNotificationSender {
@@ -32,6 +33,13 @@ export class PushNotificationSender {
 
     public async sendReady() {
         const notifications = await this.notificationRepository.findReadyToSend();
+
+        if (notifications.length > 0) {
+            winston.info("Sending ready push notifications", {
+                push_notification_ids: notifications.map((notification) => notification.id),
+                recipient_ids: notifications.map((notification) => notification.message.recipientId),
+            });
+        }
 
         for await (const ticket of this.transport.sendMany(notifications)) {
             await this.notificationRepository.setSendingStatus(ticket);
