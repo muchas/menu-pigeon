@@ -73,7 +73,7 @@ describe("Push notification integration test", () => {
         const recipient3 = new Recipient(
             "r#3",
             "Sławek",
-            ["business-1", "business-2", "business-3", "business-4"],
+            ["business-1"],
             [device1]
         );
 

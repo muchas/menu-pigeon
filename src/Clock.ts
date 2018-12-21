@@ -1,5 +1,7 @@
 import Timeout = NodeJS.Timeout;
+import { injectable } from "inversify";
 
+@injectable()
 export abstract class Clock {
     protected period: number = 10;
 
