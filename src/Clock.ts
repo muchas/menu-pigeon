@@ -1,5 +1,5 @@
 import Timeout = NodeJS.Timeout;
-import {injectable} from "inversify";
+import { injectable } from "inversify";
 
 @injectable()
 export abstract class Clock {

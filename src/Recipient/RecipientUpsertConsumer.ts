@@ -4,8 +4,7 @@ import { RecipientRepository } from "./RecipientRepository";
 import { Recipient, RecipientPreferences } from "./Recipient";
 import { RecipientDevice } from "./RecipientDevice";
 import { NotifierClock } from "../PushNotification/NotifierClock";
-import {injectable} from "inversify";
-
+import { injectable } from "inversify";
 
 @injectable()
 export class RecipientUpsertConsumer implements Consumer {
