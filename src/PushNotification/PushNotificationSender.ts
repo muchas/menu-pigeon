@@ -37,7 +37,7 @@ export class PushNotificationSender {
         if (notifications.length > 0) {
             winston.info("Sending ready push notifications", {
                 push_notification_ids: notifications.map((notification) => notification.id),
-                push_tokens: notifications.map((notification) => notification.pushToken),
+                recipient_ids: notifications.map((notification) => notification.message.recipientId),
             });
         }
 
