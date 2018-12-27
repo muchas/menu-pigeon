@@ -36,7 +36,8 @@ export class RecipientMongoRepository extends RecipientRepository {
                         $each: [...recipient.topicLastNotification],
                     },
                 },
-            }, {
+            },
+            {
                 upsert: true,
             }
         );
