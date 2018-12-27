@@ -8,7 +8,7 @@ import { Recipient } from "../../src/Recipient/Recipient";
 import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
 import { PushNotifier } from "../../src/PushNotification/PushNotifier";
 import { Connection, createConnection } from "typeorm";
-import { RecipientRepository } from "../../src/Recipient/RecipientRepository";
+import { RecipientMemoryRepository } from "../../src/Recipient/RecipientMemoryRepository";
 import { RecipientDevice } from "../../src/Recipient/RecipientDevice";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { Container } from "inversify";
@@ -82,10 +82,10 @@ describe("Push notification integration test", () => {
         const notifier = container.get<PushNotifier>(PushNotifier);
         const sender = container.get<PushNotificationSender>(PushNotificationSender);
         const eventRepository = container.get<EventRepository>(EventRepository);
-        const recipientRepository = container.get<RecipientRepository>(RecipientRepository);
+        const recipientRepository = container.get<RecipientMemoryRepository>(RecipientMemoryRepository);
 
         eventRepository.addMany(events);
-        recipientRepository.addMany(recipients);
+        await recipientRepository.addMany(recipients);
         await notifier.notifyAll(today.toDate());
         await sender.sendReady();
     });

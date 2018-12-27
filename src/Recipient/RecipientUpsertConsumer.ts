@@ -1,6 +1,6 @@
 import { Consumer, Job } from "queue";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
-import { RecipientRepository } from "./RecipientRepository";
+import { RecipientMemoryRepository } from "./RecipientMemoryRepository";
 import { Recipient, RecipientPreferences } from "./Recipient";
 import { RecipientDevice } from "./RecipientDevice";
 import { NotifierClock } from "../PushNotification/NotifierClock";
@@ -10,7 +10,7 @@ import * as winston from "winston";
 @injectable()
 export class RecipientUpsertConsumer implements Consumer {
 
-    public constructor(private readonly recipientRepository: RecipientRepository,
+    public constructor(private readonly recipientRepository: RecipientMemoryRepository,
                        private readonly notifierClock: NotifierClock) {}
 
     public async consume(job: Job<RecipientUpsert>): Promise<void> {

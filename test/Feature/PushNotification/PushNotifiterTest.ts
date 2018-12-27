@@ -4,7 +4,7 @@ import * as sinon from "sinon";
 import * as moment from "moment";
 import { Recipient } from "../../../src/Recipient/Recipient";
 import { PushNotifier } from "../../../src/PushNotification/PushNotifier";
-import { RecipientRepository } from "../../../src/Recipient/RecipientRepository";
+import { RecipientMemoryRepository } from "../../../src/Recipient/RecipientMemoryRepository";
 import { EventRepository } from "../../../src/Event/EventRepository";
 import { PushNotificationSender } from "../../../src/PushNotification/PushNotificationSender";
 import { LunchOfferEvent } from "../../../src/Publication/LunchOfferEvent";
@@ -54,7 +54,7 @@ describe("PushNotifier", () => {
         const recipient3 = new Recipient("r#3", "Slawek", ["business-1", "business-2", "business-3", "business-4"]);
 
         const recipients = [recipient1, recipient2, recipient3];
-        const recipientRepository = new RecipientRepository(recipients);
+        const recipientRepository = new RecipientMemoryRepository(recipients);
         const sender = sinon.createStubInstance(PushNotificationSender);
         const notifier = new PushNotifier(recipientRepository, eventRepository, sender as any);
 

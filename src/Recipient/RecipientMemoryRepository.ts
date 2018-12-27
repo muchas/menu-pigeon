@@ -2,11 +2,11 @@ import { Recipient } from "./Recipient";
 import { injectable } from "inversify";
 
 @injectable()
-export class RecipientRepository {
+export class RecipientMemoryRepository {
     public constructor(private recipients: Recipient[] = []) {
     }
 
-    public addMany(recipients: Recipient[]) {
+    public async addMany(recipients: Recipient[]) {
         this.recipients.push(...recipients);
     }
 
@@ -30,7 +30,7 @@ export class RecipientRepository {
         return [...this.recipients];
     }
 
-    public async findOne(id: string): Promise<Recipient | void> {
+    public async findOne(id: string): Promise<Recipient | undefined> {
         return this.recipients.find((recipient) => recipient.id === id);
     }
 }

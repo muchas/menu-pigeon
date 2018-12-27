@@ -1,4 +1,4 @@
-import { RecipientRepository } from "../Recipient/RecipientRepository";
+import { RecipientMemoryRepository } from "../Recipient/RecipientMemoryRepository";
 import { EventRepository } from "../Event/EventRepository";
 import { EventDistributor } from "../Event/EventDistributor";
 import { Recipient } from "../Recipient/Recipient";
@@ -25,7 +25,7 @@ export class PushNotifier {
     private readonly throttleService: MessageThrottleService;
 
     public constructor(
-        private readonly recipientRepository: RecipientRepository,
+        private readonly recipientRepository: RecipientMemoryRepository,
         private readonly eventRepository: EventRepository,
         private readonly pushNotificationSender: PushNotificationSender
     ) {
