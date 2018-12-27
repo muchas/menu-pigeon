@@ -1,16 +1,18 @@
 import { Recipient } from "./Recipient";
 import { injectable } from "inversify";
+import { RecipientRepository } from "../Interfaces/RecipientRepository";
 
 @injectable()
-export class RecipientMemoryRepository {
+export class RecipientMemoryRepository extends RecipientRepository {
     public constructor(private recipients: Recipient[] = []) {
+        super();
     }
 
     public async addMany(recipients: Recipient[]) {
         this.recipients.push(...recipients);
     }
 
-    public async upsert(recipient: Recipient) {
+    public async add(recipient: Recipient) {
         const existingRecipient = this.recipients.find((r) => r.id === recipient.id);
         if (existingRecipient !== null) {
             recipient.notifiedEventIds = existingRecipient.notifiedEventIds;

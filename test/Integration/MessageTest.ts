@@ -2,7 +2,7 @@ import { createContainer } from "../../src/inversify.config";
 import "reflect-metadata";
 import * as moment from "moment";
 import { Event } from "../../src/Interfaces/Event";
-import { EventRepository } from "../../src/Event/EventRepository";
+import { EventMemoryRepository } from "../../src/Event/EventMemoryRepository";
 import { LunchOfferEvent } from "../../src/Publication/LunchOfferEvent";
 import { Recipient } from "../../src/Recipient/Recipient";
 import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
@@ -81,10 +81,10 @@ describe("Push notification integration test", () => {
 
         const notifier = container.get<PushNotifier>(PushNotifier);
         const sender = container.get<PushNotificationSender>(PushNotificationSender);
-        const eventRepository = container.get<EventRepository>(EventRepository);
+        const eventRepository = container.get<EventMemoryRepository>(EventMemoryRepository);
         const recipientRepository = container.get<RecipientMemoryRepository>(RecipientMemoryRepository);
 
-        eventRepository.addMany(events);
+        await eventRepository.addMany(events);
         await recipientRepository.addMany(recipients);
         await notifier.notifyAll(today.toDate());
         await sender.sendReady();

@@ -16,7 +16,7 @@ export class RecipientUpsertConsumer implements Consumer {
     public async consume(job: Job<RecipientUpsert>): Promise<void> {
         const {id, name, devices, followedTopics, preferences} = job.message;
 
-        winston.info("Consumption of recipient upsert started", {
+        winston.info("Consumption of recipient add started", {
             recipient_id: id,
             message_body: job.body,
         });
@@ -31,10 +31,10 @@ export class RecipientUpsertConsumer implements Consumer {
             id, name, followedTopics, recipientDevices, recipientPreferences
         );
 
-        await this.recipientRepository.upsert(recipient);
+        await this.recipientRepository.add(recipient);
         await this.notifierClock.tick();
 
-        winston.info("Consumption of recipient upsert finished", {
+        winston.info("Consumption of recipient add finished", {
            recipient_id: id,
            message_body: job.body,
         });

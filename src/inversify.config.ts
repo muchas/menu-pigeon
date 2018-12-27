@@ -4,7 +4,7 @@ import * as env from "node-env-file";
 import Config from "./Config";
 import { MessageGateCollection, Queue, QueueConnection } from "queue";
 import { RecipientMemoryRepository } from "./Recipient/RecipientMemoryRepository";
-import { EventRepository } from "./Event/EventRepository";
+import { EventMemoryRepository } from "./Event/EventMemoryRepository";
 import "reflect-metadata";
 import { PushNotificationSender } from "./PushNotification/PushNotificationSender";
 import { ExpoTransport } from "./PushNotification/ExpoTransport";
@@ -13,6 +13,8 @@ import Expo from "expo-server-sdk";
 import Mongo from "./Mongo";
 import { RecipientRepository } from "./Interfaces/RecipientRepository";
 import { RecipientMongoRepository } from "./Recipient/RecipientMongoRepository";
+import { EventRepository } from "./Interfaces/EventRepository";
+import { EventMongoRepository } from "./Event/EventMongoRepository";
 
 export const createContainer = (): Container => {
     env(__dirname + "/../.env");
@@ -72,8 +74,9 @@ export const createContainer = (): Container => {
         .inSingletonScope();
 
     container.bind(RecipientMemoryRepository).toSelf().inSingletonScope();
-    container.bind(EventRepository).toSelf().inSingletonScope();
+    container.bind(EventMemoryRepository).toSelf().inSingletonScope();
     container.bind(RecipientRepository).toService(RecipientMongoRepository);
+    container.bind(EventRepository).toService(EventMongoRepository);
     container.bind(PushNotificationSender).toDynamicValue(
         () => {
             const transport = container.get<ExpoTransport>(ExpoTransport);

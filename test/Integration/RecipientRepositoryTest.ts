@@ -34,9 +34,9 @@ describe("RecipientRepository test", () => {
         await tearDownWithMongo(container);
     });
 
-    it.skip("should persist new recipients on upsert", async () => {
+    it.skip("should persist new recipients on add", async () => {
         // when
-        await recipientRepository.upsert(recipient);
+        await recipientRepository.add(recipient);
 
         // then
         const got = await recipientRepository.findOne("#r1");
@@ -44,7 +44,7 @@ describe("RecipientRepository test", () => {
         expect(got.name).to.equal(recipient.name);
     });
 
-    it.skip("should modify existing recipients on upsert", async () => {
+    it.skip("should modify existing recipients on add", async () => {
         // given
         const event = {
             id: "8128",
@@ -54,7 +54,7 @@ describe("RecipientRepository test", () => {
             expirationTime: new Date(),
         };
 
-        await recipientRepository.upsert(recipient);
+        await recipientRepository.add(recipient);
 
         recipient.name = "Andrew";
         recipient.follow("business-50");
@@ -62,7 +62,7 @@ describe("RecipientRepository test", () => {
         recipient.markNotifiedAbout(event);
 
         // when
-        await recipientRepository.upsert(recipient);
+        await recipientRepository.add(recipient);
 
         // then
         const got = await recipientRepository.findOne("#r1");

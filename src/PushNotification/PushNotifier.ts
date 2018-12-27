@@ -1,5 +1,5 @@
 import { RecipientMemoryRepository } from "../Recipient/RecipientMemoryRepository";
-import { EventRepository } from "../Event/EventRepository";
+import { EventMemoryRepository } from "../Event/EventMemoryRepository";
 import { EventDistributor } from "../Event/EventDistributor";
 import { Recipient } from "../Recipient/Recipient";
 import { Message } from "../Entity/Message";
@@ -26,7 +26,7 @@ export class PushNotifier {
 
     public constructor(
         private readonly recipientRepository: RecipientMemoryRepository,
-        private readonly eventRepository: EventRepository,
+        private readonly eventRepository: EventMemoryRepository,
         private readonly pushNotificationSender: PushNotificationSender
     ) {
         this.messageComposer = new LunchOfferMessageComposer();

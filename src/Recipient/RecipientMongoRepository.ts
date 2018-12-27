@@ -14,12 +14,12 @@ export class RecipientMongoRepository extends RecipientRepository {
         super();
     }
 
-    public async upsertMany(recipients: Recipient[]) {
-        const upserts = recipients.map(async recipient => this.upsert(recipient));
+    public async addMany(recipients: Recipient[]) {
+        const upserts = recipients.map(async recipient => this.add(recipient));
         await Promise.all(upserts);
     }
 
-    public async upsert(recipient: Recipient) {
+    public async add(recipient: Recipient) {
         const data = this.toDocument(recipient);
 
         await this.collection().updateOne(
