@@ -75,8 +75,8 @@ export const createContainer = (): Container => {
 
     container.bind(RecipientMemoryRepository).toSelf().inSingletonScope();
     container.bind(EventMemoryRepository).toSelf().inSingletonScope();
-    container.bind(RecipientRepository).toService(RecipientMongoRepository);
-    container.bind(EventRepository).toService(EventMongoRepository);
+    container.bind(RecipientRepository).to(RecipientMongoRepository).inSingletonScope();
+    container.bind(EventRepository).to(EventMongoRepository).inSingletonScope();
     container.bind(PushNotificationSender).toDynamicValue(
         () => {
             const transport = container.get<ExpoTransport>(ExpoTransport);
