@@ -14,6 +14,7 @@ import { TopicFollow } from "queue/lib/Messages/TopicFollow";
 import * as winston from "winston";
 import { createContainer } from "./inversify.config";
 import { NotifierClock } from "./PushNotification/NotifierClock";
+import {StatusCheckerClock} from "./PushNotification/StatusCheckerClock";
 
 const container = createContainer();
 const config = container.get<Config>(Config);
@@ -26,6 +27,7 @@ createConnection()
 
         const queue = container.get<Queue>(Queue);
         const notifierClock = container.get<NotifierClock>(NotifierClock);
+        const statusCheckerClock = container.get<StatusCheckerClock>(StatusCheckerClock);
 
         const persistedPublicationConsumer = new SingleConsumer(
             container.get<PersistedPublicationConsumer>(PersistedPublicationConsumer)
@@ -41,6 +43,7 @@ createConnection()
         );
 
         await notifierClock.start();
+        await statusCheckerClock.start();
 
         await queue.consume(
             `${config.get("APP_NAME")}.default`,
