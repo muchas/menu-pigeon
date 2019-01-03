@@ -7,7 +7,8 @@ export class PushNotificationTicket {
         public sentSuccessfully: boolean = true,
         public receiptId?: string,
         public data?: object,
-        public error?: object
+        public error?: object,
+        public sentAt: Date = new Date(),
     ) {
     }
 }
