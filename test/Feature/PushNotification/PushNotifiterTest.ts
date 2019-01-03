@@ -4,8 +4,8 @@ import * as sinon from "sinon";
 import * as moment from "moment";
 import { Recipient } from "../../../src/Recipient/Recipient";
 import { PushNotifier } from "../../../src/PushNotification/PushNotifier";
-import { RecipientRepository } from "../../../src/Recipient/RecipientRepository";
-import { EventRepository } from "../../../src/Event/EventRepository";
+import { RecipientMemoryRepository } from "../../../src/Recipient/RecipientMemoryRepository";
+import { EventMemoryRepository } from "../../../src/Event/EventMemoryRepository";
 import { PushNotificationSender } from "../../../src/PushNotification/PushNotificationSender";
 import { LunchOfferEvent } from "../../../src/Publication/LunchOfferEvent";
 import { Event } from "../../../src/Interfaces/Event";
@@ -18,7 +18,7 @@ describe("PushNotifier", () => {
     let event3: Event;
     let event4: Event;
     let events: Event[];
-    let eventRepository: EventRepository;
+    let eventRepository: EventMemoryRepository;
     let today;
 
     let publication1: PersistedPublication;
@@ -44,7 +44,7 @@ describe("PushNotifier", () => {
 
         events = [event1, event2, event3, event4];
 
-        eventRepository = new EventRepository(events);
+        eventRepository = new EventMemoryRepository(events);
     });
 
     it("should send messages to interested recipients", async () => {
@@ -54,7 +54,7 @@ describe("PushNotifier", () => {
         const recipient3 = new Recipient("r#3", "Slawek", ["business-1", "business-2", "business-3", "business-4"]);
 
         const recipients = [recipient1, recipient2, recipient3];
-        const recipientRepository = new RecipientRepository(recipients);
+        const recipientRepository = new RecipientMemoryRepository(recipients);
         const sender = sinon.createStubInstance(PushNotificationSender);
         const notifier = new PushNotifier(recipientRepository, eventRepository, sender as any);
 

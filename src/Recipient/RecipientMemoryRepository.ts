@@ -1,16 +1,18 @@
 import { Recipient } from "./Recipient";
 import { injectable } from "inversify";
+import { RecipientRepository } from "../Interfaces/RecipientRepository";
 
 @injectable()
-export class RecipientRepository {
+export class RecipientMemoryRepository extends RecipientRepository {
     public constructor(private recipients: Recipient[] = []) {
+        super();
     }
 
-    public addMany(recipients: Recipient[]) {
+    public async addMany(recipients: Recipient[]) {
         this.recipients.push(...recipients);
     }
 
-    public async upsert(recipient: Recipient) {
+    public async add(recipient: Recipient) {
         const existingRecipient = this.recipients.find((r) => r.id === recipient.id);
         if (existingRecipient !== null) {
             recipient.notifiedEventIds = existingRecipient.notifiedEventIds;
@@ -30,7 +32,7 @@ export class RecipientRepository {
         return [...this.recipients];
     }
 
-    public async findOne(id: string): Promise<Recipient | void> {
+    public async findOne(id: string): Promise<Recipient | undefined> {
         return this.recipients.find((recipient) => recipient.id === id);
     }
 }

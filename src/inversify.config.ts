@@ -3,13 +3,18 @@ import { Container } from "inversify";
 import * as env from "node-env-file";
 import Config from "./Config";
 import { MessageGateCollection, Queue, QueueConnection } from "queue";
-import { RecipientRepository } from "./Recipient/RecipientRepository";
-import { EventRepository } from "./Event/EventRepository";
+import { RecipientMemoryRepository } from "./Recipient/RecipientMemoryRepository";
+import { EventMemoryRepository } from "./Event/EventMemoryRepository";
 import "reflect-metadata";
 import { PushNotificationSender } from "./PushNotification/PushNotificationSender";
 import { ExpoTransport } from "./PushNotification/ExpoTransport";
 import { PushNotificationRepository } from "./PushNotification/PushNotificationRepository";
 import Expo from "expo-server-sdk";
+import Mongo from "./Mongo";
+import { RecipientRepository } from "./Interfaces/RecipientRepository";
+import { RecipientMongoRepository } from "./Recipient/RecipientMongoRepository";
+import { EventRepository } from "./Interfaces/EventRepository";
+import { EventMongoRepository } from "./Event/EventMongoRepository";
 
 export const createContainer = (): Container => {
     env(__dirname + "/../.env");
@@ -20,6 +25,11 @@ export const createContainer = (): Container => {
     container.bind(Config)
         .toDynamicValue(() => new Config({
             APP_NAME: "pigeon",
+            MONGO_HOSTNAME: process.env.MONGO_HOSTNAME || "localhost",
+            MONGO_PORT: process.env.MONGO_PORT || 27017,
+            MONGO_DATABASE: process.env.MONGO_DATABASE || "nalunch",
+            MONGO_USERNAME: process.env.MONGO_USERNAME,
+            MONGO_PASSWORD: process.env.MONGO_PASSWORD,
             GRAYLOG_HOSTNAME: process.env.GRAYLOG_HOSTNAME,
             GRAYLOG_PORT: process.env.GRAYLOG_PORT || 12201,
             RABBITMQ_HOSTNAME: process.env.RABBITMQ_HOSTNAME || "localhost",
@@ -29,6 +39,19 @@ export const createContainer = (): Container => {
             RABBITMQ_EXCHANGE: process.env.RABBITMQ_EXCHANGE || "posts",
             SENTRY_DSN: process.env.SENTRY_DSN,
         }))
+        .inSingletonScope();
+
+    container.bind(Mongo)
+        .toDynamicValue(() => {
+            const config = container.get<Config>(Config);
+            return new Mongo(
+                config.get("MONGO_HOSTNAME"),
+                config.get("MONGO_PORT"),
+                config.get("MONGO_USERNAME"),
+                config.get("MONGO_PASSWORD"),
+                config.get("MONGO_DATABASE")
+            );
+        })
         .inSingletonScope();
 
     container.bind(Queue)
@@ -50,8 +73,10 @@ export const createContainer = (): Container => {
         })
         .inSingletonScope();
 
-    container.bind(RecipientRepository).toSelf().inSingletonScope();
-    container.bind(EventRepository).toSelf().inSingletonScope();
+    container.bind(RecipientMemoryRepository).toSelf().inSingletonScope();
+    container.bind(EventMemoryRepository).toSelf().inSingletonScope();
+    container.bind(RecipientRepository).to(RecipientMongoRepository).inSingletonScope();
+    container.bind(EventRepository).to(EventMongoRepository).inSingletonScope();
     container.bind(PushNotificationSender).toDynamicValue(
         () => {
             const transport = container.get<ExpoTransport>(ExpoTransport);

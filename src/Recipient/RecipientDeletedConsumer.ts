@@ -1,5 +1,5 @@
 import { Consumer, Job } from "queue";
-import { RecipientRepository } from "./RecipientRepository";
+import { RecipientMemoryRepository } from "./RecipientMemoryRepository";
 import { RecipientDeleted } from "queue/lib/Messages/RecipientDeleted";
 import { injectable } from "inversify";
 import * as winston from "winston";
@@ -7,7 +7,7 @@ import * as winston from "winston";
 @injectable()
 export class RecipientDeletedConsumer implements Consumer {
 
-    public constructor(private readonly recipientRepository: RecipientRepository) {}
+    public constructor(private readonly recipientRepository: RecipientMemoryRepository) {}
 
     public async consume(job: Job<RecipientDeleted>) {
         winston.info("Consumption of recipient deleted started", {

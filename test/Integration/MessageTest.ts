@@ -2,13 +2,13 @@ import { createContainer } from "../../src/inversify.config";
 import "reflect-metadata";
 import * as moment from "moment";
 import { Event } from "../../src/Interfaces/Event";
-import { EventRepository } from "../../src/Event/EventRepository";
+import { EventMemoryRepository } from "../../src/Event/EventMemoryRepository";
 import { LunchOfferEvent } from "../../src/Publication/LunchOfferEvent";
 import { Recipient } from "../../src/Recipient/Recipient";
 import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
 import { PushNotifier } from "../../src/PushNotification/PushNotifier";
 import { Connection, createConnection } from "typeorm";
-import { RecipientRepository } from "../../src/Recipient/RecipientRepository";
+import { RecipientMemoryRepository } from "../../src/Recipient/RecipientMemoryRepository";
 import { RecipientDevice } from "../../src/Recipient/RecipientDevice";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { Container } from "inversify";
@@ -81,11 +81,11 @@ describe("Push notification integration test", () => {
 
         const notifier = container.get<PushNotifier>(PushNotifier);
         const sender = container.get<PushNotificationSender>(PushNotificationSender);
-        const eventRepository = container.get<EventRepository>(EventRepository);
-        const recipientRepository = container.get<RecipientRepository>(RecipientRepository);
+        const eventRepository = container.get<EventMemoryRepository>(EventMemoryRepository);
+        const recipientRepository = container.get<RecipientMemoryRepository>(RecipientMemoryRepository);
 
-        eventRepository.addMany(events);
-        recipientRepository.addMany(recipients);
+        await eventRepository.addMany(events);
+        await recipientRepository.addMany(recipients);
         await notifier.notifyAll(today.toDate());
         await sender.sendReady();
     });

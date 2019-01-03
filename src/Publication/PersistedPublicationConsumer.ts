@@ -1,5 +1,5 @@
 import { Consumer, Job } from "queue";
-import { EventRepository } from "../Event/EventRepository";
+import { EventMemoryRepository } from "../Event/EventMemoryRepository";
 import { LunchOfferEventFactory } from "./LunchOfferEventFactory";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { injectable } from "inversify";
@@ -11,7 +11,7 @@ export class PersistedPublicationConsumer implements Consumer {
     private readonly factory: LunchOfferEventFactory;
 
     public constructor(
-        private readonly eventRepository: EventRepository,
+        private readonly eventRepository: EventMemoryRepository,
         private readonly notifierClock: NotifierClock
     ) {
         this.factory = new LunchOfferEventFactory();
