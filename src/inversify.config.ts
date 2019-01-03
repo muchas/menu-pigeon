@@ -15,7 +15,7 @@ import { RecipientRepository } from "./Interfaces/RecipientRepository";
 import { RecipientMongoRepository } from "./Recipient/RecipientMongoRepository";
 import { EventRepository } from "./Interfaces/EventRepository";
 import { EventMongoRepository } from "./Event/EventMongoRepository";
-import {PushNotificationStatusChecker} from "./PushNotification/PushNotificationStatusChecker";
+import { PushNotificationStatusChecker } from "./PushNotification/PushNotificationStatusChecker";
 
 export const createContainer = (): Container => {
     env(__dirname + "/../.env");

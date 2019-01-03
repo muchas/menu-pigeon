@@ -14,7 +14,7 @@ import { TopicFollow } from "queue/lib/Messages/TopicFollow";
 import * as winston from "winston";
 import { createContainer } from "./inversify.config";
 import { NotifierClock } from "./PushNotification/NotifierClock";
-import {StatusCheckerClock} from "./PushNotification/StatusCheckerClock";
+import { StatusCheckerClock } from "./PushNotification/StatusCheckerClock";
 
 const container = createContainer();
 const config = container.get<Config>(Config);

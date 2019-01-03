@@ -12,7 +12,7 @@ import { RecipientMemoryRepository } from "../../src/Recipient/RecipientMemoryRe
 import { RecipientDevice } from "../../src/Recipient/RecipientDevice";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { Container } from "inversify";
-import {PushNotificationStatusChecker} from "../../src/PushNotification/PushNotificationStatusChecker";
+import { PushNotificationStatusChecker } from "../../src/PushNotification/PushNotificationStatusChecker";
 
 describe("Push notification integration test", () => {
     let container: Container;
@@ -78,7 +78,7 @@ describe("Push notification integration test", () => {
             [device1]
         );
 
-        const recipients = [recipient3];
+        const recipients = [recipient1, recipient2, recipient3];
 
         const notifier = container.get<PushNotifier>(PushNotifier);
         const sender = container.get<PushNotificationSender>(PushNotificationSender);

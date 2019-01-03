@@ -1,7 +1,6 @@
 import { PushNotificationRepository } from "./PushNotificationRepository";
 import { PushNotificationTransport } from "../Interfaces/PushNotificationTransport";
-import {injectable} from "inversify";
-
+import { injectable } from "inversify";
 
 @injectable()
 export class PushNotificationStatusChecker {
