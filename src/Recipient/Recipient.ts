@@ -61,4 +61,8 @@ export class Recipient {
     public unfollow(topic: string) {
         return this.followedTopics.delete(topic);
     }
+
+    public removeDevice(pushToken: string) {
+        this.devices = this.devices.filter(device => device.pushToken !== pushToken);
+    }
 }

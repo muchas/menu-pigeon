@@ -32,7 +32,7 @@ export class PushNotification {
         type: "json",
         nullable: true,
     })
-    public data?: string;
+    public data?: object;
 
     @Column({
         type: "json",

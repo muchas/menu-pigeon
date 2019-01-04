@@ -66,13 +66,12 @@ export class ExpoTransport implements PushNotificationTransport {
                 notifications.map((n): [string, PushNotification] => [n.receiptId, n])
             );
             const receipts = await this.client.getPushNotificationReceiptsAsync(chunk);
-            let status;
 
             for (const [receiptId, receipt] of Object.entries(receipts)) {
-                status = this.toInternalStatus(receipt.status);
+                const status = this.toInternalStatus(receipt.status);
 
                 yield new PushNotificationReceipt(
-                    notificationsByReceiptId.get(receiptId), true, status, receipt.details
+                    notificationsByReceiptId.get(receiptId), true, status, receipt
                 );
             }
         } catch (e) {

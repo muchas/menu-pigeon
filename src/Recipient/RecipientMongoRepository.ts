@@ -52,6 +52,16 @@ export class RecipientMongoRepository extends RecipientRepository {
         return documents.map((document) => this.fromDocument(document));
     }
 
+    public async findByDevice(pushToken: string): Promise<Recipient[]> {
+         const documents = await this.collection()
+             .find({
+                 "devices.pushToken": pushToken,
+             })
+             .toArray();
+
+         return documents.map((document) => this.fromDocument(document));
+    }
+
     public async findOne(id: string): Promise<Recipient | undefined> {
         const document = await this.collection().findOne({id});
 

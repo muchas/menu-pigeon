@@ -16,6 +16,7 @@ import { RecipientMongoRepository } from "./Recipient/RecipientMongoRepository";
 import { EventRepository } from "./Interfaces/EventRepository";
 import { EventMongoRepository } from "./Event/EventMongoRepository";
 import { PushNotificationStatusChecker } from "./PushNotification/PushNotificationStatusChecker";
+import { RecipientService } from "./Recipient/RecipientService";
 
 export const createContainer = (): Container => {
     env(__dirname + "/../.env");
@@ -89,7 +90,8 @@ export const createContainer = (): Container => {
         () => {
             const transport = container.get<ExpoTransport>(ExpoTransport);
             const repository = container.get<PushNotificationRepository>(PushNotificationRepository);
-            return new PushNotificationStatusChecker(transport, repository);
+            const recipientService = container.get<RecipientService>(RecipientService);
+            return new PushNotificationStatusChecker(transport, repository, recipientService);
         }
     );
     container.bind(Expo).toDynamicValue(() => new Expo());

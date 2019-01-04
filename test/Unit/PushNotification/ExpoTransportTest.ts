@@ -173,7 +173,7 @@ describe("ExpoTransport", () => {
             expect(receipts.map(r => r.status)).to.deep.equal(
                 [PushNotificationStatus.DELIVERED, PushNotificationStatus.ERROR, PushNotificationStatus.DELIVERED]
             );
-            expect(receipts.map(r => r.data)).to.deep.equal(Object.values(returnedReceipts).map(r => r.details));
+            expect(receipts.map(r => r.data)).to.deep.equal(Object.values(returnedReceipts));
         });
 
         it("should return failed receipt in case of exception", async () => {
