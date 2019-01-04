@@ -14,6 +14,9 @@ import { TopicFollow } from "queue/lib/Messages/TopicFollow";
 import * as winston from "winston";
 import { createContainer } from "./inversify.config";
 import { NotifierClock } from "./PushNotification/NotifierClock";
+import { StatusCheckerClock } from "./PushNotification/StatusCheckerClock";
+import { DeviceDeletedConsumer } from "./Recipient/DeviceDeletedConsumer";
+import { DeviceDeleted } from "queue/lib/Messages/DeviceDeleted";
 
 const container = createContainer();
 const config = container.get<Config>(Config);
@@ -26,6 +29,7 @@ createConnection()
 
         const queue = container.get<Queue>(Queue);
         const notifierClock = container.get<NotifierClock>(NotifierClock);
+        const statusCheckerClock = container.get<StatusCheckerClock>(StatusCheckerClock);
 
         const persistedPublicationConsumer = new SingleConsumer(
             container.get<PersistedPublicationConsumer>(PersistedPublicationConsumer)
@@ -36,11 +40,16 @@ createConnection()
         const recipientDeletedConsumer = new SingleConsumer(
             container.get<RecipientDeletedConsumer>(RecipientDeletedConsumer)
         );
+        const deviceDeletedConsumer = new SingleConsumer(
+            container.get<DeviceDeletedConsumer>(DeviceDeletedConsumer)
+        );
+
         const topicFollowConsumer = new SingleConsumer(
             container.get<TopicFollowConsumer>(TopicFollowConsumer)
         );
 
         await notifierClock.start();
+        await statusCheckerClock.start();
 
         await queue.consume(
             `${config.get("APP_NAME")}.default`,
@@ -48,6 +57,7 @@ createConnection()
                 [PersistedPublication, persistedPublicationConsumer],
                 [RecipientUpsert, recipientUpsertConsumer],
                 [RecipientDeleted, recipientDeletedConsumer],
+                [DeviceDeleted, deviceDeletedConsumer],
                 [TopicFollow, topicFollowConsumer],
             ])
         );

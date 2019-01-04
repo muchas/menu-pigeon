@@ -14,7 +14,7 @@ export class RecipientMemoryRepository extends RecipientRepository {
 
     public async add(recipient: Recipient) {
         const existingRecipient = this.recipients.find((r) => r.id === recipient.id);
-        if (existingRecipient !== null) {
+        if (existingRecipient) {
             recipient.notifiedEventIds = existingRecipient.notifiedEventIds;
             recipient.topicLastNotification = existingRecipient.topicLastNotification;
 
@@ -30,6 +30,14 @@ export class RecipientMemoryRepository extends RecipientRepository {
 
     public async findAll(): Promise<Recipient[]> {
         return [...this.recipients];
+    }
+
+    public async findByDevice(pushToken: string): Promise<Recipient[]> {
+        return this.recipients.filter(
+            (recipient) => recipient.devices.find(
+                (device) => device.pushToken === pushToken
+            )
+        );
     }
 
     public async findOne(id: string): Promise<Recipient | undefined> {

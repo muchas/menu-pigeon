@@ -137,14 +137,17 @@ describe("ExpoTransport", () => {
             const chunk1 = ["receipt#1", "receipt#2"];
             const chunk2 = ["receipt#3"];
             const chunks = [chunk1, chunk2];
-            const returnedReceipts = [
-                {status: "ok", details: {time: "xxx"}},
-                {status: "error", details: {error: "yyy"}},
-                {status: "ok", details: {time: "zzz"}},
-            ];
+            const returnedReceipts1 = {
+                "receipt#1": {status: "ok", details: {time: "xxx"}},
+                "receipt#2": {status: "error", details: {error: "yyy"}},
+            };
+            const returnedReceipts2 = {
+                "receipt#3": {status: "ok", details: {time: "zzz"}},
+            };
+            const returnedReceipts = {...returnedReceipts1, ...returnedReceipts2};
             expoClient.chunkPushNotificationReceiptIds.returns(chunks);
-            expoClient.getPushNotificationReceiptsAsync.onCall(0).returns(returnedReceipts.slice(0, 2));
-            expoClient.getPushNotificationReceiptsAsync.onCall(1).returns(returnedReceipts.slice(2, 3));
+            expoClient.getPushNotificationReceiptsAsync.onCall(0).returns(returnedReceipts1);
+            expoClient.getPushNotificationReceiptsAsync.onCall(1).returns(returnedReceipts2);
 
             const transport = new ExpoTransport(expoClient);
 
@@ -170,7 +173,7 @@ describe("ExpoTransport", () => {
             expect(receipts.map(r => r.status)).to.deep.equal(
                 [PushNotificationStatus.DELIVERED, PushNotificationStatus.ERROR, PushNotificationStatus.DELIVERED]
             );
-            expect(receipts.map(r => r.data)).to.deep.equal(returnedReceipts.map(r => r.details));
+            expect(receipts.map(r => r.data)).to.deep.equal(Object.values(returnedReceipts));
         });
 
         it("should return failed receipt in case of exception", async () => {

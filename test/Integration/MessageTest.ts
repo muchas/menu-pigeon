@@ -12,6 +12,7 @@ import { RecipientMemoryRepository } from "../../src/Recipient/RecipientMemoryRe
 import { RecipientDevice } from "../../src/Recipient/RecipientDevice";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { Container } from "inversify";
+import { PushNotificationStatusChecker } from "../../src/PushNotification/PushNotificationStatusChecker";
 
 describe("Push notification integration test", () => {
     let container: Container;
@@ -88,5 +89,12 @@ describe("Push notification integration test", () => {
         await recipientRepository.addMany(recipients);
         await notifier.notifyAll(today.toDate());
         await sender.sendReady();
+    });
+
+    it.skip("should save notification status", async () => {
+        const statusChecker = container.get<PushNotificationStatusChecker>(PushNotificationStatusChecker);
+
+        await statusChecker.updateStatus();
+
     });
 });

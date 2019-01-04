@@ -49,7 +49,11 @@ export class PushNotificationRepository {
         if (pushTicket.sentSuccessfully) {
             notification.receiptId = pushTicket.receiptId;
             notification.status = PushNotificationStatus.SENT;
-            // notification.data = pushTicket.data;
+            notification.sentAt = pushTicket.sentAt;
+            notification.data = {
+                ticket_data: pushTicket.data,
+                ...notification.data,
+            };
             await this.notificationRepository.save(notification);
         }
     }
@@ -57,8 +61,11 @@ export class PushNotificationRepository {
     public async setDeliveryStatus(receipt: PushNotificationReceipt) {
         const notification = receipt.notification;
         if (receipt.fetchedSuccessfully) {
-            // TODO: handle errors (removal of push tokens / devices?)
             notification.status =  receipt.status;
+            notification.data = {
+                receipt_data: receipt.data,
+                ...notification.data,
+            };
             await this.notificationRepository.save(notification);
         }
     }
