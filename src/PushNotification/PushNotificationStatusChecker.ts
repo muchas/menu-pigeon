@@ -31,18 +31,20 @@ export class PushNotificationStatusChecker {
     }
 
     private async handleReceipt(receipt: PushNotificationReceipt) {
-        if (receipt.data && receipt.data.details && receipt.data.details.error) {
-            const error = receipt.data.details.error;
-            if (error === "DeviceNotRegistered") {
-                await this.recipientService.removeDevice(receipt.notification.pushToken);
-            } else {
-                winston.error(error, {
-                    recipient_id: receipt.notification.message.recipientId,
-                    push_notification_id: receipt.notification.id,
-                    receipt_id: receipt.notification.receiptId,
-                    receipt_data: receipt.data,
-                });
-            }
+        if (!receipt.data || !receipt.data.details || !receipt.data.details.error) {
+            return;
+        }
+
+        const error = receipt.data.details.error;
+        if (error === "DeviceNotRegistered") {
+            await this.recipientService.removeDevice(receipt.notification.pushToken);
+        } else {
+            winston.error(error, {
+                recipient_id: receipt.notification.message.recipientId,
+                push_notification_id: receipt.notification.id,
+                receipt_id: receipt.notification.receiptId,
+                receipt_data: receipt.data,
+            });
         }
     }
 }
