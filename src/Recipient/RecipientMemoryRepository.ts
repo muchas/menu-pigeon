@@ -14,7 +14,7 @@ export class RecipientMemoryRepository extends RecipientRepository {
 
     public async add(recipient: Recipient) {
         const existingRecipient = this.recipients.find((r) => r.id === recipient.id);
-        if (existingRecipient !== null) {
+        if (existingRecipient) {
             recipient.notifiedEventIds = existingRecipient.notifiedEventIds;
             recipient.topicLastNotification = existingRecipient.topicLastNotification;
 
