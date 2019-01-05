@@ -1,10 +1,10 @@
-import {Consumer, Job} from "queue";
-import {LunchOfferEventFactory} from "./LunchOfferEventFactory";
-import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
-import {injectable} from "inversify";
-import {NotifierClock} from "../PushNotification/NotifierClock";
+import { Consumer, Job } from "queue";
+import { LunchOfferEventFactory } from "./LunchOfferEventFactory";
+import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
+import { injectable } from "inversify";
+import { NotifierClock } from "../PushNotification/NotifierClock";
 import * as winston from "winston";
-import {EventRepository} from "../Interfaces/EventRepository";
+import { EventRepository } from "../Interfaces/EventRepository";
 
 @injectable()
 export class PersistedPublicationConsumer implements Consumer {

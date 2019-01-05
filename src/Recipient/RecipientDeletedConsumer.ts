@@ -1,8 +1,8 @@
-import {Consumer, Job} from "queue";
-import {RecipientDeleted} from "queue/lib/Messages/RecipientDeleted";
-import {injectable} from "inversify";
+import { Consumer, Job } from "queue";
+import { RecipientDeleted } from "queue/lib/Messages/RecipientDeleted";
+import { injectable } from "inversify";
 import * as winston from "winston";
-import {RecipientRepository} from "../Interfaces/RecipientRepository";
+import { RecipientRepository } from "../Interfaces/RecipientRepository";
 
 @injectable()
 export class RecipientDeletedConsumer implements Consumer {

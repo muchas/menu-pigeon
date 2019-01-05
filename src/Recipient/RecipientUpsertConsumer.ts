@@ -1,11 +1,11 @@
-import {Consumer, Job} from "queue";
-import {RecipientUpsert} from "queue/lib/Messages/RecipientUpsert";
-import {Recipient, RecipientPreferences} from "./Recipient";
-import {RecipientDevice} from "./RecipientDevice";
-import {NotifierClock} from "../PushNotification/NotifierClock";
-import {injectable} from "inversify";
+import { Consumer, Job } from "queue";
+import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
+import { Recipient, RecipientPreferences } from "./Recipient";
+import { RecipientDevice } from "./RecipientDevice";
+import { NotifierClock } from "../PushNotification/NotifierClock";
+import { injectable } from "inversify";
 import * as winston from "winston";
-import {RecipientRepository} from "../Interfaces/RecipientRepository";
+import { RecipientRepository } from "../Interfaces/RecipientRepository";
 
 @injectable()
 export class RecipientUpsertConsumer implements Consumer {

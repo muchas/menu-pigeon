@@ -1,9 +1,9 @@
-import {Consumer, Job} from "queue";
-import {TopicFollow} from "queue/lib/Messages/TopicFollow";
-import {NotifierClock} from "../PushNotification/NotifierClock";
-import {injectable} from "inversify";
+import { Consumer, Job } from "queue";
+import { TopicFollow } from "queue/lib/Messages/TopicFollow";
+import { NotifierClock } from "../PushNotification/NotifierClock";
+import { injectable } from "inversify";
 import * as winston from "winston";
-import {RecipientRepository} from "../Interfaces/RecipientRepository";
+import { RecipientRepository } from "../Interfaces/RecipientRepository";
 
 @injectable()
 export class TopicFollowConsumer implements Consumer {

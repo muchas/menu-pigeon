@@ -1,19 +1,19 @@
 import "reflect-metadata";
-import {Container} from "inversify";
+import { Container } from "inversify";
 import * as env from "node-env-file";
 import Config from "./Config";
-import {MessageGateCollection, Queue, QueueConnection} from "queue";
-import {PushNotificationSender} from "./PushNotification/PushNotificationSender";
-import {ExpoTransport} from "./PushNotification/ExpoTransport";
-import {PushNotificationRepository} from "./PushNotification/PushNotificationRepository";
+import { MessageGateCollection, Queue, QueueConnection } from "queue";
+import { PushNotificationSender } from "./PushNotification/PushNotificationSender";
+import { ExpoTransport } from "./PushNotification/ExpoTransport";
+import { PushNotificationRepository } from "./PushNotification/PushNotificationRepository";
 import Expo from "expo-server-sdk";
 import Mongo from "./Mongo";
-import {RecipientRepository} from "./Interfaces/RecipientRepository";
-import {RecipientMongoRepository} from "./Recipient/RecipientMongoRepository";
-import {EventRepository} from "./Interfaces/EventRepository";
-import {EventMongoRepository} from "./Event/EventMongoRepository";
-import {PushNotificationStatusChecker} from "./PushNotification/PushNotificationStatusChecker";
-import {RecipientService} from "./Recipient/RecipientService";
+import { RecipientRepository } from "./Interfaces/RecipientRepository";
+import { RecipientMongoRepository } from "./Recipient/RecipientMongoRepository";
+import { EventRepository } from "./Interfaces/EventRepository";
+import { EventMongoRepository } from "./Event/EventMongoRepository";
+import { PushNotificationStatusChecker } from "./PushNotification/PushNotificationStatusChecker";
+import { RecipientService } from "./Recipient/RecipientService";
 
 export const createContainer = (): Container => {
     env(__dirname + "/../.env");
