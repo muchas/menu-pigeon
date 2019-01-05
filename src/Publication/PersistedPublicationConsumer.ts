@@ -1,17 +1,17 @@
-import { Consumer, Job } from "queue";
-import { EventMemoryRepository } from "../Event/EventMemoryRepository";
-import { LunchOfferEventFactory } from "./LunchOfferEventFactory";
-import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
-import { injectable } from "inversify";
-import { NotifierClock } from "../PushNotification/NotifierClock";
+import {Consumer, Job} from "queue";
+import {LunchOfferEventFactory} from "./LunchOfferEventFactory";
+import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
+import {injectable} from "inversify";
+import {NotifierClock} from "../PushNotification/NotifierClock";
 import * as winston from "winston";
+import {EventRepository} from "../Interfaces/EventRepository";
 
 @injectable()
 export class PersistedPublicationConsumer implements Consumer {
     private readonly factory: LunchOfferEventFactory;
 
     public constructor(
-        private readonly eventRepository: EventMemoryRepository,
+        private readonly eventRepository: EventRepository,
         private readonly notifierClock: NotifierClock
     ) {
         this.factory = new LunchOfferEventFactory();

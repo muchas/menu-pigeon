@@ -1,16 +1,16 @@
-import { RecipientMemoryRepository } from "../Recipient/RecipientMemoryRepository";
-import { EventMemoryRepository } from "../Event/EventMemoryRepository";
-import { EventDistributor } from "../Event/EventDistributor";
-import { Recipient } from "../Recipient/Recipient";
-import { Message } from "../Entity/Message";
-import { Event } from "../Interfaces/Event";
-import { PushNotificationSender } from "./PushNotificationSender";
-import { LunchOfferMessageComposer } from "../Publication/LunchOfferMessageComposer";
-import { EventNotification } from "../Event/EventNotification";
-import { EventNotificationScheduler } from "../Event/EventNotificationScheduler";
-import { LunchOfferEvent } from "../Publication/LunchOfferEvent";
-import { MessageThrottleService } from "./MessageThrottleService";
-import { injectable } from "inversify";
+import {EventDistributor} from "../Event/EventDistributor";
+import {Recipient} from "../Recipient/Recipient";
+import {Message} from "../Entity/Message";
+import {Event} from "../Interfaces/Event";
+import {PushNotificationSender} from "./PushNotificationSender";
+import {LunchOfferMessageComposer} from "../Publication/LunchOfferMessageComposer";
+import {EventNotification} from "../Event/EventNotification";
+import {EventNotificationScheduler} from "../Event/EventNotificationScheduler";
+import {LunchOfferEvent} from "../Publication/LunchOfferEvent";
+import {MessageThrottleService} from "./MessageThrottleService";
+import {injectable} from "inversify";
+import {RecipientRepository} from "../Interfaces/RecipientRepository";
+import {EventRepository} from "../Interfaces/EventRepository";
 
 /**
  * Responsibility:
@@ -25,8 +25,8 @@ export class PushNotifier {
     private readonly throttleService: MessageThrottleService;
 
     public constructor(
-        private readonly recipientRepository: RecipientMemoryRepository,
-        private readonly eventRepository: EventMemoryRepository,
+        private readonly recipientRepository: RecipientRepository,
+        private readonly eventRepository: EventRepository,
         private readonly pushNotificationSender: PushNotificationSender
     ) {
         this.messageComposer = new LunchOfferMessageComposer();
