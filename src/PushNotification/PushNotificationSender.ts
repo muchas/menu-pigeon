@@ -30,10 +30,12 @@ export class PushNotificationSender {
 
         await this.notificationRepository.storeMessagesToSend(messages);
 
-        winston.info("Messages scheduled", {
-            message_ids: messages.map((message) => message.id),
-            recipient_ids: messages.map((message) => message.recipientId),
-        });
+        if (messages.length > 0) {
+            winston.info("Messages scheduled", {
+                message_ids: messages.map((message) => message.id),
+                recipient_ids: messages.map((message) => message.recipientId),
+            });
+        }
     }
 
     public async sendReady() {
