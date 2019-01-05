@@ -1,15 +1,15 @@
 import { Consumer, Job } from "queue";
 import { TopicFollow } from "queue/lib/Messages/TopicFollow";
-import { RecipientMemoryRepository } from "./RecipientMemoryRepository";
 import { NotifierClock } from "../PushNotification/NotifierClock";
 import { injectable } from "inversify";
 import * as winston from "winston";
+import { RecipientRepository } from "../Interfaces/RecipientRepository";
 
 @injectable()
 export class TopicFollowConsumer implements Consumer {
 
     public constructor(
-        private readonly recipientRepository: RecipientMemoryRepository,
+        private readonly recipientRepository: RecipientRepository,
         private readonly notifierClock: NotifierClock
     ) {
     }
