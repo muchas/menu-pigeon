@@ -9,7 +9,9 @@ export class RecipientMemoryRepository extends RecipientRepository {
     }
 
     public async addMany(recipients: Recipient[]) {
-        this.recipients.push(...recipients);
+        for (const recipient of recipients) {
+            await this.add(recipient);
+        }
     }
 
     public async add(recipient: Recipient) {
