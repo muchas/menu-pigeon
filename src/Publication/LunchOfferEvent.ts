@@ -1,6 +1,8 @@
 import { Event } from "../Interfaces/Event";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 
+export const LUNCH_OFFER_EVENT_TYPE = "LUNCH_OFFER";
+
 export class LunchOfferEvent implements Event {
 
     public constructor(
@@ -9,14 +11,6 @@ export class LunchOfferEvent implements Event {
         public expirationTime: Date,
         public topics: string[],
         public content: PersistedPublication,
-        public eventType: string = "LUNCH_OFFER"
+        public eventType: string = LUNCH_OFFER_EVENT_TYPE
     ) {}
-
-    public get businessId(): string {
-        return this.content.businessId;
-    }
-
-    public get businessName(): string {
-        return this.content.businessName;
-    }
 }
