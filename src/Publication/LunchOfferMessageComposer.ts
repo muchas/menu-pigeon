@@ -26,7 +26,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
                     "Czas na lunch",
                     `${this.makeGreeting(recipient)}${event.content.businessName} opublikował nową ofertę.
                     Kliknij, aby sprawdzić szczegóły.`,
-                    "high",
+                    "high"
                 ),
             ];
         }

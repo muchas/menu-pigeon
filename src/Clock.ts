@@ -24,9 +24,9 @@ export abstract class Clock {
             await this.performAction();
 
             setTimeout(async () => this.tick(), this.period);
-        } catch(e) {
+        } catch (e) {
             winston.error(e);
-            winston.error('Clock stopped ticking');
+            winston.error("Clock stopped ticking");
         }
     }
 }

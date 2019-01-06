@@ -1,21 +1,20 @@
-import {setupWithMongo, tearDownWithMongo} from "../utils";
-import {expect} from "chai";
+import { setupWithMongo, tearDownWithMongo } from "../utils";
+import { expect } from "chai";
 import * as sinon from "sinon";
 import * as moment from "moment";
-import {Recipient, RecipientPreferences} from "../../src/Recipient/Recipient";
-import {PushNotifier} from "../../src/PushNotification/PushNotifier";
-import {PushNotificationSender} from "../../src/PushNotification/PushNotificationSender";
-import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
-import {PersistedPublicationConsumer} from "../../src/Publication/PersistedPublicationConsumer";
-import {Container} from "inversify";
-import {EventRepository} from "../../src/Interfaces/EventRepository";
-import {RecipientRepository} from "../../src/Interfaces/RecipientRepository";
-import {RecipientUpsert} from "queue/lib/Messages/RecipientUpsert";
-import {NotificationLevel} from "queue/lib/Messages/Recipient";
-import {RecipientUpsertConsumer} from "../../src/Recipient/RecipientUpsertConsumer";
-import {Job, Queue} from "queue";
-import {Connection, createConnection} from "typeorm";
-
+import { Recipient, RecipientPreferences } from "../../src/Recipient/Recipient";
+import { PushNotifier } from "../../src/PushNotification/PushNotifier";
+import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
+import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
+import { PersistedPublicationConsumer } from "../../src/Publication/PersistedPublicationConsumer";
+import { Container } from "inversify";
+import { EventRepository } from "../../src/Interfaces/EventRepository";
+import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
+import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
+import { NotificationLevel } from "queue/lib/Messages/Recipient";
+import { RecipientUpsertConsumer } from "../../src/Recipient/RecipientUpsertConsumer";
+import { Job, Queue } from "queue";
+import { Connection, createConnection } from "typeorm";
 
 const createRecipientUpsertJob = (upsert: RecipientUpsert): Job<RecipientUpsert> => {
     const queue = sinon.createStubInstance(Queue);
@@ -47,7 +46,7 @@ describe("PushNotifier", () => {
         container.bind(Connection).toConstantValue(connection);
 
         today = moment();
-        const morning = today.set(8, 'hour').toDate();
+        const morning = today.set(8, "hour").toDate();
 
         const offers = [{date: today.toDate(), lunches: [], soups: [], prices: [], texts: []}];
         publication1 = new PersistedPublication(1, "1", "Bococa Bistro", offers, morning);
@@ -65,7 +64,7 @@ describe("PushNotifier", () => {
         await tearDownWithMongo(container);
     });
 
-    it.only("should send messages to interested recipients @slow", async () => {
+    it("should send messages to interested recipients @slow", async () => {
         // given
         const preferences = new RecipientPreferences(7, 0, NotificationLevel.Often);
         const recipientUpsert1 = new RecipientUpsert(
