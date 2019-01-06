@@ -21,26 +21,26 @@ export class LunchOfferMessageComposer implements MessageComposer {
             const event = offerEvents[0];
             return [
                 this.createMessage(
-                    recipient.id,
+                    recipient,
+                    offerEvents,
                     "Czas na lunch",
                     `${this.makeGreeting(recipient)}${event.content.businessName} opublikował nową ofertę.
                     Kliknij, aby sprawdzić szczegóły.`,
-                    "high",
-                    event.expirationTime
+                    "high"
                 ),
             ];
         }
 
-        const minExpirationTime = min(offerEvents.map((e) => moment(e.expirationTime))).toDate();
         const businessCount = Array.from(new Set(offerEvents.map(e => e.content.businessId))).length;
 
         return [
             this.createMessage(
-                recipient.id,
+                recipient,
+                offerEvents,
                 `${this.makeGreeting(recipient)}sprawdź dzisiejszy lunch!`,
                 `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`,
-                "high",
-                minExpirationTime),
+                "high"
+            ),
         ];
     }
 
@@ -51,17 +51,27 @@ export class LunchOfferMessageComposer implements MessageComposer {
         return "";
     }
 
-    private createMessage(recipientId: string,
+    private createMessage(recipient: Recipient,
+                          events: LunchOfferEvent[],
                           title: string,
                           body: string,
-                          priority: MessagePriority,
-                          expirationTime: Date): Message {
+                          priority: MessagePriority): Message {
+        const minExpirationTime = min(events.map((e) => moment(e.expirationTime))).toDate();
         const message = new Message();
-        message.recipientId = recipientId;
+        message.recipientId = recipient.id;
         message.title = capitalize(title);
         message.body = capitalize(body);
         message.priority = priority;
-        message.expirationTime = expirationTime;
+        message.expirationTime = minExpirationTime;
+        message.setEventType(LUNCH_OFFER_EVENT_TYPE);
+        message.setEventIds(events.map(event => event.id));
+        message.setTopics(this.getMessageTopics(recipient, events));
         return message;
+    }
+
+    private getMessageTopics(recipient: Recipient, events: LunchOfferEvent[]): string[] {
+        return events
+            .map(event => event.topics.filter(topic => recipient.followedTopics.has(topic)))
+            .reduce((memo, item) => memo.concat(item), []);
     }
 }
