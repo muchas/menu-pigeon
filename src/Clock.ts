@@ -1,5 +1,6 @@
 import Timeout = NodeJS.Timeout;
 import { injectable } from "inversify";
+import * as winston from "winston";
 
 @injectable()
 export abstract class Clock {
@@ -19,7 +20,13 @@ export abstract class Clock {
            this.lastTimeout = undefined;
         }
 
-        await this.performAction();
-        setTimeout(async () => this.tick(), this.period);
+        try {
+            await this.performAction();
+
+            setTimeout(async () => this.tick(), this.period);
+        } catch(e) {
+            winston.error(e);
+            winston.error('Clock stopped ticking');
+        }
     }
 }
