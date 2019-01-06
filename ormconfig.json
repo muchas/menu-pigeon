@@ -6,7 +6,7 @@
    "password": "qwerty",
    "database": "nalunch_db",
    "synchronize": true,
-   "logging": true,
+   "logging": false,
    "entities": [
       "src/Entity/**/*.ts"
    ],
