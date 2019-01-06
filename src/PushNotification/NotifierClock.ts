@@ -7,7 +7,7 @@ export class NotifierClock extends Clock {
 
     public constructor(private readonly notifier: PushNotifier) {
         super();
-        this.period = 10 * 1000;
+        this.period = 20 * 1000;
     }
 
     public async performAction() {

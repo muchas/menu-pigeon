@@ -18,6 +18,7 @@ import { StatusCheckerClock } from "./PushNotification/StatusCheckerClock";
 import { DeviceDeletedConsumer } from "./Recipient/DeviceDeletedConsumer";
 import { DeviceDeleted } from "queue/lib/Messages/DeviceDeleted";
 import Mongo from "./Mongo";
+import { SenderClock } from "./PushNotification/SenderClock";
 
 const container = createContainer();
 const config = container.get<Config>(Config);
@@ -31,6 +32,7 @@ createConnection()
         const mongo = container.get<Mongo>(Mongo);
         const queue = container.get<Queue>(Queue);
         const notifierClock = container.get<NotifierClock>(NotifierClock);
+        const senderClock = container.get<SenderClock>(SenderClock);
         const statusCheckerClock = container.get<StatusCheckerClock>(StatusCheckerClock);
 
         const persistedPublicationConsumer = new SingleConsumer(
@@ -54,6 +56,7 @@ createConnection()
 
         await notifierClock.start();
         await statusCheckerClock.start();
+        await senderClock.start();
 
         await queue.consume(
             `${config.get("APP_NAME")}.default`,
