@@ -36,6 +36,7 @@ export class TopicFollowConsumer implements Consumer {
             recipient.unfollow(topicName);
         }
 
+        await this.recipientRepository.add(recipient);
         await this.notifierClock.tick();
 
         winston.info("Consumption of topic follow finished", {
