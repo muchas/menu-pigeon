@@ -19,13 +19,14 @@ export class LunchOfferMessageComposer implements MessageComposer {
         }
         if (offerEvents.length === 1) {
             const event = offerEvents[0];
+            const greeting = this.makeGreeting(recipient);
+            const businessName = event.content.businessName;
             return [
                 this.createMessage(
                     recipient,
                     offerEvents,
                     "Czas na lunch",
-                    `${this.makeGreeting(recipient)}${event.content.businessName} opublikował nową ofertę.
-                    Kliknij, aby sprawdzić szczegóły.`,
+                    `${greeting}${businessName} opublikował nową ofertę. Kliknij, aby sprawdzić szczegóły.`,
                     "high"
                 ),
             ];
