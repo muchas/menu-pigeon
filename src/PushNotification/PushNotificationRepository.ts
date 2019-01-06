@@ -40,7 +40,7 @@ export class PushNotificationRepository {
             .innerJoinAndSelect("notification.message", "message")
             .where("notification.status = :status", {status: PushNotificationStatus.SCHEDULED})
             .andWhere("notification.sentAt is NULL")
-            .andWhere("message.expirationTime <= NOW()")
+            .andWhere("message.expirationTime >= NOW()")
             .getMany();
     }
 
