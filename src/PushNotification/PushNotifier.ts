@@ -82,5 +82,7 @@ export class PushNotifier {
                 recipient.markNotifiedAbout(event);
             }
         }
+
+        await this.recipientRepository.addMany(recipients);
     }
 }
