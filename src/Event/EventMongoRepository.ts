@@ -46,10 +46,10 @@ export class EventMongoRepository extends EventRepository {
             .find(
             {
                 expirationTime: {
-                    $lte: time.toISOString(),
+                    $gte: time,
                 },
                 readyTime: {
-                    $gte: time.toISOString(),
+                    $lte: time,
                 },
             }
             )
