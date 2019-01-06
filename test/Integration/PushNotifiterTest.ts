@@ -64,7 +64,7 @@ describe("PushNotifier", () => {
         await tearDownWithMongo(container);
     });
 
-    it("should send messages to interested recipients @slow", async () => {
+    it.skip("should send messages to interested recipients @slow", async () => {
         // given
         const preferences = new RecipientPreferences(7, 0, NotificationLevel.Often);
         const recipientUpsert1 = new RecipientUpsert(
