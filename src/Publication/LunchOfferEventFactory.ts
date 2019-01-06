@@ -27,6 +27,6 @@ export class LunchOfferEventFactory {
     }
 
     private getPublicationTopics(publication: PersistedPublication): string[] {
-        return [`business-${publication.businessName}`];
+        return [`business-${publication.businessId}`];
     }
 }
