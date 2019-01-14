@@ -141,6 +141,12 @@
   version "5.2.5"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.5.tgz#8a4accfc403c124a0bafe8a9fc61a05ec1032073"
 
+"@types/moment-timezone@^0.5.10":
+  version "0.5.10"
+  resolved "https://registry.yarnpkg.com/@types/moment-timezone/-/moment-timezone-0.5.10.tgz#2b251ad454a46bdd4e3b5a5157d45059e5714799"
+  dependencies:
+    moment ">=2.14.0"
+
 "@types/mongodb@^3.1.18":
   version "3.1.18"
   resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.1.18.tgz#24e847c15155226895ec9c79660ec0907005deff"
@@ -1080,7 +1086,13 @@ mocha@^5.1.1:
     mkdirp "0.5.1"
     supports-color "5.4.0"
 
-moment@^2.22.2, moment@^2.23.0:
+moment-timezone@^0.5.23:
+  version "0.5.23"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.23.tgz#7cbb00db2c14c71b19303cb47b0fb0a6d8651463"
+  dependencies:
+    moment ">= 2.9.0"
+
+"moment@>= 2.9.0", moment@>=2.14.0, moment@^2.22.2, moment@^2.23.0:
   version "2.23.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.23.0.tgz#759ea491ac97d54bac5ad776996e2a58cc1bc225"
 

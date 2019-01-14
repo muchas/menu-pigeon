@@ -4,6 +4,7 @@ import { RecipientRepository } from "../Interfaces/RecipientRepository";
 import Mongo from "../Mongo";
 import { Collection } from "mongodb";
 import { RecipientDevice } from "./RecipientDevice";
+import * as moment from "moment-timezone";
 
 @injectable()
 export class RecipientMongoRepository extends RecipientRepository {
@@ -33,7 +34,7 @@ export class RecipientMongoRepository extends RecipientRepository {
                         $each: [...recipient.notifiedEventIds],
                     },
                     topicLastNotification: {
-                        $each: [...recipient.topicLastNotification],
+                        $each: [...recipient.topicLastNotification].map(([key, date]) => [key, date.toDate()]),
                     },
                 },
             },
@@ -82,7 +83,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             followedTopics: [...recipient.followedTopics],
             devices: recipient.devices.map((device) => ({
                 pushToken: device.pushToken,
-                createdAt: device.createdAt,
+                createdAt: device.createdAt.toDate(),
             })),
             preferences: {
                 earliestHour: recipient.preferences.earliestHour,
@@ -97,14 +98,16 @@ export class RecipientMongoRepository extends RecipientRepository {
             data.id,
             data.name,
             data.followedTopics,
-            data.devices.map((deviceData) => new RecipientDevice(deviceData.pushToken, deviceData.createdAt)),
+            data.devices.map(
+                (deviceData) => new RecipientDevice(deviceData.pushToken, moment(deviceData.createdAt))
+            ),
             new RecipientPreferences(
                 data.preferences.earliestHour,
                 data.preferences.earliestMinute,
                 data.preferences.level
             ),
             new Set(data.notifiedEventIds),
-            new Map(data.topicLastNotification)
+            new Map(data.topicLastNotification.map(([key, date]) => [key, moment(date)]))
         );
     }
 }

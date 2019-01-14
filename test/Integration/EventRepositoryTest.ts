@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { Container } from "inversify";
 import { setupWithMongo, tearDownWithMongo } from "../utils";
 import { EventRepository } from "../../src/Interfaces/EventRepository";
+import * as moment from "moment-timezone";
 
 describe("EventRepository test", () => {
     let container: Container;
@@ -24,8 +25,8 @@ describe("EventRepository test", () => {
             id: "#e1",
             eventType: "lunch",
             topics: ["business-50"],
-            readyTime: new Date(),
-            expirationTime: new Date(),
+            readyTime: moment(),
+            expirationTime: moment(),
         };
 
         // when

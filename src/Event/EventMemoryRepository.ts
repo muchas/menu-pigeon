@@ -1,6 +1,7 @@
 import { Event } from "../Interfaces/Event";
 import { injectable } from "inversify";
 import { EventRepository } from "../Interfaces/EventRepository";
+import { Moment } from "moment-timezone";
 
 @injectable()
 export class EventMemoryRepository extends EventRepository {
@@ -23,7 +24,7 @@ export class EventMemoryRepository extends EventRepository {
         return this.events.find((event) => event.id === id);
     }
 
-    public async findRelevant(time: Date): Promise<Event[]> {
+    public async findRelevant(time: Moment): Promise<Event[]> {
         return this.events.filter(
             (event) => event.readyTime <= time && event.expirationTime >= time
         );

@@ -49,7 +49,7 @@ export class PushNotificationRepository {
         if (pushTicket.sentSuccessfully) {
             notification.receiptId = pushTicket.receiptId;
             notification.status = PushNotificationStatus.SENT;
-            notification.sentAt = pushTicket.sentAt;
+            notification.sentAt = pushTicket.sentAt.toDate();
             notification.data = {
                 ticket_data: pushTicket.data,
                 ...notification.data,

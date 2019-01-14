@@ -1,6 +1,6 @@
 import { createContainer } from "../../src/inversify.config";
 import "reflect-metadata";
-import * as moment from "moment";
+import * as moment from "moment-timezone";
 import { Event } from "../../src/Interfaces/Event";
 import { EventMemoryRepository } from "../../src/Event/EventMemoryRepository";
 import { LunchOfferEvent } from "../../src/Publication/LunchOfferEvent";

@@ -63,7 +63,7 @@ describe("MessageThrottleService", () => {
 
     it("should receive at most one a week if seldom", async () => {
         // given
-        const weekAgo = moment().subtract("1", "week").toDate();
+        const weekAgo = moment().subtract("1", "week");
 
         const messages = [
             createMessage("#1", [], "default"),
@@ -92,7 +92,7 @@ describe("MessageThrottleService", () => {
 
     it("should not receive if notified within last week and seldom", async () => {
         // given
-        const weekAgo = moment().subtract("1", "week").add("1", "minute").toDate();
+        const weekAgo = moment().subtract("1", "week").add("1", "minute");
 
         const messages = [
             createMessage("#1", [], "default"),
@@ -120,7 +120,7 @@ describe("MessageThrottleService", () => {
 
     it("should receive at most one a day if daily", async () => {
         // given
-        const dayAgo = moment().subtract("1", "day").toDate();
+        const dayAgo = moment().subtract("1", "day");
 
         const messages = [
             createMessage("#1", [], "default"),
@@ -149,7 +149,7 @@ describe("MessageThrottleService", () => {
 
     it("should receive at most one per hour if often", async () => {
         // given
-        const hourAgo = moment().subtract("1", "hour").toDate();
+        const hourAgo = moment().subtract("1", "hour");
 
         const messages = [
             createMessage("#1", [], "default"),

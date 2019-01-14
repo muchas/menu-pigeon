@@ -2,8 +2,7 @@ import { MessageComposer } from "../Interfaces/MessageComposer";
 import { Recipient } from "../Recipient/Recipient";
 import { Message, MessagePriority } from "../Entity/Message";
 import { LUNCH_OFFER_EVENT_TYPE, LunchOfferEvent } from "./LunchOfferEvent";
-import * as moment from "moment";
-import { min } from "moment";
+import { min } from "moment-timezone";
 import { capitalize } from "../utils";
 import { Event } from "../Interfaces/Event";
 
@@ -57,7 +56,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
                           title: string,
                           body: string,
                           priority: MessagePriority): Message {
-        const minExpirationTime = min(events.map((e) => moment(e.expirationTime))).toDate();
+        const minExpirationTime = min(events.map((e) => e.expirationTime)).toDate();
         const message = new Message();
         message.recipientId = recipient.id;
         message.title = capitalize(title);

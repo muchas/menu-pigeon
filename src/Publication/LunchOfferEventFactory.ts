@@ -1,17 +1,16 @@
-import * as moment from "moment";
+import * as moment from "moment-timezone";
 import { LunchOfferEvent } from "./LunchOfferEvent";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
-import { Moment } from "moment";
+import { Moment } from "moment-timezone";
 import * as uuid from "uuid";
 
 export class LunchOfferEventFactory {
 
     public create(publication: PersistedPublication): LunchOfferEvent[] {
         return publication.lunchOffers.map((offer) => {
-            const readyTime = this.resetToDayStart(offer.date).toDate();
+            const readyTime = this.resetToDayStart(offer.date);
             const expirationTime = this.resetToDayStart(offer.date)
-                .add("1", "day")
-                .toDate();
+                .add("1", "day");
 
             const topics = this.getPublicationTopics(publication);
 
