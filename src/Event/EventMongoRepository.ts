@@ -48,7 +48,7 @@ export class EventMongoRepository extends EventRepository {
     }
 
     public async findRelevant(time: Moment): Promise<Event[]> {
-        return this.collection()
+        const events =  await this.collection()
             .find(
             {
                 expirationTime: {
@@ -60,6 +60,12 @@ export class EventMongoRepository extends EventRepository {
             }
             )
             .toArray();
+
+        return events.map((document) => ({
+            ...document,
+            readyTime: moment(document.readyTime),
+            expirationTime: moment(document.expirationTime),
+        }));
     }
 
     public collection(): Collection {
