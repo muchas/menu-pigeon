@@ -1,7 +1,7 @@
 import { Clock } from "../Clock";
 import { PushNotifier } from "./PushNotifier";
 import { injectable } from "inversify";
-import moment = require("moment-timezone");
+import * as moment from "moment-timezone";
 
 @injectable()
 export class NotifierClock extends Clock {

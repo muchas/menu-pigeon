@@ -4,7 +4,7 @@ import { Collection } from "mongodb";
 import { Event } from "../Interfaces/Event";
 import { EventRepository } from "../Interfaces/EventRepository";
 import { Moment } from "moment-timezone";
-import moment = require("moment-timezone");
+import * as moment from "moment-timezone";
 
 @injectable()
 export class EventMongoRepository extends EventRepository {
