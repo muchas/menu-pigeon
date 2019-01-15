@@ -19,6 +19,9 @@ import { DeviceDeletedConsumer } from "./Recipient/DeviceDeletedConsumer";
 import { DeviceDeleted } from "queue/lib/Messages/DeviceDeleted";
 import Mongo from "./Mongo";
 import { SenderClock } from "./PushNotification/SenderClock";
+import * as moment from "moment-timezone";
+
+moment.tz.setDefault("Europe/Warsaw");
 
 const container = createContainer();
 const config = container.get<Config>(Config);

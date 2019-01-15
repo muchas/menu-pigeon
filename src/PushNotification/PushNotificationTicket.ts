@@ -1,4 +1,6 @@
 import { PushNotification } from "../Entity/PushNotification";
+import { Moment } from "moment-timezone";
+import * as moment from "moment-timezone";
 
 export class PushNotificationTicket {
 
@@ -8,7 +10,7 @@ export class PushNotificationTicket {
         public receiptId?: string,
         public data?: object,
         public error?: object,
-        public sentAt: Date = new Date()
+        public sentAt: Moment = moment()
     ) {
     }
 }

@@ -2,8 +2,8 @@ import { Recipient } from "../Recipient/Recipient";
 import { Message } from "../Entity/Message";
 import { LUNCH_EVENT_TYPE } from "../Publication/constants";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import * as moment from "moment";
-import { DurationInputArg2 } from "moment";
+import * as moment from "moment-timezone";
+import { DurationInputArg2 } from "moment-timezone";
 
 interface MessageThrottleRule {
     filter(recipient: Recipient, messages: Message[]): Message[];

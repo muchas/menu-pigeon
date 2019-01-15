@@ -6,6 +6,7 @@ import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
 import { Recipient, RecipientPreferences } from "../../src/Recipient/Recipient";
 import { RecipientDevice } from "../../src/Recipient/RecipientDevice";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
+import * as moment from "moment-timezone";
 
 describe("RecipientRepository test", () => {
     let container: Container;
@@ -21,12 +22,12 @@ describe("RecipientRepository test", () => {
             "John",
             ["business-1", "business-5"],
             [
-                new RecipientDevice("awopk124pko", new Date()),
-                new RecipientDevice("pok1po2k4ij", new Date()),
+                new RecipientDevice("awopk124pko", moment()),
+                new RecipientDevice("pok1po2k4ij", moment()),
             ],
             new RecipientPreferences(9, 15, NotificationLevel.Seldom),
             new Set(["#japwjo", "#12mlk1", "#jm214"]),
-            new Map([["1241", new Date()], ["125", new Date()]])
+            new Map([["1241", moment()], ["125", moment()]])
         );
     });
 
@@ -50,8 +51,8 @@ describe("RecipientRepository test", () => {
             id: "8128",
             eventType: "lunch",
             topics: ["business-50"],
-            readyTime: new Date(),
-            expirationTime: new Date(),
+            readyTime: moment(),
+            expirationTime: moment(),
         };
 
         await recipientRepository.add(recipient);

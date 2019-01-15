@@ -1,11 +1,12 @@
 import { Location } from "./Location";
+import { Moment } from "moment-timezone";
 
 export interface Event {
     id: string;
     eventType: string;
     topics: string[];
-    readyTime: Date;
-    expirationTime: Date;
+    readyTime: Moment;
+    expirationTime: Moment;
     location?: Location;
     content?: any;
 }

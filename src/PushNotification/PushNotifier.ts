@@ -10,6 +10,7 @@ import { MessageThrottleService } from "./MessageThrottleService";
 import { injectable } from "inversify";
 import { RecipientRepository } from "../Interfaces/RecipientRepository";
 import { EventRepository } from "../Interfaces/EventRepository";
+import { Moment } from "moment-timezone";
 
 /**
  * Responsibility:
@@ -34,7 +35,7 @@ export class PushNotifier {
         this.throttleService = new MessageThrottleService();
     }
 
-    public async notifyAll(currentTime: Date) {
+    public async notifyAll(currentTime: Moment) {
         const events = await this.eventRepository.findRelevant(currentTime);
         const recipients = await this.recipientRepository.findAll();
 
@@ -46,7 +47,7 @@ export class PushNotifier {
         await this.markNotified(recipients, events, messages);
     }
 
-    private makeMessages(recipient: Recipient, events: Event[], currentTime: Date): Message[] {
+    private makeMessages(recipient: Recipient, events: Event[], currentTime: Moment): Message[] {
         const recipientEvents = this.distributor.filterRelevantFor(recipient, events);
         const notifications = this.prepareNotifications(recipient, recipientEvents, currentTime);
         const messages = this.messageComposer.compose(recipient, notifications.map(n => n.event));
@@ -57,7 +58,7 @@ export class PushNotifier {
     private prepareNotifications(
         recipient: Recipient,
         events: Event[],
-        currentTime: Date
+        currentTime: Moment
     ): EventNotification[] {
         return this.scheduler
             .schedule(recipient, events, currentTime)

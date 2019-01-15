@@ -1,8 +1,9 @@
-import * as moment from "moment";
+import * as moment from "moment-timezone";
 import { Event } from "../Interfaces/Event";
 import { EventNotification } from "./EventNotification";
 import { Recipient } from "../Recipient/Recipient";
 import { max, min } from "../utils";
+import { Moment } from "moment-timezone";
 
 /**
  * Responsibility:
@@ -15,21 +16,19 @@ export class EventNotificationScheduler {
     public schedule(
         recipient: Recipient,
         events: Event[],
-        targetDay: Date
+        targetDay: Moment
     ): EventNotification[] {
         const preferences = recipient.preferences;
 
         const targetDayNotificationStart = moment(targetDay)
             .set("hour", preferences.earliestHour)
             .set("minute", preferences.earliestMinute)
-            .set("second", 0)
-            .toDate();
+            .set("second", 0);
 
         const targetDayNotificationEnd = moment(targetDay)
             .set("hour", preferences.latestHour)
             .set("minute", preferences.latestMinute)
-            .set("second", 0)
-            .toDate();
+            .set("second", 0);
 
         const notifications = [];
 

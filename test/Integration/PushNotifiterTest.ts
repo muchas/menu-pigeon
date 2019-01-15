@@ -1,7 +1,7 @@
 import { setupWithMongo, tearDownWithMongo } from "../utils";
 import { expect } from "chai";
 import * as sinon from "sinon";
-import * as moment from "moment";
+import * as moment from "moment-timezone";
 import { Recipient, RecipientPreferences } from "../../src/Recipient/Recipient";
 import { PushNotifier } from "../../src/PushNotification/PushNotifier";
 import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";

@@ -6,6 +6,7 @@ import { NotifierClock } from "../PushNotification/NotifierClock";
 import { injectable } from "inversify";
 import * as winston from "winston";
 import { RecipientRepository } from "../Interfaces/RecipientRepository";
+import * as moment from "moment-timezone";
 
 @injectable()
 export class RecipientUpsertConsumer implements Consumer {
@@ -21,7 +22,7 @@ export class RecipientUpsertConsumer implements Consumer {
         });
 
         const recipientDevices = devices.map(
-            (device) => new RecipientDevice(device.pushToken, new Date())
+            (device) => new RecipientDevice(device.pushToken, moment())
         );
         const recipientPreferences = new RecipientPreferences(
             preferences.earliestHour, preferences.earliestMinute, preferences.level

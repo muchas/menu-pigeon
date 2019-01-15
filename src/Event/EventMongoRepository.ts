@@ -3,6 +3,8 @@ import Mongo from "../Mongo";
 import { Collection } from "mongodb";
 import { Event } from "../Interfaces/Event";
 import { EventRepository } from "../Interfaces/EventRepository";
+import { Moment } from "moment-timezone";
+import * as moment from "moment-timezone";
 
 @injectable()
 export class EventMongoRepository extends EventRepository {
@@ -37,19 +39,23 @@ export class EventMongoRepository extends EventRepository {
     public async findOne(id: string): Promise<Event | undefined> {
         const document = await this.collection().findOne({id});
         if (document) {
-            return document;
+            return {
+                ...document,
+                readyTime: moment(document.readyTime),
+                expirationTime: moment(document.expirationTime),
+            };
         }
     }
 
-    public async findRelevant(time: Date): Promise<Event[]> {
+    public async findRelevant(time: Moment): Promise<Event[]> {
         return this.collection()
             .find(
             {
                 expirationTime: {
-                    $gte: time,
+                    $gte: time.toDate(),
                 },
                 readyTime: {
-                    $lte: time,
+                    $lte: time.toDate(),
                 },
             }
             )
@@ -65,8 +71,8 @@ export class EventMongoRepository extends EventRepository {
             id: event.id,
             eventType: event.eventType,
             topics: event.topics,
-            readyTime: event.readyTime,
-            expirationTime: event.expirationTime,
+            readyTime: event.readyTime.toDate(),
+            expirationTime: event.expirationTime.toDate(),
             location: event.location,
             content: event.content,
         };

@@ -1,11 +1,12 @@
 import { Event } from "../Interfaces/Event";
 import { Recipient } from "../Recipient/Recipient";
+import { Moment } from "moment-timezone";
 
 export class EventNotification {
 
     public constructor(
-        public readyTime: Date,
-        public expirationTime: Date,
+        public readyTime: Moment,
+        public expirationTime: Moment,
         public event: Event,
         public recipient: Recipient
     ) {}
