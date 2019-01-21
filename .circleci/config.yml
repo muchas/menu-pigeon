@@ -35,7 +35,7 @@ jobs:
         environment:
           DB_HOSTNAME: localhost
           DB_USERNAME: circleci
-          DB_DATABASE: circle_test
+          DB_NAME: circle_test
 
     - store_test_results:
         path: test-results
