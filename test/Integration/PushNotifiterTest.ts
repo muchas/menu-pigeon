@@ -49,10 +49,10 @@ describe("PushNotifier", () => {
         const morning = today.set(8, "hour").toDate();
 
         const offers = [{date: today.toDate(), lunches: [], soups: [], prices: [], texts: []}];
-        publication1 = new PersistedPublication(1, "1", "Bococa Bistro", offers, morning);
-        publication2 = new PersistedPublication(2, "2", "I Love Coffee Kawiarnia", offers, morning);
-        publication3 = new PersistedPublication(3, "3", "Lunch Bar Majeranek", offers, morning);
-        publication4 = new PersistedPublication(4, "4", "Bistro Maro", offers, morning);
+        publication1 = new PersistedPublication(1, "1", "Bococa Bistro", "bococa", offers, morning);
+        publication2 = new PersistedPublication(2, "2", "I Love Coffee Kawiarnia", "ilc", offers, morning);
+        publication3 = new PersistedPublication(3, "3", "Lunch Bar Majeranek", "majeranek", offers, morning);
+        publication4 = new PersistedPublication(4, "4", "Bistro Maro", "maro", offers, morning);
 
         publicationConsumer = container.get<PersistedPublicationConsumer>(PersistedPublicationConsumer);
         recipientUpsertConsumer = container.get<RecipientUpsertConsumer>(RecipientUpsertConsumer);
