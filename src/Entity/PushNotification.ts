@@ -26,6 +26,11 @@ export class PushNotification {
     @Column({
         nullable: true,
     })
+    public lockedUntil: Date = null;
+
+    @Column({
+        nullable: true,
+    })
     public receiptId?: string;
 
     @Column({

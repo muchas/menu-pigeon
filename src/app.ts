@@ -1,25 +1,24 @@
 import "reflect-metadata";
-import { Connection, createConnection } from "typeorm";
-import { Consumer, Queue, SingleConsumer } from "queue";
-import { setupLogging } from "./logging";
+import {Connection} from "typeorm";
+import {Consumer, Queue, SingleConsumer} from "queue";
+import {setupLogging} from "./logging";
 import Config from "./Config";
-import { PersistedPublicationConsumer } from "./Publication/PersistedPublicationConsumer";
-import { RecipientDeletedConsumer } from "./Recipient/RecipientDeletedConsumer";
-import { RecipientUpsertConsumer } from "./Recipient/RecipientUpsertConsumer";
-import { TopicFollowConsumer } from "./Recipient/TopicFollowConsumer";
-import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
-import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
-import { RecipientDeleted } from "queue/lib/Messages/RecipientDeleted";
-import { TopicFollow } from "queue/lib/Messages/TopicFollow";
+import {PersistedPublicationConsumer} from "./Publication/PersistedPublicationConsumer";
+import {RecipientDeletedConsumer} from "./Recipient/RecipientDeletedConsumer";
+import {RecipientUpsertConsumer} from "./Recipient/RecipientUpsertConsumer";
+import {TopicFollowConsumer} from "./Recipient/TopicFollowConsumer";
+import {PersistedPublication} from "queue/lib/Messages/PersistedPublication";
+import {RecipientUpsert} from "queue/lib/Messages/RecipientUpsert";
+import {RecipientDeleted} from "queue/lib/Messages/RecipientDeleted";
+import {TopicFollow} from "queue/lib/Messages/TopicFollow";
 import * as winston from "winston";
-import { createContainer } from "./inversify.config";
-import { NotifierClock } from "./PushNotification/NotifierClock";
-import { StatusCheckerClock } from "./PushNotification/StatusCheckerClock";
-import { DeviceDeletedConsumer } from "./Recipient/DeviceDeletedConsumer";
-import { DeviceDeleted } from "queue/lib/Messages/DeviceDeleted";
+import {createContainer} from "./inversify.config";
+import {NotifierClock} from "./PushNotification/NotifierClock";
+import {StatusCheckerClock} from "./PushNotification/StatusCheckerClock";
 import Mongo from "./Mongo";
-import { SenderClock } from "./PushNotification/SenderClock";
+import {SenderClock} from "./PushNotification/SenderClock";
 import * as moment from "moment-timezone";
+import {createORMConnection} from "./typeorm.config";
 
 moment.tz.setDefault("Europe/Warsaw");
 
@@ -28,7 +27,7 @@ const config = container.get<Config>(Config);
 
 setupLogging(config);
 
-createConnection()
+createORMConnection(config)
     .then(async connection => {
         container.bind(Connection).toConstantValue(connection);
 
@@ -47,9 +46,6 @@ createConnection()
         const recipientDeletedConsumer = new SingleConsumer(
             container.get<RecipientDeletedConsumer>(RecipientDeletedConsumer)
         );
-        const deviceDeletedConsumer = new SingleConsumer(
-            container.get<DeviceDeletedConsumer>(DeviceDeletedConsumer)
-        );
 
         const topicFollowConsumer = new SingleConsumer(
             container.get<TopicFollowConsumer>(TopicFollowConsumer)
@@ -67,7 +63,6 @@ createConnection()
                 [PersistedPublication, persistedPublicationConsumer],
                 [RecipientUpsert, recipientUpsertConsumer],
                 [RecipientDeleted, recipientDeletedConsumer],
-                [DeviceDeleted, deviceDeletedConsumer],
                 [TopicFollow, topicFollowConsumer],
             ])
         );
