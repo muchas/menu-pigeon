@@ -1,4 +1,4 @@
-Pigeon [![CircleCI](https://circleci.com/gh/muchas/menu-pigeon.svg?style=svg)](https://circleci.com/gh/muchas/menu-pigeon)
+Pigeon [![CircleCI](https://circleci.com/gh/muchas/menu-pigeon.svg?style=svg&circle-token=659398258a041d03f040f9794b462d21311fc135)](https://circleci.com/gh/muchas/menu-pigeon)
 ======
 Notification service
 
