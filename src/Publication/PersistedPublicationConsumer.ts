@@ -12,7 +12,7 @@ export class PersistedPublicationConsumer implements Consumer {
 
     public constructor(
         private readonly eventRepository: EventRepository,
-        private readonly notifierClock: NotifierClock
+        private readonly notifierClock: NotifierClock,
     ) {
         this.factory = new LunchOfferEventFactory();
     }

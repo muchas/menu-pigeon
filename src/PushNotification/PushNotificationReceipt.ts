@@ -22,6 +22,6 @@ export class PushNotificationReceipt {
         public notification: PushNotification,
         public fetchedSuccessfully: boolean = true,
         public status?: PushNotificationStatus,
-        public data?: PushNotificationReceiptData
+        public data?: PushNotificationReceiptData,
     ) {}
 }

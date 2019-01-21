@@ -9,7 +9,7 @@ export class RecipientDeletedConsumer implements Consumer {
 
     public constructor(private readonly recipientRepository: RecipientRepository) {}
 
-    public async consume(job: Job<RecipientDeleted>) {
+    public async consume(job: Job<RecipientDeleted>): Promise<void> {
         winston.info("Consumption of recipient deleted started", {
             recipient_id: job.message.id,
         });

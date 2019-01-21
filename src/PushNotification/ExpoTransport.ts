@@ -24,7 +24,7 @@ export class ExpoTransport implements PushNotificationTransport {
     public async *confirmStatuses(notifications: PushNotification[]): AsyncIterableIterator<PushNotificationReceipt> {
         const receiptIds = notifications.map((n) => n.receiptId);
         const notificationsByReceiptId = new Map(
-            notifications.map((n): [string, PushNotification] => [n.receiptId, n])
+            notifications.map((n): [string, PushNotification] => [n.receiptId, n]),
         );
         const chunks = this.client.chunkPushNotificationReceiptIds(receiptIds);
 
@@ -37,14 +37,14 @@ export class ExpoTransport implements PushNotificationTransport {
 
     public async send(notification: PushNotification): Promise<PushNotificationTicket> {
         const tickets = await toArray(
-            this.sendMessagesChunk([this.toExpoPush(notification)], [notification])
+            this.sendMessagesChunk([this.toExpoPush(notification)], [notification]),
         );
         return tickets[0];
     }
 
     public async *sendMany(notifications: PushNotification[]): AsyncIterableIterator<PushNotificationTicket> {
         const notificationsByToken = new Map(
-            notifications.map((n): [string, PushNotification] => [n.pushToken, n])
+            notifications.map((n): [string, PushNotification] => [n.pushToken, n]),
         );
 
         const expoPushes = notifications.map((notification) => this.toExpoPush(notification));
@@ -59,11 +59,11 @@ export class ExpoTransport implements PushNotificationTransport {
 
     private async *confirmReceiptsChunk(
         chunk: ExpoPushReceiptId[],
-        notifications: PushNotification[]
+        notifications: PushNotification[],
     ): AsyncIterableIterator<PushNotificationReceipt> {
         try {
             const notificationsByReceiptId = new Map(
-                notifications.map((n): [string, PushNotification] => [n.receiptId, n])
+                notifications.map((n): [string, PushNotification] => [n.receiptId, n]),
             );
             const receipts = await this.client.getPushNotificationReceiptsAsync(chunk);
 
@@ -71,7 +71,7 @@ export class ExpoTransport implements PushNotificationTransport {
                 const status = this.toInternalStatus(receipt.status);
 
                 yield new PushNotificationReceipt(
-                    notificationsByReceiptId.get(receiptId), true, status, receipt
+                    notificationsByReceiptId.get(receiptId), true, status, receipt,
                 );
             }
         } catch (e) {
@@ -85,7 +85,7 @@ export class ExpoTransport implements PushNotificationTransport {
 
     private async *sendMessagesChunk(
         chunk: ExpoPushMessage[],
-        notifications: PushNotification[]
+        notifications: PushNotification[],
     ): AsyncIterableIterator<PushNotificationTicket> {
       try {
             const tickets = await this.client.sendPushNotificationsAsync(chunk);
@@ -108,8 +108,10 @@ export class ExpoTransport implements PushNotificationTransport {
                 return PushNotificationStatus.DELIVERED;
             case "error":
                 return PushNotificationStatus.ERROR;
+
+            default:
+                return PushNotificationStatus.UNKNOWN;
         }
-        return PushNotificationStatus.UNKNOWN;
     }
 
     private toExpoPush(notification: PushNotification): ExpoPushMessage {

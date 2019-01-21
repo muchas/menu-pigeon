@@ -22,7 +22,7 @@ class FrequencyMessageRule implements MessageThrottleRule {
 
     public constructor(
         private readonly notificationLevel: NotificationLevel,
-        private readonly unit: DurationInputArg2
+        private readonly unit: DurationInputArg2,
     ) {
     }
 

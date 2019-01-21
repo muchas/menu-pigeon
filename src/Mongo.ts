@@ -18,7 +18,7 @@ export default class Mongo {
             this.client = await MongoClient.connect(this.url, {
                 useNewUrlParser: true,
             });
-            this._db = await this.client.db(this.databaseName);
+            this._db = this.client.db(this.databaseName);
         }
 
         return this._db;
@@ -32,7 +32,7 @@ export default class Mongo {
         return this._db;
     }
 
-    private generateUrl(username: string, password: string, host: string, port: number) {
+    private generateUrl(username: string, password: string, host: string, port: number): string {
         if (username || password) {
             return `mongodb://${username}:${password}@${host}:${port}/${this.databaseName}`;
         }

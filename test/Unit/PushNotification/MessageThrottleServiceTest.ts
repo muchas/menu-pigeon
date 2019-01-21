@@ -5,7 +5,7 @@ import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import { MessageThrottleService } from "../../../src/PushNotification/MessageThrottleService";
 import { Message } from "../../../src/Entity/Message";
 import { LUNCH_EVENT_TYPE } from "../../../src/Publication/constants";
-import moment = require("moment");
+import * as moment from "moment";
 
 const createMessage = (id: string, topics: string[] = [], eventType= "default") => {
     const message = new Message();
