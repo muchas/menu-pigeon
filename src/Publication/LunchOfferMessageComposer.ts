@@ -57,6 +57,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
                           body: string,
                           priority: MessagePriority): Message {
         const minExpirationTime = min(events.map((e) => e.expirationTime)).toDate();
+        const slugs = events.map((event) => event.content.businessSlug);
         const message = new Message();
         message.recipientId = recipient.id;
         message.title = capitalize(title);
@@ -66,6 +67,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
         message.setEventType(LUNCH_OFFER_EVENT_TYPE);
         message.setEventIds(events.map(event => event.id));
         message.setTopics(this.getMessageTopics(recipient, events));
+        message.setNotificationData({slugs});
         return message;
     }
 
