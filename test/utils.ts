@@ -7,9 +7,10 @@ import { SinonStubbedInstance } from "sinon";
 import { Queue } from "queue";
 import { Container } from "inversify";
 import { createContainer } from "../src/inversify.config";
-import { Connection, createConnection } from "typeorm";
+import { Connection } from "typeorm";
 import Config from "../src/Config";
 import Mongo from "../src/Mongo";
+import { createORMConnection } from "../src/typeorm.config";
 
 export const setup = (): Container => {
     chai.use(chaiAsPromised);
@@ -41,8 +42,8 @@ export const tearDownWithMongo = async (container: Container): Promise<void> => 
 
 export const setupWithDb = async (): Promise<Container> => {
     const container = setup();
-
-    const connection = await createConnection();
+    const config = container.get<Config>(Config);
+    const connection = await createORMConnection(config);
     container.bind(Connection).toConstantValue(connection);
 
     return container;
@@ -50,6 +51,7 @@ export const setupWithDb = async (): Promise<Container> => {
 
 export const tearDownWithDb = async (container: Container): Promise<void> => {
     const connection = container.get<Connection>(Connection);
+    await connection.dropDatabase();
     await connection.close();
 };
 

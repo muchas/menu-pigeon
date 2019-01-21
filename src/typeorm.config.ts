@@ -7,7 +7,7 @@ export const createORMConnection = async (config: Config): Promise<Connection> =
     return createConnection({
         ...connectionOptions,
         type: "postgres",
-        host: config.get("DB_HOST"),
+        host: config.get("DB_HOSTNAME"),
         port: parseInt(config.get("DB_PORT")),
         username: config.get("DB_USERNAME"),
         password: config.get("DB_PASSWORD"),

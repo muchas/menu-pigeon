@@ -1,5 +1,4 @@
 {
-   "type": "postgres",
    "synchronize": true,
    "logging": false,
    "entities": [
@@ -10,7 +9,6 @@
    ],
    "cli": {
       "entitiesDir": "src/entity",
-      "migrationsDir": "src/migration",
-      "subscribersDir": "src/subscriber"
+      "migrationsDir": "src/migration"
    }
 }
