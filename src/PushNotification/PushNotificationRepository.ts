@@ -1,14 +1,14 @@
-import {PushNotification} from "../Entity/PushNotification";
-import {PushNotificationTicket} from "./PushNotificationTicket";
-import {PushNotificationReceipt, PushNotificationStatus} from "./PushNotificationReceipt";
-import {Message} from "../Entity/Message";
-import {Connection, EntityManager, Repository} from "typeorm";
-import {injectable} from "inversify";
+import { PushNotification } from "../Entity/PushNotification";
+import { PushNotificationTicket } from "./PushNotificationTicket";
+import { PushNotificationReceipt, PushNotificationStatus } from "./PushNotificationReceipt";
+import { Message } from "../Entity/Message";
+import { Connection, EntityManager, Repository } from "typeorm";
+import { injectable } from "inversify";
 import * as moment from "moment-timezone";
 
 @injectable()
 export class PushNotificationRepository {
-    private readonly LOCK_TIME = 5;
+    private readonly LOCK_TIME: number = 5;
 
     private readonly connection: Connection;
     private readonly messageRepository: Repository<Message>;
@@ -54,8 +54,8 @@ export class PushNotificationRepository {
                 .getMany();
 
             const locks = notifications.map(async (notification) => {
-                notification.lockedUntil = moment().add(this.LOCK_TIME, 'minute').toDate();
-                return await entityManager.save(notification);
+                notification.lockedUntil = moment().add(this.LOCK_TIME, "minute").toDate();
+                return entityManager.save(notification);
             });
 
             await Promise.all(locks);
