@@ -13,10 +13,12 @@ export class LunchOfferMessageComposer implements MessageComposer {
             .filter(event => event.eventType === LUNCH_OFFER_EVENT_TYPE)
             .map(event => event as LunchOfferEvent);
 
-        if (offerEvents.length <= 0) {
+        const businessCount = Array.from(new Set(offerEvents.map(e => e.content.businessId))).length;
+
+        if (businessCount <= 0) {
             return [];
         }
-        if (offerEvents.length === 1) {
+        if (businessCount === 1) {
             const event = offerEvents[0];
             const greeting = this.makeGreeting(recipient);
             const businessName = event.content.businessName;
@@ -30,8 +32,6 @@ export class LunchOfferMessageComposer implements MessageComposer {
                 ),
             ];
         }
-
-        const businessCount = Array.from(new Set(offerEvents.map(e => e.content.businessId))).length;
 
         return [
             this.createMessage(
