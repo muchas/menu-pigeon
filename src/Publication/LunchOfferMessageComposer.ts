@@ -26,7 +26,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
                     offerEvents,
                     "Czas na lunch",
                     `${greeting}${businessName} opublikował nową ofertę. Kliknij, aby sprawdzić szczegóły.`,
-                    "high"
+                    "high",
                 ),
             ];
         }
@@ -39,7 +39,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
                 offerEvents,
                 `${this.makeGreeting(recipient)}sprawdź dzisiejszy lunch!`,
                 `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`,
-                "high"
+                "high",
             ),
         ];
     }

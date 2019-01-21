@@ -10,11 +10,11 @@ import * as winston from "winston";
 export class PushNotificationSender {
     public constructor(
         private readonly transport: PushNotificationTransport,
-        private readonly notificationRepository: PushNotificationRepository
+        private readonly notificationRepository: PushNotificationRepository,
     ) {
     }
 
-    public async schedule(recipients: Recipient[], messages: Message[]) {
+    public async schedule(recipients: Recipient[], messages: Message[]): Promise<void> {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
 
         for (const message of messages) {
@@ -38,7 +38,7 @@ export class PushNotificationSender {
         }
     }
 
-    public async sendReady() {
+    public async sendReady(): Promise<void> {
         const notifications = await this.notificationRepository.findReadyToSend();
 
         if (notifications.length > 0) {

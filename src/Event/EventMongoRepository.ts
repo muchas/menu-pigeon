@@ -15,12 +15,12 @@ export class EventMongoRepository extends EventRepository {
         super();
     }
 
-    public async addMany(events: Event[]) {
+    public async addMany(events: Event[]): Promise<void> {
         const upserts = events.map(async event => this.add(event));
         await Promise.all(upserts);
     }
 
-    public async add(event: Event) {
+    public async add(event: Event): Promise<void> {
         const data = this.toDocument(event);
 
         await this.collection().updateOne(
@@ -32,7 +32,7 @@ export class EventMongoRepository extends EventRepository {
             },
             {
                 upsert: true,
-            }
+            },
         );
     }
 
@@ -57,7 +57,7 @@ export class EventMongoRepository extends EventRepository {
                 readyTime: {
                     $lte: time.toDate(),
                 },
-            }
+            },
             )
             .toArray();
 
@@ -72,7 +72,7 @@ export class EventMongoRepository extends EventRepository {
         return this.mongo.db.collection(EventMongoRepository.COLLECTION_NAME);
     }
 
-    private toDocument(event: Event) {
+    private toDocument(event: Event): object {
         return {
             id: event.id,
             eventType: event.eventType,

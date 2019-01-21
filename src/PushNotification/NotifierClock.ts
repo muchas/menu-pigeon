@@ -11,7 +11,7 @@ export class NotifierClock extends Clock {
         this.period = 20 * 1000;
     }
 
-    public async performAction() {
+    public async performAction(): Promise<void> {
         await this.notifier.notifyAll(moment());
     }
 }

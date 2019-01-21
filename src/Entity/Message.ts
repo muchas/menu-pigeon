@@ -57,15 +57,15 @@ export class Message {
         return this.data.eventType || "";
     }
 
-    public setTopics(topics: string[]) {
+    public setTopics(topics: string[]): void {
         this.data.topics = topics;
     }
 
-    public setEventIds(eventIds: string[]) {
+    public setEventIds(eventIds: string[]): void {
         this.data.eventIds = eventIds;
     }
 
-    public setEventType(eventType: string) {
+    public setEventType(eventType: string): void {
         this.data.eventType = eventType;
     }
 }

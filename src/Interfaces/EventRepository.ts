@@ -6,6 +6,6 @@ import { Moment } from "moment-timezone";
 export abstract class EventRepository {
     public async abstract findOne(id: string): Promise<Event | undefined>;
     public async abstract findRelevant(time: Moment): Promise<Event[]>;
-    public async abstract addMany(recipients: Event[]);
-    public async abstract add(recipient: Event);
+    public async abstract addMany(recipients: Event[]): Promise<void>;
+    public async abstract add(recipient: Event): Promise<void>;
 }

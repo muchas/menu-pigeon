@@ -10,11 +10,11 @@ export class PushNotificationStatusChecker {
     public constructor(
         private readonly transport: PushNotificationTransport,
         private readonly notificationRepository: PushNotificationRepository,
-        private readonly recipientService: RecipientService
+        private readonly recipientService: RecipientService,
     ) {
     }
 
-    public async updateStatus() {
+    public async updateStatus(): Promise<void> {
         const notifications = await this.notificationRepository.findSentUnconfirmed();
 
         for await (const receipt of this.transport.confirmStatuses(notifications)) {
@@ -30,7 +30,7 @@ export class PushNotificationStatusChecker {
         }
     }
 
-    private async handleReceipt(receipt: PushNotificationReceipt) {
+    private async handleReceipt(receipt: PushNotificationReceipt): Promise<void> {
         if (!receipt.data || !receipt.data.details || !receipt.data.details.error) {
             return;
         }

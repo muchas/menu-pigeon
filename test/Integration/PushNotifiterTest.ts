@@ -68,23 +68,23 @@ describe("PushNotifier", () => {
         // given
         const preferences = new RecipientPreferences(7, 0, NotificationLevel.Often);
         const recipientUpsert1 = new RecipientUpsert(
-            "r#1", [], ["business-2", "business-3"], preferences, "Iza"
+            "r#1", [], ["business-2", "business-3"], preferences, "Iza",
         );
         const recipientUpsert2 = new RecipientUpsert(
-            "r#2", [], ["business-3"], preferences, "Michal"
+            "r#2", [], ["business-3"], preferences, "Michal",
         );
         const recipientUpsert3 = new RecipientUpsert(
             "r#3", [], ["business-1", "business-2", "business-3", "business-4"],
-            preferences, "Slawek"
+            preferences, "Slawek",
         );
 
         const recipient1 = new Recipient(
-            "r#1", "Iza", ["business-2", "business-3"], [], preferences
+            "r#1", "Iza", ["business-2", "business-3"], [], preferences,
         );
         const recipient2 = new Recipient("r#2", "Michal", ["business-3"], [], preferences);
         const recipient3 = new Recipient(
             "r#3", "Slawek", ["business-1", "business-2", "business-3", "business-4"],
-            [], preferences
+            [], preferences,
         );
         const recipients = [recipient1, recipient2, recipient3];
 
@@ -108,7 +108,7 @@ describe("PushNotifier", () => {
         const persistedRecipients = await recipientRepository.findAll();
         const notifiedTopics = persistedRecipients.map((r) => [...r.topicLastNotification.keys()]);
         expect(notifiedTopics).deep.equals(
-            [["business-2", "business-3"], ["business-3"], ["business-1", "business-2", "business-3", "business-4"]]
+            [["business-2", "business-3"], ["business-3"], ["business-1", "business-2", "business-3", "business-4"]],
         );
     });
 });

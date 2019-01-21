@@ -39,20 +39,20 @@ createConnection()
         const statusCheckerClock = container.get<StatusCheckerClock>(StatusCheckerClock);
 
         const persistedPublicationConsumer = new SingleConsumer(
-            container.get<PersistedPublicationConsumer>(PersistedPublicationConsumer)
+            container.get<PersistedPublicationConsumer>(PersistedPublicationConsumer),
         );
         const recipientUpsertConsumer = new SingleConsumer(
-            container.get<RecipientUpsertConsumer>(RecipientUpsertConsumer)
+            container.get<RecipientUpsertConsumer>(RecipientUpsertConsumer),
         );
         const recipientDeletedConsumer = new SingleConsumer(
-            container.get<RecipientDeletedConsumer>(RecipientDeletedConsumer)
+            container.get<RecipientDeletedConsumer>(RecipientDeletedConsumer),
         );
         const deviceDeletedConsumer = new SingleConsumer(
-            container.get<DeviceDeletedConsumer>(DeviceDeletedConsumer)
+            container.get<DeviceDeletedConsumer>(DeviceDeletedConsumer),
         );
 
         const topicFollowConsumer = new SingleConsumer(
-            container.get<TopicFollowConsumer>(TopicFollowConsumer)
+            container.get<TopicFollowConsumer>(TopicFollowConsumer),
         );
 
         await mongo.connect();
@@ -69,7 +69,7 @@ createConnection()
                 [RecipientDeleted, recipientDeletedConsumer],
                 [DeviceDeleted, deviceDeletedConsumer],
                 [TopicFollow, topicFollowConsumer],
-            ])
+            ]),
         );
 
     })

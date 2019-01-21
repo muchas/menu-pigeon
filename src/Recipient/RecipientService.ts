@@ -8,10 +8,10 @@ export class RecipientService {
 
     public constructor(
         private readonly recipientRepository: RecipientRepository,
-        private readonly queue: Queue
+        private readonly queue: Queue,
     ) {}
 
-    public async removeDevice(pushToken: string) {
+    public async removeDevice(pushToken: string): Promise<void> {
         const recipients = await this.recipientRepository.findByDevice(pushToken);
         if (recipients.length <= 0) {
             // as Pigeon service may consume DeviceDeleted messages
@@ -23,7 +23,7 @@ export class RecipientService {
             recipient.removeDevice(pushToken);
         }
 
-        const promises = recipients.map((recipient) => this.recipientRepository.add(recipient));
+        const promises = recipients.map(async (recipient) => this.recipientRepository.add(recipient));
         await Promise.all(promises);
 
         await this.queue.produce(new DeviceDeleted(pushToken));

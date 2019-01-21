@@ -41,16 +41,16 @@ describe("Push notification integration test", () => {
         const tomorrow = today.add(1, "day").toDate();
 
         publication1 = new PersistedPublication(
-            1, "1", "Bococa Bistro", [], morning
+            1, "1", "Bococa Bistro", [], morning,
         );
         publication2 = new PersistedPublication(
-            2, "2", "I Love Coffee Kawiarnia", [], morning
+            2, "2", "I Love Coffee Kawiarnia", [], morning,
         );
         publication3 = new PersistedPublication(
-            3, "3", "Lunch Bar Majeranek", [], morning
+            3, "3", "Lunch Bar Majeranek", [], morning,
         );
         publication4 = new PersistedPublication(
-            4, "4", "Bistro Maro", [], morning
+            4, "4", "Bistro Maro", [], morning,
         );
 
         event1 = new LunchOfferEvent("e#1", morning, tomorrow, ["business-1"], publication1);
@@ -65,7 +65,7 @@ describe("Push notification integration test", () => {
             "r#1",
             "Iza",
             ["business-2", "business-3", "business-4"],
-            [device3]
+            [device3],
         );
 
         const device2 = new RecipientDevice("ExponentPushToken[dtdyV1PhS9NpKWze4p29VE]", morning);
@@ -76,7 +76,7 @@ describe("Push notification integration test", () => {
             "r#3",
             "Sławek",
             ["business-1"],
-            [device1]
+            [device1],
         );
 
         const recipients = [recipient1, recipient2, recipient3];

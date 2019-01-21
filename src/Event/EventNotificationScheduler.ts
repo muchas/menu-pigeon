@@ -16,7 +16,7 @@ export class EventNotificationScheduler {
     public schedule(
         recipient: Recipient,
         events: Event[],
-        targetDay: Moment
+        targetDay: Moment,
     ): EventNotification[] {
         const preferences = recipient.preferences;
 
@@ -42,7 +42,7 @@ export class EventNotificationScheduler {
             const expirationTime = min(event.expirationTime, targetDayNotificationEnd);
 
             notifications.push(
-                new EventNotification(readyTime, expirationTime, event, recipient)
+                new EventNotification(readyTime, expirationTime, event, recipient),
             );
         }
 

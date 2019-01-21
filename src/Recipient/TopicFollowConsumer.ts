@@ -10,11 +10,11 @@ export class TopicFollowConsumer implements Consumer {
 
     public constructor(
         private readonly recipientRepository: RecipientRepository,
-        private readonly notifierClock: NotifierClock
+        private readonly notifierClock: NotifierClock,
     ) {
     }
 
-    public async consume(job: Job<TopicFollow>) {
+    public async consume(job: Job<TopicFollow>): Promise<void> {
         const {topicName, recipientId} = job.message;
 
         winston.info("Consumption of topic follow started", {

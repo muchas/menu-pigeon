@@ -27,7 +27,7 @@ export class PushNotifier {
     public constructor(
         private readonly recipientRepository: RecipientRepository,
         private readonly eventRepository: EventRepository,
-        private readonly pushNotificationSender: PushNotificationSender
+        private readonly pushNotificationSender: PushNotificationSender,
     ) {
         this.messageComposer = new LunchOfferMessageComposer();
         this.scheduler = new EventNotificationScheduler();
@@ -35,7 +35,7 @@ export class PushNotifier {
         this.throttleService = new MessageThrottleService();
     }
 
-    public async notifyAll(currentTime: Moment) {
+    public async notifyAll(currentTime: Moment): Promise<void> {
         const events = await this.eventRepository.findRelevant(currentTime);
         const recipients = await this.recipientRepository.findAll();
 
@@ -58,7 +58,7 @@ export class PushNotifier {
     private prepareNotifications(
         recipient: Recipient,
         events: Event[],
-        currentTime: Moment
+        currentTime: Moment,
     ): EventNotification[] {
         return this.scheduler
             .schedule(recipient, events, currentTime)
@@ -68,9 +68,11 @@ export class PushNotifier {
                 !recipient.notifiedEventIds.has(notification.event.id));
     }
 
-    private async markNotified(recipients: Recipient[],
-                               events: Event[],
-                               messages: Message[]) {
+    private async markNotified(
+        recipients: Recipient[],
+        events: Event[],
+        messages: Message[],
+    ): Promise<void> {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
         const eventsById = new Map(events.map((e): [string, Event] => [e.id, e]));
 

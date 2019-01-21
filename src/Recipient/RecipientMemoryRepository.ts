@@ -8,13 +8,13 @@ export class RecipientMemoryRepository extends RecipientRepository {
         super();
     }
 
-    public async addMany(recipients: Recipient[]) {
+    public async addMany(recipients: Recipient[]): Promise<void> {
         for (const recipient of recipients) {
             await this.add(recipient);
         }
     }
 
-    public async add(recipient: Recipient) {
+    public async add(recipient: Recipient): Promise<void> {
         const existingRecipient = this.recipients.find((r) => r.id === recipient.id);
         if (existingRecipient) {
             recipient.notifiedEventIds = existingRecipient.notifiedEventIds;
@@ -26,7 +26,7 @@ export class RecipientMemoryRepository extends RecipientRepository {
         this.recipients.push(recipient);
     }
 
-    public async remove(id: string) {
+    public async remove(id: string): Promise<void> {
         this.recipients = this.recipients.filter((r) => r.id !== id);
     }
 
@@ -37,8 +37,8 @@ export class RecipientMemoryRepository extends RecipientRepository {
     public async findByDevice(pushToken: string): Promise<Recipient[]> {
         return this.recipients.filter(
             (recipient) => recipient.devices.find(
-                (device) => device.pushToken === pushToken
-            )
+                (device) => device.pushToken === pushToken,
+            ),
         );
     }
 

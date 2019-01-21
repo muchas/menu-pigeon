@@ -12,11 +12,11 @@ export class EventMemoryRepository extends EventRepository {
         this.events = events;
     }
 
-    public async addMany(events: Event[]) {
+    public async addMany(events: Event[]): Promise<void> {
         this.events.push(...events);
     }
 
-    public async add(event: Event) {
+    public async add(event: Event): Promise<void> {
         this.events.push(event);
     }
 
@@ -26,7 +26,7 @@ export class EventMemoryRepository extends EventRepository {
 
     public async findRelevant(time: Moment): Promise<Event[]> {
         return this.events.filter(
-            (event) => event.readyTime <= time && event.expirationTime >= time
+            (event) => event.readyTime <= time && event.expirationTime >= time,
         );
     }
 

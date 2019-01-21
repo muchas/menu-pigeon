@@ -10,7 +10,7 @@ export class PushNotificationTicket {
         public receiptId?: string,
         public data?: object,
         public error?: object,
-        public sentAt: Moment = moment()
+        public sentAt: Moment = moment(),
     ) {
     }
 }
