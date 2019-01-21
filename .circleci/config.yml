@@ -33,7 +33,7 @@ jobs:
         name: Test
         command: yarn junit
         environment:
-          DB_HOST: localhost
+          DB_HOSTNAME: localhost
           DB_USERNAME: circleci
           DB_DATABASE: circle_test
 
