@@ -161,17 +161,17 @@ describe("ExpoTransport", () => {
 
             // then
             expect(expoClient.chunkPushNotificationReceiptIds).to.have.been.calledOnceWith(
-                ["receipt#1", "receipt#2", "receipt#3"]
+                ["receipt#1", "receipt#2", "receipt#3"],
             );
             expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(
-                ["receipt#1", "receipt#2"]
+                ["receipt#1", "receipt#2"],
             );
             expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(["receipt#3"]);
             expect(receipts).to.be.lengthOf(3);
             expect(receipts.map(r => r.notification)).to.deep.equal(notifications);
             expect(receipts.map(r => r.fetchedSuccessfully)).to.deep.equal([true, true, true]);
             expect(receipts.map(r => r.status)).to.deep.equal(
-                [PushNotificationStatus.DELIVERED, PushNotificationStatus.ERROR, PushNotificationStatus.DELIVERED]
+                [PushNotificationStatus.DELIVERED, PushNotificationStatus.ERROR, PushNotificationStatus.DELIVERED],
             );
             expect(receipts.map(r => r.data)).to.deep.equal(Object.values(returnedReceipts));
         });

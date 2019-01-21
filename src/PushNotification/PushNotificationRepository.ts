@@ -20,7 +20,7 @@ export class PushNotificationRepository {
         this.notificationRepository = connection.getRepository(PushNotification);
     }
 
-    public async storeMessagesToSend(messages: Message[]) {
+    public async storeMessagesToSend(messages: Message[]): Promise<void> {
         // TODO: move to MessageRepository?
         await this.messageRepository.save(messages);
         const notifications = messages
@@ -64,7 +64,7 @@ export class PushNotificationRepository {
         return notifications;
     }
 
-    public async setSendingStatus(pushTicket: PushNotificationTicket) {
+    public async setSendingStatus(pushTicket: PushNotificationTicket): Promise<void> {
         const notification = pushTicket.notification;
         if (pushTicket.sentSuccessfully && pushTicket.receiptId) {
             notification.receiptId = pushTicket.receiptId;
@@ -78,7 +78,7 @@ export class PushNotificationRepository {
         }
     }
 
-    public async setDeliveryStatus(receipt: PushNotificationReceipt) {
+    public async setDeliveryStatus(receipt: PushNotificationReceipt): Promise<void> {
         const notification = receipt.notification;
         if (receipt.fetchedSuccessfully) {
             notification.status =  receipt.status;

@@ -4,82 +4,7 @@
   },
   "extends": "tslint:all",
   "rules": {
-    "max-classes-per-file": false,
-    "ordered-imports": false,
-    "completed-docs": false,
-    "object-literal-sort-keys": false,
-    "no-unused-expression": false,
     "arrow-parens": false,
-    "radix": false,
-    "interface-name": false,
-    "no-parameter-properties": false,
-    "file-name-casing": false,
-    "prefer-function-over-method": false,
-    "no-any": false,
-    "no-default-export": false,
-    "no-null-keyword": false,
-    "prefer-template": false,
-    "no-magic-numbers": false,
-    "newline-before-return": false,
-    "newline-per-chained-call": false,
-    "no-submodule-imports": false,
-    "no-implicit-dependencies": false,
-    "no-duplicate-imports": false,
-    "no-unsafe-any": false,
-    "comment-format": {
-      "options": ["check-space"]
-    },
-    "no-require-imports": false,
-    "strict-boolean-expressions": false,
-    "match-default-export-name": false,
-    "deprecation": false,
-    "no-import-side-effect": false,
-    "await-promise": false,
-    "binary-expression-operand-order": false,
-    "no-inferrable-types": false,
-    "no-unbound-method": false,
-    "no-void-expression": false,
-    "no-use-before-declare": false,
-    "switch-default": false,
-    "restrict-plus-operands": false,
-    "no-inferred-empty-object-type": false,
-    "no-unnecessary-callback-wrapper": false,
-    "return-undefined": false,
-    "variable-name": [
-      true,
-      "ban-keywords",
-      "check-format",
-      "allow-leading-underscore"
-    ],
-    "trailing-comma": [
-      true,
-      {
-        "multiline": {
-          "objects": "always",
-          "arrays": "always",
-          "functions": "never"
-        }
-      }
-    ],
-    "space-before-function-paren": [
-      true,
-      {
-        "anonymous": "always",
-        "named": "never",
-        "asyncArrow": "always"
-      }
-    ],
-    "member-ordering": {
-      "options": {
-        "order": "statics-first"
-      }
-    },
-    "typedef": [
-      true,
-      "parameter",
-      "property-declaration",
-      "member-variable-declaration"
-    ],
     "ban": [
       true,
       [
@@ -90,6 +15,52 @@
         "it",
         "only"
       ]
+    ],
+    "binary-expression-operand-order": false,
+    "comment-format": {
+      "options": ["check-space"]
+    },
+    "completed-docs": false,
+    "deprecation": false,
+    "file-name-casing": false,
+    "interface-name": false,
+    "match-default-export-name": false,
+    "max-classes-per-file": false,
+    "member-ordering": false,
+    "newline-before-return": false,
+    "newline-per-chained-call": false,
+    "no-any": false,
+    "no-default-export": false,
+    "no-duplicate-imports": false,
+    "no-implicit-dependencies": false,
+    "no-import-side-effect": false,
+    "no-inferrable-types": false,
+    "no-inferred-empty-object-type": false,
+    "no-magic-numbers": false,
+    "no-null-keyword": false,
+    "no-parameter-properties": false,
+    "no-submodule-imports": false,
+    "no-unbound-method": false,
+    "no-unsafe-any": false,
+    "no-unused-expression": false,
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "prefer-function-over-method": false,
+    "radix": false,
+    "restrict-plus-operands": false,
+    "strict-boolean-expressions": false,
+    "typedef": [
+      true,
+      "call-signature",
+      "member-variable-declaration",
+      "parameter",
+      "property-declaration"
+    ],
+    "variable-name": [
+      true,
+      "allow-leading-underscore",
+      "ban-keywords",
+      "check-format"
     ]
   }
 }

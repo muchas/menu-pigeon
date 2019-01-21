@@ -12,6 +12,6 @@ export class LunchOfferEvent implements Event {
         public expirationTime: Moment,
         public topics: string[],
         public content: PersistedPublication,
-        public eventType: string = LUNCH_OFFER_EVENT_TYPE
+        public eventType: string = LUNCH_OFFER_EVENT_TYPE,
     ) {}
 }

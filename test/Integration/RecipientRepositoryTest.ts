@@ -16,7 +16,7 @@ describe("RecipientRepository test", () => {
     beforeEach(async () => {
         container = await setupWithMongo();
 
-        recipientRepository = await container.get<RecipientRepository>(RecipientRepository);
+        recipientRepository = container.get<RecipientRepository>(RecipientRepository);
         recipient = new Recipient(
             "#r1",
             "John",
@@ -27,7 +27,7 @@ describe("RecipientRepository test", () => {
             ],
             new RecipientPreferences(9, 15, NotificationLevel.Seldom),
             new Set(["#japwjo", "#12mlk1", "#jm214"]),
-            new Map([["1241", moment()], ["125", moment()]])
+            new Map([["1241", moment()], ["125", moment()]]),
         );
     });
 

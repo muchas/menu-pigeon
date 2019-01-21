@@ -16,7 +16,7 @@ import { PushNotificationStatusChecker } from "./PushNotification/PushNotificati
 import { RecipientService } from "./Recipient/RecipientService";
 
 export const createContainer = (): Container => {
-    env(__dirname + "/../.env");
+    env(`${__dirname}/../.env`);
 
     const container = new Container({autoBindInjectable: true});
     container.bind(Container).toConstantValue(container);
@@ -48,7 +48,7 @@ export const createContainer = (): Container => {
                 config.get("MONGO_PORT"),
                 config.get("MONGO_USERNAME"),
                 config.get("MONGO_PASSWORD"),
-                config.get("MONGO_DATABASE")
+                config.get("MONGO_DATABASE"),
             );
         })
         .inSingletonScope();
@@ -61,13 +61,13 @@ export const createContainer = (): Container => {
                 config.get("RABBITMQ_HOSTNAME"),
                 config.get("RABBITMQ_PORT"),
                 config.get("RABBITMQ_USERNAME"),
-                config.get("RABBITMQ_PASSWORD")
+                config.get("RABBITMQ_PASSWORD"),
             );
 
             return new Queue(
                 queueConnection,
                 config.get("RABBITMQ_EXCHANGE"),
-                new MessageGateCollection()
+                new MessageGateCollection(),
             );
         })
         .inSingletonScope();
@@ -79,7 +79,7 @@ export const createContainer = (): Container => {
             const transport = container.get<ExpoTransport>(ExpoTransport);
             const repository = container.get<PushNotificationRepository>(PushNotificationRepository);
             return new PushNotificationSender(transport, repository);
-        }
+        },
     );
     container.bind(PushNotificationStatusChecker).toDynamicValue(
         () => {
@@ -87,7 +87,7 @@ export const createContainer = (): Container => {
             const repository = container.get<PushNotificationRepository>(PushNotificationRepository);
             const recipientService = container.get<RecipientService>(RecipientService);
             return new PushNotificationStatusChecker(transport, repository, recipientService);
-        }
+        },
     );
     container.bind(Expo).toDynamicValue(() => new Expo());
 

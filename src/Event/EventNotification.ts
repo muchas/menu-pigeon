@@ -8,6 +8,6 @@ export class EventNotification {
         public readyTime: Moment,
         public expirationTime: Moment,
         public event: Event,
-        public recipient: Recipient
+        public recipient: Recipient,
     ) {}
 }

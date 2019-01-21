@@ -38,17 +38,16 @@ createORMConnection(config)
         const statusCheckerClock = container.get<StatusCheckerClock>(StatusCheckerClock);
 
         const persistedPublicationConsumer = new SingleConsumer(
-            container.get<PersistedPublicationConsumer>(PersistedPublicationConsumer)
+            container.get<PersistedPublicationConsumer>(PersistedPublicationConsumer),
         );
         const recipientUpsertConsumer = new SingleConsumer(
-            container.get<RecipientUpsertConsumer>(RecipientUpsertConsumer)
+            container.get<RecipientUpsertConsumer>(RecipientUpsertConsumer),
         );
         const recipientDeletedConsumer = new SingleConsumer(
-            container.get<RecipientDeletedConsumer>(RecipientDeletedConsumer)
+            container.get<RecipientDeletedConsumer>(RecipientDeletedConsumer),
         );
-
         const topicFollowConsumer = new SingleConsumer(
-            container.get<TopicFollowConsumer>(TopicFollowConsumer)
+            container.get<TopicFollowConsumer>(TopicFollowConsumer),
         );
 
         await mongo.connect();
@@ -64,7 +63,7 @@ createORMConnection(config)
                 [RecipientUpsert, recipientUpsertConsumer],
                 [RecipientDeleted, recipientDeletedConsumer],
                 [TopicFollow, topicFollowConsumer],
-            ])
+            ]),
         );
 
     })

@@ -15,12 +15,12 @@ export class RecipientMongoRepository extends RecipientRepository {
         super();
     }
 
-    public async addMany(recipients: Recipient[]) {
+    public async addMany(recipients: Recipient[]): Promise<void> {
         const upserts = recipients.map(async recipient => this.add(recipient));
         await Promise.all(upserts);
     }
 
-    public async add(recipient: Recipient) {
+    public async add(recipient: Recipient): Promise<void> {
         const data = this.toDocument(recipient);
 
         await this.collection().updateOne(
@@ -40,11 +40,11 @@ export class RecipientMongoRepository extends RecipientRepository {
             },
             {
                 upsert: true,
-            }
+            },
         );
     }
 
-    public async remove(id: string) {
+    public async remove(id: string): Promise<void> {
         await this.collection().deleteOne({id});
     }
 
@@ -67,7 +67,7 @@ export class RecipientMongoRepository extends RecipientRepository {
         const document = await this.collection().findOne({id});
 
         if (!document) {
-            return;
+            return undefined;
         }
 
         return this.fromDocument(document);
@@ -77,7 +77,7 @@ export class RecipientMongoRepository extends RecipientRepository {
         return this.mongo.db.collection(RecipientMongoRepository.COLLECTION_NAME);
     }
 
-    private toDocument(recipient: Recipient) {
+    private toDocument(recipient: Recipient): object {
         return {
             name: recipient.name,
             followedTopics: [...recipient.followedTopics],
@@ -99,15 +99,15 @@ export class RecipientMongoRepository extends RecipientRepository {
             data.name,
             data.followedTopics,
             data.devices.map(
-                (deviceData) => new RecipientDevice(deviceData.pushToken, moment(deviceData.createdAt))
+                (deviceData) => new RecipientDevice(deviceData.pushToken, moment(deviceData.createdAt)),
             ),
             new RecipientPreferences(
                 data.preferences.earliestHour,
                 data.preferences.earliestMinute,
-                data.preferences.level
+                data.preferences.level,
             ),
             new Set(data.notifiedEventIds),
-            new Map(data.topicLastNotification.map(([key, date]) => [key, moment(date)]))
+            new Map(data.topicLastNotification.map(([key, date]) => [key, moment(date)])),
         );
     }
 }

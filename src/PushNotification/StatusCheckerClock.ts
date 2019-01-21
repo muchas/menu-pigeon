@@ -10,7 +10,7 @@ export class StatusCheckerClock extends Clock {
         this.period = 60 * 1000;
     }
 
-    public async performAction() {
+    public async performAction(): Promise<void> {
         await this.statusChecker.updateStatus();
     }
 }

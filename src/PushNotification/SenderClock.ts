@@ -10,7 +10,7 @@ export class SenderClock extends Clock {
         this.period = 2 * 1000;
     }
 
-    public async performAction() {
+    public async performAction(): Promise<void> {
         await this.sender.sendReady();
     }
 }

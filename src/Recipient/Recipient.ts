@@ -12,7 +12,7 @@ export class RecipientPreferences implements NotificationPreferences {
     public constructor(
         public earliestHour: number,
         public earliestMinute: number,
-        public level: NotificationLevel
+        public level: NotificationLevel,
     ) {
     }
 }
@@ -27,10 +27,10 @@ export class Recipient {
         followedTopics: string[] = [],
         public devices: RecipientDevice[] = [],
         public preferences: RecipientPreferences = new RecipientPreferences(
-            9, 0, NotificationLevel.Daily
+            9, 0, NotificationLevel.Daily,
         ),
         public notifiedEventIds: Set<string> = new Set(),
-        public topicLastNotification: Map<string, Moment> = new Map()
+        public topicLastNotification: Map<string, Moment> = new Map(),
     ) {
         this.followedTopics = new Set(followedTopics);
     }
@@ -42,27 +42,27 @@ export class Recipient {
     public get lastNotificationTime(): Moment | undefined {
         const dates = Array.from(this.topicLastNotification.values());
         if (dates.length === 0) {
-            return;
+            return undefined;
         }
         return max(dates);
     }
 
-    public markNotifiedAbout(event: Event, notificationTime: Moment = moment()) {
+    public markNotifiedAbout(event: Event, notificationTime: Moment = moment()): void {
         this.notifiedEventIds.add(event.id);
         for (const topic of event.topics) {
             this.topicLastNotification.set(topic, notificationTime);
         }
     }
 
-    public follow(topic: string) {
-        return this.followedTopics.add(topic);
+    public follow(topic: string): void {
+        this.followedTopics.add(topic);
     }
 
-    public unfollow(topic: string) {
-        return this.followedTopics.delete(topic);
+    public unfollow(topic: string): void {
+        this.followedTopics.delete(topic);
     }
 
-    public removeDevice(pushToken: string) {
+    public removeDevice(pushToken: string): void {
         this.devices = this.devices.filter(device => device.pushToken !== pushToken);
     }
 }
