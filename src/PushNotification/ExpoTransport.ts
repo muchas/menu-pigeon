@@ -108,7 +108,6 @@ export class ExpoTransport implements PushNotificationTransport {
                 return PushNotificationStatus.DELIVERED;
             case "error":
                 return PushNotificationStatus.ERROR;
-
             default:
                 return PushNotificationStatus.UNKNOWN;
         }
