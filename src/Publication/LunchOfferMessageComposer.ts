@@ -13,7 +13,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
             .filter(event => event.eventType === LUNCH_OFFER_EVENT_TYPE)
             .map(event => event as LunchOfferEvent);
 
-        const businessCount = Array.from(new Set(offerEvents.map(e => e.content.businessId))).length;
+        const businessCount = (new Set(offerEvents.map(e => e.content.businessId))).size;
 
         if (businessCount <= 0) {
             return [];
