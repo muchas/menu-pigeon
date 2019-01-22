@@ -8,7 +8,7 @@ import * as moment from "moment-timezone";
 
 @injectable()
 export class PushNotificationRepository {
-    private readonly LOCK_TIME: number = 5;
+    private readonly LOCK_TIME_MINUTES: number = 5;
 
     private readonly connection: Connection;
     private readonly messageRepository: Repository<Message>;
@@ -54,7 +54,7 @@ export class PushNotificationRepository {
                 .getMany();
 
             const locks = notifications.map(async (notification) => {
-                notification.lockedUntil = moment().add(this.LOCK_TIME, "minute").toDate();
+                notification.lockedUntil = moment().add(this.LOCK_TIME_MINUTES, "minute").toDate();
                 return entityManager.save(notification);
             });
 
