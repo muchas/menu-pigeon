@@ -39,7 +39,7 @@ export class PushNotificationSender {
     }
 
     public async sendReady(): Promise<void> {
-        const notifications = await this.notificationRepository.findReadyToSend();
+        const notifications = await this.notificationRepository.fetchForSending();
 
         if (notifications.length > 0) {
             winston.info("Sending ready push notifications", {

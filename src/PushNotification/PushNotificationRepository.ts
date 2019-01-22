@@ -2,15 +2,20 @@ import { PushNotification } from "../Entity/PushNotification";
 import { PushNotificationTicket } from "./PushNotificationTicket";
 import { PushNotificationReceipt, PushNotificationStatus } from "./PushNotificationReceipt";
 import { Message } from "../Entity/Message";
-import { Connection, Repository } from "typeorm";
+import { Connection, EntityManager, Repository } from "typeorm";
 import { injectable } from "inversify";
+import * as moment from "moment-timezone";
 
 @injectable()
 export class PushNotificationRepository {
+    private readonly LOCK_TIME_MINUTES: number = 5;
+
+    private readonly connection: Connection;
     private readonly messageRepository: Repository<Message>;
     private readonly notificationRepository: Repository<PushNotification>;
 
     public constructor(connection: Connection) {
+        this.connection = connection;
         this.messageRepository = connection.getRepository(Message);
         this.notificationRepository = connection.getRepository(PushNotification);
     }
@@ -34,19 +39,34 @@ export class PushNotificationRepository {
         });
     }
 
-    public async findReadyToSend(): Promise<PushNotification[]> {
-        return this.notificationRepository
-            .createQueryBuilder("notification")
-            .innerJoinAndSelect("notification.message", "message")
-            .where("notification.status = :status", {status: PushNotificationStatus.SCHEDULED})
-            .andWhere("notification.sentAt is NULL")
-            .andWhere("message.expirationTime >= NOW()")
-            .getMany();
+    public async fetchForSending(): Promise<PushNotification[]> {
+        let notifications: PushNotification[] = [];
+
+        await this.connection.transaction(async (entityManager: EntityManager) => {
+
+            notifications = await entityManager.getRepository(PushNotification)
+                .createQueryBuilder("notification")
+                .innerJoinAndSelect("notification.message", "message")
+                .where("notification.status = :status", {status: PushNotificationStatus.SCHEDULED})
+                .andWhere("notification.sentAt is NULL")
+                .andWhere("notification.lockedUntil is NULL OR notification.lockedUntil < NOW()")
+                .andWhere("message.expirationTime >= NOW()")
+                .getMany();
+
+            const locks = notifications.map(async (notification) => {
+                notification.lockedUntil = moment().add(this.LOCK_TIME_MINUTES, "minute").toDate();
+                return entityManager.save(notification);
+            });
+
+            await Promise.all(locks);
+        });
+
+        return notifications;
     }
 
     public async setSendingStatus(pushTicket: PushNotificationTicket): Promise<void> {
         const notification = pushTicket.notification;
-        if (pushTicket.sentSuccessfully) {
+        if (pushTicket.sentSuccessfully && pushTicket.receiptId) {
             notification.receiptId = pushTicket.receiptId;
             notification.status = PushNotificationStatus.SENT;
             notification.sentAt = pushTicket.sentAt.toDate();

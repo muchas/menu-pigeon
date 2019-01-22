@@ -119,6 +119,7 @@ export class ExpoTransport implements PushNotificationTransport {
             title: notification.title,
             body: notification.body,
             priority: notification.priority,
+            data: notification.message.data.notificationData,
         };
     }
 }

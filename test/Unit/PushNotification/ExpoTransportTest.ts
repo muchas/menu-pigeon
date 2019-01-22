@@ -38,6 +38,7 @@ describe("ExpoTransport", () => {
             message.title = "Pretty nice title";
             message.body = "This is message body!";
             message.priority = "high";
+            message.data = {notificationData: {slugs: ["#slug1"]}};
 
             pushNotification = createPushNotification(message, "PUSH_TOKEN1", 0);
         });
@@ -55,6 +56,7 @@ describe("ExpoTransport", () => {
               to: pushNotification.pushToken,
               title: message.title,
               body: message.body,
+              data: message.data.notificationData,
               priority: message.priority,
             };
 
@@ -102,12 +104,14 @@ describe("ExpoTransport", () => {
                 to: notification1.pushToken,
                 title: message.title,
                 body: message.body,
+                data: message.data.notificationData,
                 priority: message.priority,
             };
             const expectedPush2 = {
                 to: notification2.pushToken,
                 title: message.title,
                 body: message.body,
+                data: message.data.notificationData,
                 priority: message.priority,
             };
 

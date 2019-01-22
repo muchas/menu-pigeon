@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Connection, createConnection } from "typeorm";
+import { Connection } from "typeorm";
 import { Consumer, Queue, SingleConsumer } from "queue";
 import { setupLogging } from "./logging";
 import Config from "./Config";
@@ -15,11 +15,10 @@ import * as winston from "winston";
 import { createContainer } from "./inversify.config";
 import { NotifierClock } from "./PushNotification/NotifierClock";
 import { StatusCheckerClock } from "./PushNotification/StatusCheckerClock";
-import { DeviceDeletedConsumer } from "./Recipient/DeviceDeletedConsumer";
-import { DeviceDeleted } from "queue/lib/Messages/DeviceDeleted";
 import Mongo from "./Mongo";
 import { SenderClock } from "./PushNotification/SenderClock";
 import * as moment from "moment-timezone";
+import { createORMConnection } from "./typeorm.config";
 
 moment.tz.setDefault("Europe/Warsaw");
 
@@ -28,7 +27,7 @@ const config = container.get<Config>(Config);
 
 setupLogging(config);
 
-createConnection()
+createORMConnection(config)
     .then(async connection => {
         container.bind(Connection).toConstantValue(connection);
 
@@ -47,10 +46,6 @@ createConnection()
         const recipientDeletedConsumer = new SingleConsumer(
             container.get<RecipientDeletedConsumer>(RecipientDeletedConsumer),
         );
-        const deviceDeletedConsumer = new SingleConsumer(
-            container.get<DeviceDeletedConsumer>(DeviceDeletedConsumer),
-        );
-
         const topicFollowConsumer = new SingleConsumer(
             container.get<TopicFollowConsumer>(TopicFollowConsumer),
         );
@@ -67,7 +62,6 @@ createConnection()
                 [PersistedPublication, persistedPublicationConsumer],
                 [RecipientUpsert, recipientUpsertConsumer],
                 [RecipientDeleted, recipientDeletedConsumer],
-                [DeviceDeleted, deviceDeletedConsumer],
                 [TopicFollow, topicFollowConsumer],
             ]),
         );

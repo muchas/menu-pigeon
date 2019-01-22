@@ -6,6 +6,7 @@ export interface MessageData {
     eventIds?: string[];
     eventType?: string;
     topics?: string[];
+    notificationData?: object;
 }
 
 @Entity()
@@ -67,5 +68,9 @@ export class Message {
 
     public setEventType(eventType: string): void {
         this.data.eventType = eventType;
+    }
+
+    public setNotificationData(data: object): void {
+        this.data.notificationData = data;
     }
 }

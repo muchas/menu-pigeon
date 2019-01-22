@@ -14,8 +14,6 @@ export class RecipientService {
     public async removeDevice(pushToken: string): Promise<void> {
         const recipients = await this.recipientRepository.findByDevice(pushToken);
         if (recipients.length <= 0) {
-            // as Pigeon service may consume DeviceDeleted messages
-            // this condition prevents infinite public-consume loops
             return;
         }
 
