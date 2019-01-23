@@ -4,8 +4,8 @@ import { Moment } from "moment-timezone";
 
 @injectable()
 export abstract class EventRepository {
-    public async abstract findOne(id: string): Promise<Event | undefined>;
-    public async abstract findRelevant(time: Moment): Promise<Event[]>;
-    public async abstract addMany(recipients: Event[]): Promise<void>;
-    public async abstract add(recipient: Event): Promise<void>;
+    public abstract async findOne(id: string): Promise<Event | undefined>;
+    public abstract async findRelevant(time: Moment): Promise<Event[]>;
+    public abstract async addMany(recipients: Event[]): Promise<void>;
+    public abstract async add(recipient: Event): Promise<void>;
 }

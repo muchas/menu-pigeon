@@ -11,8 +11,7 @@ export class PushNotificationStatusChecker {
         private readonly transport: PushNotificationTransport,
         private readonly notificationRepository: PushNotificationRepository,
         private readonly recipientService: RecipientService,
-    ) {
-    }
+    ) {}
 
     public async updateStatus(): Promise<void> {
         const notifications = await this.notificationRepository.findSentUnconfirmed();

@@ -7,7 +7,7 @@ import { Message } from "../../src/Entity/Message";
 import { PushNotification } from "../../src/Entity/PushNotification";
 import { PushNotificationStatus } from "../../src/PushNotification/PushNotificationReceipt";
 
-const createMessage = (recipientId: string, topics: string[] = [], eventType= "default") => {
+const createMessage = (recipientId: string, topics: string[] = [], eventType = "default") => {
     const message = new Message();
     message.recipientId = recipientId;
     message.title = "Hej John, lunch dnia!";
@@ -19,10 +19,12 @@ const createMessage = (recipientId: string, topics: string[] = [], eventType= "d
     return message;
 };
 
-const createPushNotification = (message: Message,
-                                token: string,
-                                status: number,
-                                receiptId?: string): PushNotification => {
+const createPushNotification = (
+    message: Message,
+    token: string,
+    status: number,
+    receiptId?: string,
+): PushNotification => {
     const notification = new PushNotification();
     notification.status = status;
     notification.pushToken = token;

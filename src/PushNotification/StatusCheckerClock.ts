@@ -4,7 +4,6 @@ import { PushNotificationStatusChecker } from "./PushNotificationStatusChecker";
 
 @injectable()
 export class StatusCheckerClock extends Clock {
-
     public constructor(private readonly statusChecker: PushNotificationStatusChecker) {
         super();
         this.period = 60 * 1000;

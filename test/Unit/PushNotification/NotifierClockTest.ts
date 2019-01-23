@@ -50,7 +50,7 @@ describe("NotifierClockTest", () => {
 
         // when
         clock.tick(16 * 1000);
-        await notifierClock.tick();  // should cancel previous call
+        await notifierClock.tick(); // should cancel previous call
         clock.tick(19.5 * 1000);
 
         // then

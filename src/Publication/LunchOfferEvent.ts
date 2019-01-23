@@ -5,7 +5,6 @@ import { Moment } from "moment-timezone";
 export const LUNCH_OFFER_EVENT_TYPE = "LUNCH_OFFER";
 
 export class LunchOfferEvent implements Event {
-
     public constructor(
         public id: string,
         public readyTime: Moment,

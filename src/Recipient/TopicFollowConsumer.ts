@@ -7,15 +7,13 @@ import { RecipientRepository } from "../Interfaces/RecipientRepository";
 
 @injectable()
 export class TopicFollowConsumer implements Consumer {
-
     public constructor(
         private readonly recipientRepository: RecipientRepository,
         private readonly notifierClock: NotifierClock,
-    ) {
-    }
+    ) {}
 
     public async consume(job: Job<TopicFollow>): Promise<void> {
-        const {topicName, recipientId} = job.message;
+        const { topicName, recipientId } = job.message;
 
         winston.info("Consumption of topic follow started", {
             recipient_id: recipientId,

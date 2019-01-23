@@ -9,10 +9,12 @@ import { toArray } from "../../../src/utils";
 import { PushNotificationStatus } from "../../../src/PushNotification/PushNotificationReceipt";
 import { setup } from "../../utils";
 
-const createPushNotification = (message: Message,
-                                token: string,
-                                status: number,
-                                receiptId?: string): PushNotification => {
+const createPushNotification = (
+    message: Message,
+    token: string,
+    status: number,
+    receiptId?: string,
+): PushNotification => {
     const notification = new PushNotification();
     notification.status = status;
     notification.pushToken = token;
@@ -38,14 +40,14 @@ describe("ExpoTransport", () => {
             message.title = "Pretty nice title";
             message.body = "This is message body!";
             message.priority = "high";
-            message.data = {notificationData: {slugs: ["#slug1"]}};
+            message.data = { notificationData: { slugs: ["#slug1"] } };
 
             pushNotification = createPushNotification(message, "PUSH_TOKEN1", 0);
         });
 
         it("should send push notification asynchronously", async () => {
             // given
-            expoClient.sendPushNotificationsAsync.returns([{id: "receipt#1"}]);
+            expoClient.sendPushNotificationsAsync.returns([{ id: "receipt#1" }]);
             const transport = new ExpoTransport(expoClient);
 
             // when
@@ -53,11 +55,11 @@ describe("ExpoTransport", () => {
 
             // then
             const expectedExpoPush = {
-              to: pushNotification.pushToken,
-              title: message.title,
-              body: message.body,
-              data: message.data.notificationData,
-              priority: message.priority,
+                to: pushNotification.pushToken,
+                title: message.title,
+                body: message.body,
+                data: message.data.notificationData,
+                priority: message.priority,
             };
 
             expect(expoClient.sendPushNotificationsAsync).to.have.been.calledOnceWith([expectedExpoPush]);
@@ -82,12 +84,12 @@ describe("ExpoTransport", () => {
 
         it("should send chunks in case of many notifications", async () => {
             // given
-            const chunk = [{to: "PUSH_TOKEN1"}, {to: "PUSH_TOKEN2"}];
+            const chunk = [{ to: "PUSH_TOKEN1" }, { to: "PUSH_TOKEN2" }];
             const chunks = [chunk];
             const receiptId = "RECEIPT_ID";
 
             expoClient.chunkPushNotifications.returns(chunks);
-            expoClient.sendPushNotificationsAsync.returns([{id: receiptId}, {id: receiptId}]);
+            expoClient.sendPushNotificationsAsync.returns([{ id: receiptId }, { id: receiptId }]);
 
             const transport = new ExpoTransport(expoClient);
 
@@ -118,8 +120,8 @@ describe("ExpoTransport", () => {
             expect(expoClient.chunkPushNotifications).to.have.been.calledWith([expectedPush1, expectedPush2]);
             expect(expoClient.sendPushNotificationsAsync).to.have.been.calledOnceWith(chunk);
             expect(tickets.length).to.equal(2);
-            expect(tickets.map((t) => t.sentSuccessfully)).to.deep.equal([true, true]);
-            expect(tickets.map((t) => t.receiptId)).to.deep.equal([receiptId, receiptId]);
+            expect(tickets.map(t => t.sentSuccessfully)).to.deep.equal([true, true]);
+            expect(tickets.map(t => t.receiptId)).to.deep.equal([receiptId, receiptId]);
         });
     });
 
@@ -142,13 +144,13 @@ describe("ExpoTransport", () => {
             const chunk2 = ["receipt#3"];
             const chunks = [chunk1, chunk2];
             const returnedReceipts1 = {
-                "receipt#1": {status: "ok", details: {time: "xxx"}},
-                "receipt#2": {status: "error", details: {error: "yyy"}},
+                "receipt#1": { status: "ok", details: { time: "xxx" } },
+                "receipt#2": { status: "error", details: { error: "yyy" } },
             };
             const returnedReceipts2 = {
-                "receipt#3": {status: "ok", details: {time: "zzz"}},
+                "receipt#3": { status: "ok", details: { time: "zzz" } },
             };
-            const returnedReceipts = {...returnedReceipts1, ...returnedReceipts2};
+            const returnedReceipts = { ...returnedReceipts1, ...returnedReceipts2 };
             expoClient.chunkPushNotificationReceiptIds.returns(chunks);
             expoClient.getPushNotificationReceiptsAsync.onCall(0).returns(returnedReceipts1);
             expoClient.getPushNotificationReceiptsAsync.onCall(1).returns(returnedReceipts2);
@@ -164,19 +166,21 @@ describe("ExpoTransport", () => {
             const receipts = await toArray(transport.confirmStatuses(notifications));
 
             // then
-            expect(expoClient.chunkPushNotificationReceiptIds).to.have.been.calledOnceWith(
-                ["receipt#1", "receipt#2", "receipt#3"],
-            );
-            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(
-                ["receipt#1", "receipt#2"],
-            );
+            expect(expoClient.chunkPushNotificationReceiptIds).to.have.been.calledOnceWith([
+                "receipt#1",
+                "receipt#2",
+                "receipt#3",
+            ]);
+            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(["receipt#1", "receipt#2"]);
             expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(["receipt#3"]);
             expect(receipts).to.be.lengthOf(3);
             expect(receipts.map(r => r.notification)).to.deep.equal(notifications);
             expect(receipts.map(r => r.fetchedSuccessfully)).to.deep.equal([true, true, true]);
-            expect(receipts.map(r => r.status)).to.deep.equal(
-                [PushNotificationStatus.DELIVERED, PushNotificationStatus.ERROR, PushNotificationStatus.DELIVERED],
-            );
+            expect(receipts.map(r => r.status)).to.deep.equal([
+                PushNotificationStatus.DELIVERED,
+                PushNotificationStatus.ERROR,
+                PushNotificationStatus.DELIVERED,
+            ]);
             expect(receipts.map(r => r.data)).to.deep.equal(Object.values(returnedReceipts));
         });
 
@@ -197,6 +201,5 @@ describe("ExpoTransport", () => {
             expect(receipts[0].fetchedSuccessfully).to.be.false;
             expect(receipts[0].notification).to.deep.equal(pushNotification);
         });
-
     });
 });

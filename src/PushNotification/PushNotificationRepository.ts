@@ -24,7 +24,7 @@ export class PushNotificationRepository {
         // TODO: move to MessageRepository?
         await this.messageRepository.save(messages);
         const notifications = messages
-            .map((message) => message.pushNotifications)
+            .map(message => message.pushNotifications)
             .reduce((prev, current) => prev.concat(current), []);
 
         await this.notificationRepository.save(notifications);
@@ -43,18 +43,20 @@ export class PushNotificationRepository {
         let notifications: PushNotification[] = [];
 
         await this.connection.transaction(async (entityManager: EntityManager) => {
-
-            notifications = await entityManager.getRepository(PushNotification)
+            notifications = await entityManager
+                .getRepository(PushNotification)
                 .createQueryBuilder("notification")
                 .innerJoinAndSelect("notification.message", "message")
-                .where("notification.status = :status", {status: PushNotificationStatus.SCHEDULED})
+                .where("notification.status = :status", { status: PushNotificationStatus.SCHEDULED })
                 .andWhere("notification.sentAt is NULL")
                 .andWhere("notification.lockedUntil is NULL OR notification.lockedUntil < NOW()")
                 .andWhere("message.expirationTime >= NOW()")
                 .getMany();
 
-            const locks = notifications.map(async (notification) => {
-                notification.lockedUntil = moment().add(this.LOCK_TIME_MINUTES, "minute").toDate();
+            const locks = notifications.map(async notification => {
+                notification.lockedUntil = moment()
+                    .add(this.LOCK_TIME_MINUTES, "minute")
+                    .toDate();
                 return entityManager.save(notification);
             });
 
@@ -81,7 +83,7 @@ export class PushNotificationRepository {
     public async setDeliveryStatus(receipt: PushNotificationReceipt): Promise<void> {
         const notification = receipt.notification;
         if (receipt.fetchedSuccessfully) {
-            notification.status =  receipt.status;
+            notification.status = receipt.status;
             notification.data = {
                 receipt_data: receipt.data,
                 ...notification.data,

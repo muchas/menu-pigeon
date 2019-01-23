@@ -12,12 +12,7 @@ import { Moment } from "moment-timezone";
  * (in the edge case scenario there may be no such time)
  */
 export class EventNotificationScheduler {
-
-    public schedule(
-        recipient: Recipient,
-        events: Event[],
-        targetDay: Moment,
-    ): EventNotification[] {
+    public schedule(recipient: Recipient, events: Event[], targetDay: Moment): EventNotification[] {
         const preferences = recipient.preferences;
 
         const targetDayNotificationStart = moment(targetDay)
@@ -41,9 +36,7 @@ export class EventNotificationScheduler {
             const readyTime = max(event.readyTime, targetDayNotificationStart);
             const expirationTime = min(event.expirationTime, targetDayNotificationEnd);
 
-            notifications.push(
-                new EventNotification(readyTime, expirationTime, event, recipient),
-            );
+            notifications.push(new EventNotification(readyTime, expirationTime, event, recipient));
         }
 
         return notifications;

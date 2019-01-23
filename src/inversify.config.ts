@@ -18,34 +18,39 @@ import { RecipientService } from "./Recipient/RecipientService";
 export const createContainer = (): Container => {
     env(`${__dirname}/../.env`);
 
-    const container = new Container({autoBindInjectable: true});
+    const container = new Container({ autoBindInjectable: true });
     container.bind(Container).toConstantValue(container);
 
-    container.bind(Config)
-        .toDynamicValue(() => new Config({
-            APP_NAME: "pigeon",
-            MONGO_HOSTNAME: process.env.MONGO_HOSTNAME || "localhost",
-            MONGO_PORT: process.env.MONGO_PORT || 27017,
-            MONGO_DATABASE: process.env.MONGO_DATABASE || "nalunch",
-            MONGO_USERNAME: process.env.MONGO_USERNAME,
-            MONGO_PASSWORD: process.env.MONGO_PASSWORD,
-            DB_HOSTNAME: process.env.DB_HOSTNAME || "localhost",
-            DB_PORT: process.env.DB_PORT || 5432,
-            DB_NAME: process.env.DB_NAME,
-            DB_USERNAME: process.env.DB_USERNAME,
-            DB_PASSWORD: process.env.DB_PASSWORD,
-            GRAYLOG_HOSTNAME: process.env.GRAYLOG_HOSTNAME,
-            GRAYLOG_PORT: process.env.GRAYLOG_PORT || 12201,
-            RABBITMQ_HOSTNAME: process.env.RABBITMQ_HOSTNAME || "localhost",
-            RABBITMQ_PORT: process.env.RABBITMQ_PORT || 5672,
-            RABBITMQ_USERNAME: process.env.RABBITMQ_USERNAME || "rabbitmq",
-            RABBITMQ_PASSWORD: process.env.RABBITMQ_PASSWORD || "rabbitmq",
-            RABBITMQ_EXCHANGE: process.env.RABBITMQ_EXCHANGE || "posts",
-            SENTRY_DSN: process.env.SENTRY_DSN,
-        }))
+    container
+        .bind(Config)
+        .toDynamicValue(
+            () =>
+                new Config({
+                    APP_NAME: "pigeon",
+                    MONGO_HOSTNAME: process.env.MONGO_HOSTNAME || "localhost",
+                    MONGO_PORT: process.env.MONGO_PORT || 27017,
+                    MONGO_DATABASE: process.env.MONGO_DATABASE || "nalunch",
+                    MONGO_USERNAME: process.env.MONGO_USERNAME,
+                    MONGO_PASSWORD: process.env.MONGO_PASSWORD,
+                    DB_HOSTNAME: process.env.DB_HOSTNAME || "localhost",
+                    DB_PORT: process.env.DB_PORT || 5432,
+                    DB_NAME: process.env.DB_NAME,
+                    DB_USERNAME: process.env.DB_USERNAME,
+                    DB_PASSWORD: process.env.DB_PASSWORD,
+                    GRAYLOG_HOSTNAME: process.env.GRAYLOG_HOSTNAME,
+                    GRAYLOG_PORT: process.env.GRAYLOG_PORT || 12201,
+                    RABBITMQ_HOSTNAME: process.env.RABBITMQ_HOSTNAME || "localhost",
+                    RABBITMQ_PORT: process.env.RABBITMQ_PORT || 5672,
+                    RABBITMQ_USERNAME: process.env.RABBITMQ_USERNAME || "rabbitmq",
+                    RABBITMQ_PASSWORD: process.env.RABBITMQ_PASSWORD || "rabbitmq",
+                    RABBITMQ_EXCHANGE: process.env.RABBITMQ_EXCHANGE || "posts",
+                    SENTRY_DSN: process.env.SENTRY_DSN,
+                }),
+        )
         .inSingletonScope();
 
-    container.bind(Mongo)
+    container
+        .bind(Mongo)
         .toDynamicValue(() => {
             const config = container.get<Config>(Config);
             return new Mongo(
@@ -58,7 +63,8 @@ export const createContainer = (): Container => {
         })
         .inSingletonScope();
 
-    container.bind(Queue)
+    container
+        .bind(Queue)
         .toDynamicValue(() => {
             const config = container.get<Config>(Config);
 
@@ -69,31 +75,29 @@ export const createContainer = (): Container => {
                 config.get("RABBITMQ_PASSWORD"),
             );
 
-            return new Queue(
-                queueConnection,
-                config.get("RABBITMQ_EXCHANGE"),
-                new MessageGateCollection(),
-            );
+            return new Queue(queueConnection, config.get("RABBITMQ_EXCHANGE"), new MessageGateCollection());
         })
         .inSingletonScope();
 
-    container.bind(RecipientRepository).to(RecipientMongoRepository).inSingletonScope();
-    container.bind(EventRepository).to(EventMongoRepository).inSingletonScope();
-    container.bind(PushNotificationSender).toDynamicValue(
-        () => {
-            const transport = container.get<ExpoTransport>(ExpoTransport);
-            const repository = container.get<PushNotificationRepository>(PushNotificationRepository);
-            return new PushNotificationSender(transport, repository);
-        },
-    );
-    container.bind(PushNotificationStatusChecker).toDynamicValue(
-        () => {
-            const transport = container.get<ExpoTransport>(ExpoTransport);
-            const repository = container.get<PushNotificationRepository>(PushNotificationRepository);
-            const recipientService = container.get<RecipientService>(RecipientService);
-            return new PushNotificationStatusChecker(transport, repository, recipientService);
-        },
-    );
+    container
+        .bind(RecipientRepository)
+        .to(RecipientMongoRepository)
+        .inSingletonScope();
+    container
+        .bind(EventRepository)
+        .to(EventMongoRepository)
+        .inSingletonScope();
+    container.bind(PushNotificationSender).toDynamicValue(() => {
+        const transport = container.get<ExpoTransport>(ExpoTransport);
+        const repository = container.get<PushNotificationRepository>(PushNotificationRepository);
+        return new PushNotificationSender(transport, repository);
+    });
+    container.bind(PushNotificationStatusChecker).toDynamicValue(() => {
+        const transport = container.get<ExpoTransport>(ExpoTransport);
+        const repository = container.get<PushNotificationRepository>(PushNotificationRepository);
+        const recipientService = container.get<RecipientService>(RecipientService);
+        return new PushNotificationStatusChecker(transport, repository, recipientService);
+    });
     container.bind(Expo).toDynamicValue(() => new Expo());
 
     return container;

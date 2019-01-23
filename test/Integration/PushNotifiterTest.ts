@@ -27,7 +27,6 @@ const createPersistedPublicationJob = (publication: PersistedPublication): Job<P
 };
 
 describe("PushNotifier", () => {
-
     let eventRepository: EventRepository;
     let recipientRepository: RecipientRepository;
     let today;
@@ -48,7 +47,7 @@ describe("PushNotifier", () => {
         today = moment();
         const morning = today.set(8, "hour").toDate();
 
-        const offers = [{date: today.toDate(), lunches: [], soups: [], prices: [], texts: []}];
+        const offers = [{ date: today.toDate(), lunches: [], soups: [], prices: [], texts: [] }];
         publication1 = new PersistedPublication(1, "1", "Bococa Bistro", "bococa", offers, morning);
         publication2 = new PersistedPublication(2, "2", "I Love Coffee Kawiarnia", "ilc", offers, morning);
         publication3 = new PersistedPublication(3, "3", "Lunch Bar Majeranek", "majeranek", offers, morning);
@@ -67,24 +66,24 @@ describe("PushNotifier", () => {
     it.skip("should send messages to interested recipients @slow", async () => {
         // given
         const preferences = new RecipientPreferences(7, 0, NotificationLevel.Often);
-        const recipientUpsert1 = new RecipientUpsert(
-            "r#1", [], ["business-2", "business-3"], preferences, "Iza",
-        );
-        const recipientUpsert2 = new RecipientUpsert(
-            "r#2", [], ["business-3"], preferences, "Michal",
-        );
+        const recipientUpsert1 = new RecipientUpsert("r#1", [], ["business-2", "business-3"], preferences, "Iza");
+        const recipientUpsert2 = new RecipientUpsert("r#2", [], ["business-3"], preferences, "Michal");
         const recipientUpsert3 = new RecipientUpsert(
-            "r#3", [], ["business-1", "business-2", "business-3", "business-4"],
-            preferences, "Slawek",
+            "r#3",
+            [],
+            ["business-1", "business-2", "business-3", "business-4"],
+            preferences,
+            "Slawek",
         );
 
-        const recipient1 = new Recipient(
-            "r#1", "Iza", ["business-2", "business-3"], [], preferences,
-        );
+        const recipient1 = new Recipient("r#1", "Iza", ["business-2", "business-3"], [], preferences);
         const recipient2 = new Recipient("r#2", "Michal", ["business-3"], [], preferences);
         const recipient3 = new Recipient(
-            "r#3", "Slawek", ["business-1", "business-2", "business-3", "business-4"],
-            [], preferences,
+            "r#3",
+            "Slawek",
+            ["business-1", "business-2", "business-3", "business-4"],
+            [],
+            preferences,
         );
         const recipients = [recipient1, recipient2, recipient3];
 
@@ -106,9 +105,11 @@ describe("PushNotifier", () => {
         // then
         expect(sender.schedule).to.have.been.calledWith(recipients);
         const persistedRecipients = await recipientRepository.findAll();
-        const notifiedTopics = persistedRecipients.map((r) => [...r.topicLastNotification.keys()]);
-        expect(notifiedTopics).deep.equals(
-            [["business-2", "business-3"], ["business-3"], ["business-1", "business-2", "business-3", "business-4"]],
-        );
+        const notifiedTopics = persistedRecipients.map(r => [...r.topicLastNotification.keys()]);
+        expect(notifiedTopics).deep.equals([
+            ["business-2", "business-3"],
+            ["business-3"],
+            ["business-1", "business-2", "business-3", "business-4"],
+        ]);
     });
 });

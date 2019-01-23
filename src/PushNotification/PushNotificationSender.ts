@@ -11,8 +11,7 @@ export class PushNotificationSender {
     public constructor(
         private readonly transport: PushNotificationTransport,
         private readonly notificationRepository: PushNotificationRepository,
-    ) {
-    }
+    ) {}
 
     public async schedule(recipients: Recipient[], messages: Message[]): Promise<void> {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
@@ -20,7 +19,7 @@ export class PushNotificationSender {
         for (const message of messages) {
             const recipient = recipientsById.get(message.recipientId);
 
-            message.pushNotifications = recipient.pushTokens.map((token) => {
+            message.pushNotifications = recipient.pushTokens.map(token => {
                 const notification = new PushNotification();
                 notification.pushToken = token;
                 notification.message = message;
@@ -32,8 +31,8 @@ export class PushNotificationSender {
 
         if (messages.length > 0) {
             winston.info("Messages scheduled", {
-                message_ids: messages.map((message) => message.id),
-                recipient_ids: messages.map((message) => message.recipientId),
+                message_ids: messages.map(message => message.id),
+                recipient_ids: messages.map(message => message.recipientId),
             });
         }
     }
@@ -43,8 +42,8 @@ export class PushNotificationSender {
 
         if (notifications.length > 0) {
             winston.info("Sending ready push notifications", {
-                push_notification_ids: notifications.map((notification) => notification.id),
-                recipient_ids: notifications.map((notification) => notification.message.recipientId),
+                push_notification_ids: notifications.map(notification => notification.id),
+                recipient_ids: notifications.map(notification => notification.message.recipientId),
             });
         }
 

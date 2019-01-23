@@ -18,7 +18,6 @@ import { Moment } from "moment-timezone";
  */
 @injectable()
 export class PushNotifier {
-
     private readonly messageComposer: LunchOfferMessageComposer;
     private readonly scheduler: EventNotificationScheduler;
     private readonly distributor: EventDistributor;
@@ -40,7 +39,7 @@ export class PushNotifier {
         const recipients = await this.recipientRepository.findAll();
 
         const messages = recipients
-            .map((recipient) => this.makeMessages(recipient, events, currentTime))
+            .map(recipient => this.makeMessages(recipient, events, currentTime))
             .reduce((previous, current) => previous.concat(current), []);
 
         await this.pushNotificationSender.schedule(recipients, messages);
@@ -50,29 +49,26 @@ export class PushNotifier {
     private makeMessages(recipient: Recipient, events: Event[], currentTime: Moment): Message[] {
         const recipientEvents = this.distributor.filterRelevantFor(recipient, events);
         const notifications = this.prepareNotifications(recipient, recipientEvents, currentTime);
-        const messages = this.messageComposer.compose(recipient, notifications.map(n => n.event));
+        const messages = this.messageComposer.compose(
+            recipient,
+            notifications.map(n => n.event),
+        );
 
         return this.throttleService.throttle(recipient, messages);
     }
 
-    private prepareNotifications(
-        recipient: Recipient,
-        events: Event[],
-        currentTime: Moment,
-    ): EventNotification[] {
+    private prepareNotifications(recipient: Recipient, events: Event[], currentTime: Moment): EventNotification[] {
         return this.scheduler
             .schedule(recipient, events, currentTime)
-            .filter((notification) =>
-                notification.readyTime <= currentTime &&
-                notification.expirationTime >= currentTime &&
-                !recipient.notifiedEventIds.has(notification.event.id));
+            .filter(
+                notification =>
+                    notification.readyTime <= currentTime &&
+                    notification.expirationTime >= currentTime &&
+                    !recipient.notifiedEventIds.has(notification.event.id),
+            );
     }
 
-    private async markNotified(
-        recipients: Recipient[],
-        events: Event[],
-        messages: Message[],
-    ): Promise<void> {
+    private async markNotified(recipients: Recipient[], events: Event[], messages: Message[]): Promise<void> {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
         const eventsById = new Map(events.map((e): [string, Event] => [e.id, e]));
 

@@ -21,13 +21,10 @@ export class EventMemoryRepository extends EventRepository {
     }
 
     public async findOne(id: string): Promise<Event | undefined> {
-        return this.events.find((event) => event.id === id);
+        return this.events.find(event => event.id === id);
     }
 
     public async findRelevant(time: Moment): Promise<Event[]> {
-        return this.events.filter(
-            (event) => event.readyTime <= time && event.expirationTime >= time,
-        );
+        return this.events.filter(event => event.readyTime <= time && event.expirationTime >= time);
     }
-
 }

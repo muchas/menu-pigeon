@@ -7,7 +7,7 @@ import { Message } from "../../../src/Entity/Message";
 import { LUNCH_EVENT_TYPE } from "../../../src/Publication/constants";
 import * as moment from "moment";
 
-const createMessage = (id: string, topics: string[] = [], eventType= "default") => {
+const createMessage = (id: string, topics: string[] = [], eventType = "default") => {
     const message = new Message();
     message.id = id;
     message.title = "Hej John, lunch dnia!";
@@ -92,7 +92,9 @@ describe("MessageThrottleService", () => {
 
     it("should not receive if notified within last week and seldom", async () => {
         // given
-        const weekAgo = moment().subtract("1", "week").add("1", "minute");
+        const weekAgo = moment()
+            .subtract("1", "week")
+            .add("1", "minute");
 
         const messages = [
             createMessage("#1", [], "default"),
