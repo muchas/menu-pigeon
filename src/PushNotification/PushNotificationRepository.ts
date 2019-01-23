@@ -2,7 +2,7 @@ import { PushNotification } from "../Entity/PushNotification";
 import { PushNotificationTicket } from "./PushNotificationTicket";
 import { PushNotificationReceipt, PushNotificationStatus } from "./PushNotificationReceipt";
 import { Message } from "../Entity/Message";
-import { Connection, EntityManager, Repository } from "typeorm";
+import { Brackets, Connection, EntityManager, Repository } from "typeorm";
 import { injectable } from "inversify";
 import * as moment from "moment-timezone";
 
@@ -49,7 +49,11 @@ export class PushNotificationRepository {
                 .innerJoinAndSelect("notification.message", "message")
                 .where("notification.status = :status", { status: PushNotificationStatus.SCHEDULED })
                 .andWhere("notification.sentAt is NULL")
-                .andWhere("notification.lockedUntil is NULL OR notification.lockedUntil < NOW()")
+                .andWhere(
+                    new Brackets(qb => {
+                        qb.where("notification.lockedUntil is NULL").orWhere("notification.lockedUntil < NOW()");
+                    }),
+                )
                 .andWhere("message.expirationTime >= NOW()")
                 .getMany();
 
