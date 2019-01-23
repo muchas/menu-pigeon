@@ -45,7 +45,9 @@ describe("RecipientRepository test", () => {
     beforeEach(async () => {
         container = await setupWithDb();
 
-        notificationRepository = container.get<PushNotificationRepository>(PushNotificationRepository);
+        notificationRepository = container.get<PushNotificationRepository>(
+            PushNotificationRepository,
+        );
     });
 
     afterEach(async () => {
@@ -55,8 +57,16 @@ describe("RecipientRepository test", () => {
     it("should lock notifications fetched for sending", async () => {
         // given
         const message = createMessage("recipient#1", ["topic-#1"]);
-        const notification1 = createPushNotification(message, "12412", PushNotificationStatus.SCHEDULED);
-        const notification2 = createPushNotification(message, "12512", PushNotificationStatus.SCHEDULED);
+        const notification1 = createPushNotification(
+            message,
+            "12412",
+            PushNotificationStatus.SCHEDULED,
+        );
+        const notification2 = createPushNotification(
+            message,
+            "12512",
+            PushNotificationStatus.SCHEDULED,
+        );
         message.pushNotifications = [notification1, notification2];
 
         await notificationRepository.storeMessagesToSend([message]);
@@ -74,8 +84,17 @@ describe("RecipientRepository test", () => {
         // given
         const yesterday = moment().subtract(1, "day");
         const message = createMessage("recipient#1", ["topic-#1"]);
-        const notification1 = createPushNotification(message, "12412", PushNotificationStatus.SCHEDULED);
-        const notification2 = createPushNotification(message, "12512", PushNotificationStatus.SENT, yesterday.toDate());
+        const notification1 = createPushNotification(
+            message,
+            "12412",
+            PushNotificationStatus.SCHEDULED,
+        );
+        const notification2 = createPushNotification(
+            message,
+            "12512",
+            PushNotificationStatus.SENT,
+            yesterday.toDate(),
+        );
         message.pushNotifications = [notification1, notification2];
 
         await notificationRepository.storeMessagesToSend([message]);

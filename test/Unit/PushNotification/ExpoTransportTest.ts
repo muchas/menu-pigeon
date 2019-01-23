@@ -62,7 +62,9 @@ describe("ExpoTransport", () => {
                 priority: message.priority,
             };
 
-            expect(expoClient.sendPushNotificationsAsync).to.have.been.calledOnceWith([expectedExpoPush]);
+            expect(expoClient.sendPushNotificationsAsync).to.have.been.calledOnceWith([
+                expectedExpoPush,
+            ]);
             expect(ticket.sentSuccessfully).to.be.true;
             expect(ticket.notification).to.equal(pushNotification);
             expect(ticket.receiptId).to.equal("receipt#1");
@@ -117,7 +119,10 @@ describe("ExpoTransport", () => {
                 priority: message.priority,
             };
 
-            expect(expoClient.chunkPushNotifications).to.have.been.calledWith([expectedPush1, expectedPush2]);
+            expect(expoClient.chunkPushNotifications).to.have.been.calledWith([
+                expectedPush1,
+                expectedPush2,
+            ]);
             expect(expoClient.sendPushNotificationsAsync).to.have.been.calledOnceWith(chunk);
             expect(tickets.length).to.equal(2);
             expect(tickets.map(t => t.sentSuccessfully)).to.deep.equal([true, true]);
@@ -171,8 +176,13 @@ describe("ExpoTransport", () => {
                 "receipt#2",
                 "receipt#3",
             ]);
-            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(["receipt#1", "receipt#2"]);
-            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith(["receipt#3"]);
+            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith([
+                "receipt#1",
+                "receipt#2",
+            ]);
+            expect(expoClient.getPushNotificationReceiptsAsync).to.have.been.calledWith([
+                "receipt#3",
+            ]);
             expect(receipts).to.be.lengthOf(3);
             expect(receipts.map(r => r.notification)).to.deep.equal(notifications);
             expect(receipts.map(r => r.fetchedSuccessfully)).to.deep.equal([true, true, true]);

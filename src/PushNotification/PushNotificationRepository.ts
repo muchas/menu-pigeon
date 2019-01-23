@@ -47,11 +47,15 @@ export class PushNotificationRepository {
                 .getRepository(PushNotification)
                 .createQueryBuilder("notification")
                 .innerJoinAndSelect("notification.message", "message")
-                .where("notification.status = :status", { status: PushNotificationStatus.SCHEDULED })
+                .where("notification.status = :status", {
+                    status: PushNotificationStatus.SCHEDULED,
+                })
                 .andWhere("notification.sentAt is NULL")
                 .andWhere(
                     new Brackets(qb => {
-                        qb.where("notification.lockedUntil is NULL").orWhere("notification.lockedUntil < NOW()");
+                        qb.where("notification.lockedUntil is NULL").orWhere(
+                            "notification.lockedUntil < NOW()",
+                        );
                     }),
                 )
                 .andWhere("message.expirationTime >= NOW()")

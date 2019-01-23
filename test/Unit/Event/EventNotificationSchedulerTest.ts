@@ -154,7 +154,11 @@ describe("EventNotificationScheduler", () => {
         };
 
         // when
-        const notifications = scheduler.schedule(recipient, [event1 as Event, event2 as Event], today());
+        const notifications = scheduler.schedule(
+            recipient,
+            [event1 as Event, event2 as Event],
+            today(),
+        );
 
         // then
         const readyTime = today()

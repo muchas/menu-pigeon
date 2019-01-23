@@ -28,7 +28,10 @@ export class EventNotificationScheduler {
         const notifications = [];
 
         for (const event of events) {
-            if (event.expirationTime < targetDayNotificationStart || event.readyTime > targetDayNotificationEnd) {
+            if (
+                event.expirationTime < targetDayNotificationStart ||
+                event.readyTime > targetDayNotificationEnd
+            ) {
                 continue;
             }
 

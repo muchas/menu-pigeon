@@ -22,13 +22,21 @@ export class RecipientUpsertConsumer implements Consumer {
             recipient_id: id,
         });
 
-        const recipientDevices = devices.map(device => new RecipientDevice(device.pushToken, moment()));
+        const recipientDevices = devices.map(
+            device => new RecipientDevice(device.pushToken, moment()),
+        );
         const recipientPreferences = new RecipientPreferences(
             preferences.earliestHour,
             preferences.earliestMinute,
             preferences.level,
         );
-        const recipient = new Recipient(id, name, followedTopics, recipientDevices, recipientPreferences);
+        const recipient = new Recipient(
+            id,
+            name,
+            followedTopics,
+            recipientDevices,
+            recipientPreferences,
+        );
 
         await this.recipientRepository.add(recipient);
         await this.notifierClock.tick();
