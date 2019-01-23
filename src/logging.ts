@@ -26,10 +26,12 @@ export const setupLogging = (config: Config) => {
     if (config.get("GRAYLOG_HOSTNAME")) {
         winston.add(winstonGraylog, {
             graylog: {
-                servers: [{
-                    host: config.get("GRAYLOG_HOSTNAME"),
-                    port: config.get("GRAYLOG_PORT"),
-                }],
+                servers: [
+                    {
+                        host: config.get("GRAYLOG_HOSTNAME"),
+                        port: config.get("GRAYLOG_PORT"),
+                    },
+                ],
                 facility: config.get("APP_NAME"),
             },
         });

@@ -40,18 +40,10 @@ describe("Push notification integration test", () => {
         const morning = today.toDate();
         const tomorrow = today.add(1, "day").toDate();
 
-        publication1 = new PersistedPublication(
-            1, "1", "Bococa Bistro", "bococa", [], morning,
-        );
-        publication2 = new PersistedPublication(
-            2, "2", "I Love Coffee Kawiarnia", "ilc", [], morning,
-        );
-        publication3 = new PersistedPublication(
-            3, "3", "Lunch Bar Majeranek", "majeranek", [], morning,
-        );
-        publication4 = new PersistedPublication(
-            4, "4", "Bistro Maro", "maro", [], morning,
-        );
+        publication1 = new PersistedPublication(1, "1", "Bococa Bistro", "bococa", [], morning);
+        publication2 = new PersistedPublication(2, "2", "I Love Coffee Kawiarnia", "ilc", [], morning);
+        publication3 = new PersistedPublication(3, "3", "Lunch Bar Majeranek", "majeranek", [], morning);
+        publication4 = new PersistedPublication(4, "4", "Bistro Maro", "maro", [], morning);
 
         event1 = new LunchOfferEvent("e#1", morning, tomorrow, ["business-1"], publication1);
         event2 = new LunchOfferEvent("e#2", morning, tomorrow, ["business-2"], publication2);
@@ -61,23 +53,13 @@ describe("Push notification integration test", () => {
         events = [event1, event2, event3, event4];
 
         const device3 = new RecipientDevice("ExponentPushToken[EQuFAcMoN2eE64nHElSquf]", morning);
-        const recipient1 = new Recipient(
-            "r#1",
-            "Iza",
-            ["business-2", "business-3", "business-4"],
-            [device3],
-        );
+        const recipient1 = new Recipient("r#1", "Iza", ["business-2", "business-3", "business-4"], [device3]);
 
         const device2 = new RecipientDevice("ExponentPushToken[dtdyV1PhS9NpKWze4p29VE]", morning);
         const recipient2 = new Recipient("r#2", "Michal", ["business-3"], [device2]);
 
         const device1 = new RecipientDevice("ExponentPushToken[tLEWtTPeOvkhYxrVxIvE7q]", morning);
-        const recipient3 = new Recipient(
-            "r#3",
-            "Sławek",
-            ["business-1"],
-            [device1],
-        );
+        const recipient3 = new Recipient("r#3", "Sławek", ["business-1"], [device1]);
 
         const recipients = [recipient1, recipient2, recipient3];
 
@@ -96,6 +78,5 @@ describe("Push notification integration test", () => {
         const statusChecker = container.get<PushNotificationStatusChecker>(PushNotificationStatusChecker);
 
         await statusChecker.updateStatus();
-
     });
 });

@@ -15,7 +15,7 @@ export class RecipientMemoryRepository extends RecipientRepository {
     }
 
     public async add(recipient: Recipient): Promise<void> {
-        const existingRecipient = this.recipients.find((r) => r.id === recipient.id);
+        const existingRecipient = this.recipients.find(r => r.id === recipient.id);
         if (existingRecipient) {
             recipient.notifiedEventIds = existingRecipient.notifiedEventIds;
             recipient.topicLastNotification = existingRecipient.topicLastNotification;
@@ -27,7 +27,7 @@ export class RecipientMemoryRepository extends RecipientRepository {
     }
 
     public async remove(id: string): Promise<void> {
-        this.recipients = this.recipients.filter((r) => r.id !== id);
+        this.recipients = this.recipients.filter(r => r.id !== id);
     }
 
     public async findAll(): Promise<Recipient[]> {
@@ -35,14 +35,10 @@ export class RecipientMemoryRepository extends RecipientRepository {
     }
 
     public async findByDevice(pushToken: string): Promise<Recipient[]> {
-        return this.recipients.filter(
-            (recipient) => recipient.devices.find(
-                (device) => device.pushToken === pushToken,
-            ),
-        );
+        return this.recipients.filter(recipient => recipient.devices.find(device => device.pushToken === pushToken));
     }
 
     public async findOne(id: string): Promise<Recipient | undefined> {
-        return this.recipients.find((recipient) => recipient.id === id);
+        return this.recipients.find(recipient => recipient.id === id);
     }
 }

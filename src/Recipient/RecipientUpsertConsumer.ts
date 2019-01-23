@@ -10,32 +10,31 @@ import * as moment from "moment-timezone";
 
 @injectable()
 export class RecipientUpsertConsumer implements Consumer {
-
-    public constructor(private readonly recipientRepository: RecipientRepository,
-                       private readonly notifierClock: NotifierClock) {}
+    public constructor(
+        private readonly recipientRepository: RecipientRepository,
+        private readonly notifierClock: NotifierClock,
+    ) {}
 
     public async consume(job: Job<RecipientUpsert>): Promise<void> {
-        const {id, name, devices, followedTopics, preferences} = job.message;
+        const { id, name, devices, followedTopics, preferences } = job.message;
 
         winston.info("Consumption of recipient add started", {
             recipient_id: id,
         });
 
-        const recipientDevices = devices.map(
-            (device) => new RecipientDevice(device.pushToken, moment()),
-        );
+        const recipientDevices = devices.map(device => new RecipientDevice(device.pushToken, moment()));
         const recipientPreferences = new RecipientPreferences(
-            preferences.earliestHour, preferences.earliestMinute, preferences.level,
+            preferences.earliestHour,
+            preferences.earliestMinute,
+            preferences.level,
         );
-        const recipient = new Recipient(
-            id, name, followedTopics, recipientDevices, recipientPreferences,
-        );
+        const recipient = new Recipient(id, name, followedTopics, recipientDevices, recipientPreferences);
 
         await this.recipientRepository.add(recipient);
         await this.notifierClock.tick();
 
         winston.info("Consumption of recipient add finished", {
-           recipient_id: id,
+            recipient_id: id,
         });
     }
 }

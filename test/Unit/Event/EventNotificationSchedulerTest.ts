@@ -45,7 +45,7 @@ describe("EventNotificationScheduler", () => {
             recipient,
             readyTime: event.readyTime,
             expirationTime: today()
-                .set("hour", 17)  // default max notification hour is set to 17
+                .set("hour", 17) // default max notification hour is set to 17
                 .set("minute", 0)
                 .set("second", 0),
         });
@@ -157,8 +157,11 @@ describe("EventNotificationScheduler", () => {
         const notifications = scheduler.schedule(recipient, [event1 as Event, event2 as Event], today());
 
         // then
-        const readyTime = today().set("hour", 12).set("minute", 0).set("second", 0);
+        const readyTime = today()
+            .set("hour", 12)
+            .set("minute", 0)
+            .set("second", 0);
         expect(notifications).to.be.lengthOf(2);
-        expect(notifications.map((n) => n.readyTime)).to.deep.equal([readyTime, readyTime]);
+        expect(notifications.map(n => n.readyTime)).to.deep.equal([readyTime, readyTime]);
     });
 });

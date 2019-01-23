@@ -8,23 +8,27 @@ import { PushNotification } from "../../src/Entity/PushNotification";
 import { PushNotificationStatus } from "../../src/PushNotification/PushNotificationReceipt";
 import * as moment from "moment-timezone";
 
-const createMessage = (recipientId: string, topics: string[] = [], eventType= "default") => {
+const createMessage = (recipientId: string, topics: string[] = [], eventType = "default") => {
     const message = new Message();
     message.recipientId = recipientId;
     message.title = "Hej John, lunch dnia!";
     message.body = "Sprawdź szczegóły";
     message.priority = "default";
-    message.expirationTime = moment().add(2, "day").toDate();
+    message.expirationTime = moment()
+        .add(2, "day")
+        .toDate();
     message.setTopics(topics);
     message.setEventType(eventType);
     return message;
 };
 
-const createPushNotification = (message: Message,
-                                token: string,
-                                status: number,
-                                lockedUntil: Date = null,
-                                receiptId?: string): PushNotification => {
+const createPushNotification = (
+    message: Message,
+    token: string,
+    status: number,
+    lockedUntil: Date = null,
+    receiptId?: string,
+): PushNotification => {
     const notification = new PushNotification();
     notification.status = status;
     notification.pushToken = token;

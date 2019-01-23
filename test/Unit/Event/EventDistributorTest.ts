@@ -4,7 +4,6 @@ import { Recipient } from "../../../src/Recipient/Recipient";
 import { Event } from "../../../src/Interfaces/Event";
 
 describe("EventDistributor", () => {
-
     it("filterRelevantFor events to recipients based on followed topics", async () => {
         // given
         const event1 = {
@@ -22,9 +21,7 @@ describe("EventDistributor", () => {
             eventType: "lunch-offer",
             topics: ["topic-1"],
         };
-        const events = [
-            event1 as Event, event2 as Event, event3 as Event,
-        ];
+        const events = [event1 as Event, event2 as Event, event3 as Event];
 
         const distributor = new EventDistributor();
         const recipient = new Recipient("recipient#1", "John", ["topic-1"]);

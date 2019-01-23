@@ -19,12 +19,10 @@ class NeverMessageRule implements MessageThrottleRule {
 }
 
 class FrequencyMessageRule implements MessageThrottleRule {
-
     public constructor(
         private readonly notificationLevel: NotificationLevel,
         private readonly unit: DurationInputArg2,
-    ) {
-    }
+    ) {}
 
     public filter(recipient: Recipient, messages: Message[]): Message[] {
         if (recipient.preferences.level === this.notificationLevel && recipient.lastNotificationTime) {
@@ -40,10 +38,9 @@ class FrequencyMessageRule implements MessageThrottleRule {
 }
 
 class LunchMessageRule implements MessageThrottleRule {
-
     public filter(recipient: Recipient, messages: Message[]): Message[] {
         let lunchEncountered = false;
-        return messages.filter((message) => {
+        return messages.filter(message => {
             if (message.eventType === LUNCH_EVENT_TYPE) {
                 if (lunchEncountered) {
                     return false;

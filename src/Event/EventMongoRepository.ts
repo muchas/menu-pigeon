@@ -8,7 +8,6 @@ import * as moment from "moment-timezone";
 
 @injectable()
 export class EventMongoRepository extends EventRepository {
-
     private static readonly COLLECTION_NAME: string = "events";
 
     public constructor(private readonly mongo: Mongo) {
@@ -37,7 +36,7 @@ export class EventMongoRepository extends EventRepository {
     }
 
     public async findOne(id: string): Promise<Event | undefined> {
-        const document = await this.collection().findOne({id});
+        const document = await this.collection().findOne({ id });
         if (document) {
             return {
                 ...document,
@@ -48,20 +47,18 @@ export class EventMongoRepository extends EventRepository {
     }
 
     public async findRelevant(time: Moment): Promise<Event[]> {
-        const events =  await this.collection()
-            .find(
-            {
+        const events = await this.collection()
+            .find({
                 expirationTime: {
                     $gte: time.toDate(),
                 },
                 readyTime: {
                     $lte: time.toDate(),
                 },
-            },
-            )
+            })
             .toArray();
 
-        return events.map((document) => ({
+        return events.map(document => ({
             ...document,
             readyTime: moment(document.readyTime),
             expirationTime: moment(document.expirationTime),

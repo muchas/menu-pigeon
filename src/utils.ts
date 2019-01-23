@@ -1,4 +1,3 @@
-
 export const toArray = async <T>(generator: AsyncIterableIterator<T>): Promise<T[]> => {
     const output = [];
 
@@ -9,7 +8,7 @@ export const toArray = async <T>(generator: AsyncIterableIterator<T>): Promise<T
     return output;
 };
 
-export const max = (a, b) => a > b ? a : b;
-export const min = (a, b) => a < b ? a : b;
+export const max = (a, b) => (a > b ? a : b);
+export const min = (a, b) => (a < b ? a : b);
 
 export const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.substr(1);

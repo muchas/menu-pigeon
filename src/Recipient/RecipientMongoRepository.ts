@@ -8,7 +8,6 @@ import * as moment from "moment-timezone";
 
 @injectable()
 export class RecipientMongoRepository extends RecipientRepository {
-
     private static readonly COLLECTION_NAME: string = "recipients";
 
     public constructor(private readonly mongo: Mongo) {
@@ -45,26 +44,28 @@ export class RecipientMongoRepository extends RecipientRepository {
     }
 
     public async remove(id: string): Promise<void> {
-        await this.collection().deleteOne({id});
+        await this.collection().deleteOne({ id });
     }
 
     public async findAll(): Promise<Recipient[]> {
-        const documents = await this.collection().find().toArray();
-        return documents.map((document) => this.fromDocument(document));
+        const documents = await this.collection()
+            .find()
+            .toArray();
+        return documents.map(document => this.fromDocument(document));
     }
 
     public async findByDevice(pushToken: string): Promise<Recipient[]> {
-         const documents = await this.collection()
-             .find({
-                 "devices.pushToken": pushToken,
-             })
-             .toArray();
+        const documents = await this.collection()
+            .find({
+                "devices.pushToken": pushToken,
+            })
+            .toArray();
 
-         return documents.map((document) => this.fromDocument(document));
+        return documents.map(document => this.fromDocument(document));
     }
 
     public async findOne(id: string): Promise<Recipient | undefined> {
-        const document = await this.collection().findOne({id});
+        const document = await this.collection().findOne({ id });
 
         if (!document) {
             return undefined;
@@ -81,7 +82,7 @@ export class RecipientMongoRepository extends RecipientRepository {
         return {
             name: recipient.name,
             followedTopics: [...recipient.followedTopics],
-            devices: recipient.devices.map((device) => ({
+            devices: recipient.devices.map(device => ({
                 pushToken: device.pushToken,
                 createdAt: device.createdAt.toDate(),
             })),
@@ -98,9 +99,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             data.id,
             data.name,
             data.followedTopics,
-            data.devices.map(
-                (deviceData) => new RecipientDevice(deviceData.pushToken, moment(deviceData.createdAt)),
-            ),
+            data.devices.map(deviceData => new RecipientDevice(deviceData.pushToken, moment(deviceData.createdAt))),
             new RecipientPreferences(
                 data.preferences.earliestHour,
                 data.preferences.earliestMinute,

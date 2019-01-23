@@ -8,7 +8,7 @@ export abstract class Clock {
 
     private lastTimeout: Timeout;
 
-    public async abstract performAction(): Promise<void>;
+    public abstract async performAction(): Promise<void>;
 
     public async start(): Promise<void> {
         return this.tick();
@@ -16,8 +16,8 @@ export abstract class Clock {
 
     public async tick(): Promise<void> {
         if (this.lastTimeout !== undefined) {
-           clearTimeout(this.lastTimeout);
-           this.lastTimeout = undefined;
+            clearTimeout(this.lastTimeout);
+            this.lastTimeout = undefined;
         }
 
         try {

@@ -3,7 +3,6 @@ import { Recipient } from "../Recipient/Recipient";
 import { Moment } from "moment-timezone";
 
 export class EventNotification {
-
     public constructor(
         public readyTime: Moment,
         public expirationTime: Moment,

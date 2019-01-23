@@ -11,7 +11,6 @@ export interface MessageData {
 
 @Entity()
 export class Message {
-
     @PrimaryGeneratedColumn("uuid")
     public id: string;
 

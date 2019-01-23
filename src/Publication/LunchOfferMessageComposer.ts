@@ -7,13 +7,12 @@ import { capitalize } from "../utils";
 import { Event } from "../Interfaces/Event";
 
 export class LunchOfferMessageComposer implements MessageComposer {
-
     public compose(recipient: Recipient, events: Event[]): Message[] {
         const offerEvents = events
             .filter(event => event.eventType === LUNCH_OFFER_EVENT_TYPE)
             .map(event => event as LunchOfferEvent);
 
-        const businessCount = (new Set(offerEvents.map(e => e.content.businessId))).size;
+        const businessCount = new Set(offerEvents.map(e => e.content.businessId)).size;
 
         if (businessCount <= 0) {
             return [];
@@ -51,13 +50,15 @@ export class LunchOfferMessageComposer implements MessageComposer {
         return "";
     }
 
-    private createMessage(recipient: Recipient,
-                          events: LunchOfferEvent[],
-                          title: string,
-                          body: string,
-                          priority: MessagePriority): Message {
-        const minExpirationTime = min(events.map((e) => e.expirationTime)).toDate();
-        const slugs = events.map((event) => event.content.businessSlug);
+    private createMessage(
+        recipient: Recipient,
+        events: LunchOfferEvent[],
+        title: string,
+        body: string,
+        priority: MessagePriority,
+    ): Message {
+        const minExpirationTime = min(events.map(e => e.expirationTime)).toDate();
+        const slugs = events.map(event => event.content.businessSlug);
         const message = new Message();
         message.recipientId = recipient.id;
         message.title = capitalize(title);
@@ -67,7 +68,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
         message.setEventType(LUNCH_OFFER_EVENT_TYPE);
         message.setEventIds(events.map(event => event.id));
         message.setTopics(this.getMessageTopics(recipient, events));
-        message.setNotificationData({slugs});
+        message.setNotificationData({ slugs });
         return message;
     }
 

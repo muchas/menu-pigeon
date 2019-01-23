@@ -6,7 +6,6 @@ import { RecipientRepository } from "../Interfaces/RecipientRepository";
 
 @injectable()
 export class RecipientDeletedConsumer implements Consumer {
-
     public constructor(private readonly recipientRepository: RecipientRepository) {}
 
     public async consume(job: Job<RecipientDeleted>): Promise<void> {

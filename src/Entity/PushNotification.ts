@@ -4,7 +4,6 @@ import { PushNotificationStatus } from "../PushNotification/PushNotificationRece
 
 @Entity()
 export class PushNotification {
-
     @PrimaryGeneratedColumn()
     public id: number;
 

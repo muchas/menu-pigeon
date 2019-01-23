@@ -17,7 +17,6 @@ export interface PushNotificationReceiptData {
 }
 
 export class PushNotificationReceipt {
-
     public constructor(
         public notification: PushNotification,
         public fetchedSuccessfully: boolean = true,

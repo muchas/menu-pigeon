@@ -26,6 +26,10 @@ jobs:
         key: v1-dependencies-{{ checksum "package.json" }}
 
     - run:
+        name: Prettier
+        command: yarn pretty
+
+    - run:
         name: Linter
         command: yarn lint
 

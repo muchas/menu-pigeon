@@ -2,7 +2,10 @@
   "lintOptions": {
     "typeCheck": true
   },
-  "extends": "tslint:all",
+  "extends": [
+    "tslint:all",
+    "tslint-config-prettier"
+  ],
   "rules": {
     "arrow-parens": false,
     "ban": [
