@@ -14,7 +14,7 @@ const createMessage = (recipientId: string, topics: string[] = [], eventType= "d
     message.title = "Hej John, lunch dnia!";
     message.body = "Sprawdź szczegóły";
     message.priority = "default";
-    message.expirationTime = moment().add(2, 'day').toDate();
+    message.expirationTime = moment().add(2, "day").toDate();
     message.setTopics(topics);
     message.setEventType(eventType);
     return message;
