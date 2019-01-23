@@ -25,7 +25,10 @@ class FrequencyMessageRule implements MessageThrottleRule {
     ) {}
 
     public filter(recipient: Recipient, messages: Message[]): Message[] {
-        if (recipient.preferences.level === this.notificationLevel && recipient.lastNotificationTime) {
+        if (
+            recipient.preferences.level === this.notificationLevel &&
+            recipient.lastNotificationTime
+        ) {
             const weekAgo = moment().subtract("1", this.unit);
             if (recipient.lastNotificationTime <= weekAgo) {
                 return messages.length > 0 ? [messages[0]] : messages;

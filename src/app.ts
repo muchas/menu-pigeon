@@ -46,7 +46,9 @@ createORMConnection(config)
         const recipientDeletedConsumer = new SingleConsumer(
             container.get<RecipientDeletedConsumer>(RecipientDeletedConsumer),
         );
-        const topicFollowConsumer = new SingleConsumer(container.get<TopicFollowConsumer>(TopicFollowConsumer));
+        const topicFollowConsumer = new SingleConsumer(
+            container.get<TopicFollowConsumer>(TopicFollowConsumer),
+        );
 
         await mongo.connect();
 

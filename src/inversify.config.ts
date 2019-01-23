@@ -75,7 +75,11 @@ export const createContainer = (): Container => {
                 config.get("RABBITMQ_PASSWORD"),
             );
 
-            return new Queue(queueConnection, config.get("RABBITMQ_EXCHANGE"), new MessageGateCollection());
+            return new Queue(
+                queueConnection,
+                config.get("RABBITMQ_EXCHANGE"),
+                new MessageGateCollection(),
+            );
         })
         .inSingletonScope();
 

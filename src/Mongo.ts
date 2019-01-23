@@ -8,7 +8,13 @@ export default class Mongo {
     private client: MongoClient;
     private _db: Db;
 
-    public constructor(host: string, port: number, username: string, password: string, database: string) {
+    public constructor(
+        host: string,
+        port: number,
+        username: string,
+        password: string,
+        database: string,
+    ) {
         this.databaseName = database;
         this.url = this.generateUrl(username, password, host, port);
     }

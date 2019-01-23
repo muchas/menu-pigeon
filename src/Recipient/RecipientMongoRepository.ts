@@ -33,7 +33,10 @@ export class RecipientMongoRepository extends RecipientRepository {
                         $each: [...recipient.notifiedEventIds],
                     },
                     topicLastNotification: {
-                        $each: [...recipient.topicLastNotification].map(([key, date]) => [key, date.toDate()]),
+                        $each: [...recipient.topicLastNotification].map(([key, date]) => [
+                            key,
+                            date.toDate(),
+                        ]),
                     },
                 },
             },
@@ -99,7 +102,10 @@ export class RecipientMongoRepository extends RecipientRepository {
             data.id,
             data.name,
             data.followedTopics,
-            data.devices.map(deviceData => new RecipientDevice(deviceData.pushToken, moment(deviceData.createdAt))),
+            data.devices.map(
+                deviceData =>
+                    new RecipientDevice(deviceData.pushToken, moment(deviceData.createdAt)),
+            ),
             new RecipientPreferences(
                 data.preferences.earliestHour,
                 data.preferences.earliestMinute,

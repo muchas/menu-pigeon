@@ -7,5 +7,7 @@ export interface PushNotificationTransport {
     sendMany(notifications: PushNotification[]): AsyncIterableIterator<PushNotificationTicket>;
 
     confirmStatus(notification: PushNotification): Promise<PushNotificationReceipt>;
-    confirmStatuses(notifications: PushNotification[]): AsyncIterableIterator<PushNotificationReceipt>;
+    confirmStatuses(
+        notifications: PushNotification[],
+    ): AsyncIterableIterator<PushNotificationReceipt>;
 }

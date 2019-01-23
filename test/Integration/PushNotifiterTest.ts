@@ -21,7 +21,9 @@ const createRecipientUpsertJob = (upsert: RecipientUpsert): Job<RecipientUpsert>
     return new Job<RecipientUpsert>(queue as any, {}, upsert);
 };
 
-const createPersistedPublicationJob = (publication: PersistedPublication): Job<PersistedPublication> => {
+const createPersistedPublicationJob = (
+    publication: PersistedPublication,
+): Job<PersistedPublication> => {
     const queue = sinon.createStubInstance(Queue);
     return new Job<PersistedPublication>(queue as any, {}, publication);
 };
@@ -49,11 +51,27 @@ describe("PushNotifier", () => {
 
         const offers = [{ date: today.toDate(), lunches: [], soups: [], prices: [], texts: [] }];
         publication1 = new PersistedPublication(1, "1", "Bococa Bistro", "bococa", offers, morning);
-        publication2 = new PersistedPublication(2, "2", "I Love Coffee Kawiarnia", "ilc", offers, morning);
-        publication3 = new PersistedPublication(3, "3", "Lunch Bar Majeranek", "majeranek", offers, morning);
+        publication2 = new PersistedPublication(
+            2,
+            "2",
+            "I Love Coffee Kawiarnia",
+            "ilc",
+            offers,
+            morning,
+        );
+        publication3 = new PersistedPublication(
+            3,
+            "3",
+            "Lunch Bar Majeranek",
+            "majeranek",
+            offers,
+            morning,
+        );
         publication4 = new PersistedPublication(4, "4", "Bistro Maro", "maro", offers, morning);
 
-        publicationConsumer = container.get<PersistedPublicationConsumer>(PersistedPublicationConsumer);
+        publicationConsumer = container.get<PersistedPublicationConsumer>(
+            PersistedPublicationConsumer,
+        );
         recipientUpsertConsumer = container.get<RecipientUpsertConsumer>(RecipientUpsertConsumer);
         eventRepository = container.get<EventRepository>(EventRepository);
         recipientRepository = container.get<RecipientRepository>(RecipientRepository);
@@ -66,8 +84,20 @@ describe("PushNotifier", () => {
     it.skip("should send messages to interested recipients @slow", async () => {
         // given
         const preferences = new RecipientPreferences(7, 0, NotificationLevel.Often);
-        const recipientUpsert1 = new RecipientUpsert("r#1", [], ["business-2", "business-3"], preferences, "Iza");
-        const recipientUpsert2 = new RecipientUpsert("r#2", [], ["business-3"], preferences, "Michal");
+        const recipientUpsert1 = new RecipientUpsert(
+            "r#1",
+            [],
+            ["business-2", "business-3"],
+            preferences,
+            "Iza",
+        );
+        const recipientUpsert2 = new RecipientUpsert(
+            "r#2",
+            [],
+            ["business-3"],
+            preferences,
+            "Michal",
+        );
         const recipientUpsert3 = new RecipientUpsert(
             "r#3",
             [],
@@ -76,7 +106,13 @@ describe("PushNotifier", () => {
             "Slawek",
         );
 
-        const recipient1 = new Recipient("r#1", "Iza", ["business-2", "business-3"], [], preferences);
+        const recipient1 = new Recipient(
+            "r#1",
+            "Iza",
+            ["business-2", "business-3"],
+            [],
+            preferences,
+        );
         const recipient2 = new Recipient("r#2", "Michal", ["business-3"], [], preferences);
         const recipient3 = new Recipient(
             "r#3",

@@ -35,7 +35,9 @@ export class RecipientMemoryRepository extends RecipientRepository {
     }
 
     public async findByDevice(pushToken: string): Promise<Recipient[]> {
-        return this.recipients.filter(recipient => recipient.devices.find(device => device.pushToken === pushToken));
+        return this.recipients.filter(recipient =>
+            recipient.devices.find(device => device.pushToken === pushToken),
+        );
     }
 
     public async findOne(id: string): Promise<Recipient | undefined> {

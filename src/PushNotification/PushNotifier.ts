@@ -57,7 +57,11 @@ export class PushNotifier {
         return this.throttleService.throttle(recipient, messages);
     }
 
-    private prepareNotifications(recipient: Recipient, events: Event[], currentTime: Moment): EventNotification[] {
+    private prepareNotifications(
+        recipient: Recipient,
+        events: Event[],
+        currentTime: Moment,
+    ): EventNotification[] {
         return this.scheduler
             .schedule(recipient, events, currentTime)
             .filter(
@@ -68,7 +72,11 @@ export class PushNotifier {
             );
     }
 
-    private async markNotified(recipients: Recipient[], events: Event[], messages: Message[]): Promise<void> {
+    private async markNotified(
+        recipients: Recipient[],
+        events: Event[],
+        messages: Message[],
+    ): Promise<void> {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
         const eventsById = new Map(events.map((e): [string, Event] => [e.id, e]));
 

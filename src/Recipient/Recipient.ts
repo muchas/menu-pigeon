@@ -8,7 +8,11 @@ export class RecipientPreferences implements NotificationPreferences {
     public readonly latestHour: number = 17;
     public readonly latestMinute: number = 0;
 
-    public constructor(public earliestHour: number, public earliestMinute: number, public level: NotificationLevel) {}
+    public constructor(
+        public earliestHour: number,
+        public earliestMinute: number,
+        public level: NotificationLevel,
+    ) {}
 }
 
 export class Recipient {
@@ -19,7 +23,11 @@ export class Recipient {
         public name?: string,
         followedTopics: string[] = [],
         public devices: RecipientDevice[] = [],
-        public preferences: RecipientPreferences = new RecipientPreferences(9, 0, NotificationLevel.Daily),
+        public preferences: RecipientPreferences = new RecipientPreferences(
+            9,
+            0,
+            NotificationLevel.Daily,
+        ),
         public notifiedEventIds: Set<string> = new Set(),
         public topicLastNotification: Map<string, Moment> = new Map(),
     ) {
