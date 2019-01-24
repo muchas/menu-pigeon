@@ -127,7 +127,7 @@ export class ExpoTransport implements PushNotificationTransport {
             title: notification.title,
             body: notification.body,
             priority: notification.priority,
-            expiration: notification.message.expirationTime.getTime(),
+            expiration: notification.expirationTime,
             data: notification.message.data.notificationData,
         };
     }

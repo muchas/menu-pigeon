@@ -58,4 +58,11 @@ export class PushNotification {
     public get priority(): MessagePriority {
         return this.message.priority;
     }
+
+    public get expirationTime(): number | null {
+        if (this.message.expirationTime) {
+            return this.message.expirationTime.getTime();
+        }
+        return null;
+    }
 }
