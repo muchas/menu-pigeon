@@ -5,6 +5,7 @@ import { LUNCH_OFFER_EVENT_TYPE, LunchOfferEvent } from "./LunchOfferEvent";
 import { min } from "moment-timezone";
 import { capitalize } from "../utils";
 import { Event } from "../Interfaces/Event";
+import {LUNCH_NOTIFICATION_TYPE} from "./constants";
 
 export class LunchOfferMessageComposer implements MessageComposer {
     public compose(recipient: Recipient, events: Event[]): Message[] {
@@ -68,7 +69,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
         message.setEventType(LUNCH_OFFER_EVENT_TYPE);
         message.setEventIds(events.map(event => event.id));
         message.setTopics(this.getMessageTopics(recipient, events));
-        message.setNotificationData({ slugs });
+        message.setNotificationData({slugs, type: LUNCH_NOTIFICATION_TYPE});
         return message;
     }
 
