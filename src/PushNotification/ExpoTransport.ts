@@ -73,14 +73,16 @@ export class ExpoTransport implements PushNotificationTransport {
             const receipts = await this.client.getPushNotificationReceiptsAsync(chunk);
 
             for (const [receiptId, receipt] of Object.entries(receipts)) {
+                const notification = notificationsByReceiptId.get(receiptId);
                 const status = this.toInternalStatus(receipt.status);
+                if (status === PushNotificationStatus.ERROR) {
+                    winston.error("Push notification delivery error", {
+                        notification_id: notification.id,
+                        data: receipt,
+                    });
+                }
 
-                yield new PushNotificationReceipt(
-                    notificationsByReceiptId.get(receiptId),
-                    true,
-                    status,
-                    receipt,
-                );
+                yield new PushNotificationReceipt(notification, true, status, receipt);
             }
         } catch (e) {
             winston.error(e);
@@ -127,7 +129,7 @@ export class ExpoTransport implements PushNotificationTransport {
             title: notification.title,
             body: notification.body,
             priority: notification.priority,
-            expiration: notification.expirationTime,
+            ttl: notification.ttl,
             data: notification.message.data.notificationData,
         };
     }

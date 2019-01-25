@@ -33,11 +33,6 @@ export class Message {
     public createdAt: Date;
 
     @Column({
-        nullable: true,
-    })
-    public ttl?: number;
-
-    @Column({
         type: "json",
     })
     public data: MessageData = {};
