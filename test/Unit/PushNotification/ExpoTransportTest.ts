@@ -59,7 +59,7 @@ describe("ExpoTransport", () => {
                 title: message.title,
                 body: message.body,
                 data: message.data.notificationData,
-                expiration: null,
+                ttl: 0,
                 priority: message.priority,
             };
 
@@ -110,7 +110,7 @@ describe("ExpoTransport", () => {
                 title: message.title,
                 body: message.body,
                 data: message.data.notificationData,
-                expiration: null,
+                ttl: 0,
                 priority: message.priority,
             };
             const expectedPush2 = {
@@ -118,7 +118,7 @@ describe("ExpoTransport", () => {
                 title: message.title,
                 body: message.body,
                 data: message.data.notificationData,
-                expiration: null,
+                ttl: 0,
                 priority: message.priority,
             };
 

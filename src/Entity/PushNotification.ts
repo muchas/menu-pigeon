@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Message, MessagePriority } from "./Message";
 import { PushNotificationStatus } from "../PushNotification/PushNotificationReceipt";
+import * as moment from "moment-timezone";
 
 @Entity()
 export class PushNotification {
@@ -59,10 +60,17 @@ export class PushNotification {
         return this.message.priority;
     }
 
-    public get expirationTime(): number | null {
+    public get expirationTime(): number | undefined {
         if (this.message.expirationTime) {
             return this.message.expirationTime.getTime();
         }
-        return null;
+        return undefined;
+    }
+
+    public get ttl(): number {
+        if (this.message.expirationTime) {
+            return moment(this.message.expirationTime).diff(moment(), "seconds");
+        }
+        return 0;
     }
 }
