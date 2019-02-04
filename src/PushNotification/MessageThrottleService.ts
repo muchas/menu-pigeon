@@ -20,7 +20,7 @@ class NeverMessageRule implements MessageThrottleRule {
 class FrequencyMessageRule implements MessageThrottleRule {
     public constructor(
         private readonly notificationLevel: NotificationLevel,
-        private readonly format: string,
+        private readonly granularity: moment.unitOfTime.StartOf,
     ) {}
 
     public filter(recipient: Recipient, messages: Message[]): Message[] {
@@ -28,13 +28,10 @@ class FrequencyMessageRule implements MessageThrottleRule {
             recipient.preferences.level === this.notificationLevel &&
             recipient.lastNotificationTime
         ) {
-            const currentTime = moment().format(this.format);
-            const lastTime = recipient.lastNotificationTime.format(this.format);
-            if (currentTime !== lastTime) {
+            if (!moment().isSame(recipient.lastNotificationTime, this.granularity)) {
                 return messages;
-            } else {
-                return [];
             }
+            return [];
         }
         return messages;
     }
@@ -54,9 +51,8 @@ class CycleMessageRule implements MessageThrottleRule {
             const cycleStart = moment().subtract("1", this.unit);
             if (recipient.lastNotificationTime <= cycleStart) {
                 return messages;
-            } else {
-                return [];
             }
+            return [];
         }
         return messages;
     }
@@ -76,8 +72,8 @@ export class MessageThrottleService {
     public constructor() {
         this.rules = [
             new NeverMessageRule(),
-            new FrequencyMessageRule(NotificationLevel.Seldom, "YYYY-MM-ww"),
-            new FrequencyMessageRule(NotificationLevel.Daily, "YYYY-MM-DD"),
+            new FrequencyMessageRule(NotificationLevel.Seldom, "week"),
+            new FrequencyMessageRule(NotificationLevel.Daily, "day"),
             new CycleMessageRule(NotificationLevel.Often, "hour"),
             new LimitRule(1),
         ];
