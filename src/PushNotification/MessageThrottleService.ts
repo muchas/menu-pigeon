@@ -1,6 +1,5 @@
 import { Recipient } from "../Recipient/Recipient";
 import { Message } from "../Entity/Message";
-import { LUNCH_EVENT_TYPE } from "../Publication/constants";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import * as moment from "moment-timezone";
 import { DurationInputArg2 } from "moment-timezone";
@@ -21,7 +20,7 @@ class NeverMessageRule implements MessageThrottleRule {
 class FrequencyMessageRule implements MessageThrottleRule {
     public constructor(
         private readonly notificationLevel: NotificationLevel,
-        private readonly unit: DurationInputArg2,
+        private readonly format: string,
     ) {}
 
     public filter(recipient: Recipient, messages: Message[]): Message[] {
@@ -29,9 +28,10 @@ class FrequencyMessageRule implements MessageThrottleRule {
             recipient.preferences.level === this.notificationLevel &&
             recipient.lastNotificationTime
         ) {
-            const weekAgo = moment().subtract("1", this.unit);
-            if (recipient.lastNotificationTime <= weekAgo) {
-                return messages.length > 0 ? [messages[0]] : messages;
+            const currentTime = moment().format(this.format);
+            const lastTime = recipient.lastNotificationTime.format(this.format);
+            if (currentTime !== lastTime) {
+                return messages;
             } else {
                 return [];
             }
@@ -40,18 +40,33 @@ class FrequencyMessageRule implements MessageThrottleRule {
     }
 }
 
-class LunchMessageRule implements MessageThrottleRule {
+class CycleMessageRule implements MessageThrottleRule {
+    public constructor(
+        private readonly notificationLevel: NotificationLevel,
+        private readonly unit: DurationInputArg2,
+    ) {}
+
     public filter(recipient: Recipient, messages: Message[]): Message[] {
-        let lunchEncountered = false;
-        return messages.filter(message => {
-            if (message.eventType === LUNCH_EVENT_TYPE) {
-                if (lunchEncountered) {
-                    return false;
-                }
-                lunchEncountered = true;
+        if (
+            recipient.preferences.level === this.notificationLevel &&
+            recipient.lastNotificationTime
+        ) {
+            const cycleStart = moment().subtract("1", this.unit);
+            if (recipient.lastNotificationTime <= cycleStart) {
+                return messages;
+            } else {
+                return [];
             }
-            return true;
-        });
+        }
+        return messages;
+    }
+}
+
+class LimitRule implements MessageThrottleRule {
+    public constructor(private readonly limit: number) {}
+
+    public filter(recipient: Recipient, messages: Message[]): Message[] {
+        return messages.slice(0, this.limit);
     }
 }
 
@@ -61,10 +76,10 @@ export class MessageThrottleService {
     public constructor() {
         this.rules = [
             new NeverMessageRule(),
-            new FrequencyMessageRule(NotificationLevel.Seldom, "week"),
-            new FrequencyMessageRule(NotificationLevel.Daily, "day"),
-            new FrequencyMessageRule(NotificationLevel.Often, "hour"),
-            new LunchMessageRule(),
+            new FrequencyMessageRule(NotificationLevel.Seldom, "YYYY-MM-ww"),
+            new FrequencyMessageRule(NotificationLevel.Daily, "YYYY-MM-DD"),
+            new CycleMessageRule(NotificationLevel.Often, "hour"),
+            new LimitRule(1),
         ];
     }
 

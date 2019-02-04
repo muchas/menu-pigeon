@@ -41,7 +41,7 @@ describe("MessageThrottleService", () => {
         expect(throttledMessages).to.be.lengthOf(0);
     });
 
-    it("should allow only one lunch offer message at once", async () => {
+    it("should allow only one message at once", async () => {
         // given
         const messages = [
             createMessage("#1", [], LUNCH_EVENT_TYPE),
@@ -57,13 +57,15 @@ describe("MessageThrottleService", () => {
         const throttledMessages = throttleService.throttle(recipient, messages);
 
         // then
-        expect(throttledMessages).to.be.lengthOf(3);
-        expect(throttledMessages.map(m => m.id)).to.deep.equal(["#1", "#3", "#5"]);
+        expect(throttledMessages).to.be.lengthOf(1);
+        expect(throttledMessages.map(m => m.id)).to.deep.equal(["#1"]);
     });
 
     it("should receive at most one a week if seldom", async () => {
         // given
-        const weekAgo = moment().subtract("1", "week");
+        const weekAgo = moment()
+            .startOf("week")
+            .subtract(1, "minute");
 
         const messages = [
             createMessage("#1", [], "default"),
@@ -93,7 +95,7 @@ describe("MessageThrottleService", () => {
     it("should not receive if notified within last week and seldom", async () => {
         // given
         const weekAgo = moment()
-            .subtract("1", "week")
+            .startOf("week")
             .add("1", "minute");
 
         const messages = [
@@ -122,7 +124,9 @@ describe("MessageThrottleService", () => {
 
     it("should receive at most one a day if daily", async () => {
         // given
-        const dayAgo = moment().subtract("1", "day");
+        const dayAgo = moment()
+            .startOf("day")
+            .subtract(1, "minute");
 
         const messages = [
             createMessage("#1", [], "default"),

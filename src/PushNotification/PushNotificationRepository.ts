@@ -5,6 +5,7 @@ import { Message } from "../Entity/Message";
 import { Brackets, Connection, EntityManager, Repository } from "typeorm";
 import { injectable } from "inversify";
 import * as moment from "moment-timezone";
+import * as winston from "winston";
 
 @injectable()
 export class PushNotificationRepository {
@@ -76,7 +77,15 @@ export class PushNotificationRepository {
 
     public async setSendingStatus(pushTicket: PushNotificationTicket): Promise<void> {
         const notification = pushTicket.notification;
-        if (pushTicket.sentSuccessfully && pushTicket.receiptId) {
+        if (pushTicket.sentSuccessfully) {
+            if (!pushTicket.receiptId) {
+                winston.warn("Lack of receiptId", {
+                    notification_id: pushTicket.notification.id,
+                    recipient_id: pushTicket.notification.message.recipientId,
+                    message_id: pushTicket.notification.message.id,
+                });
+            }
+
             notification.receiptId = pushTicket.receiptId;
             notification.status = PushNotificationStatus.SENT;
             notification.sentAt = pushTicket.sentAt.toDate();
