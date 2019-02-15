@@ -10,6 +10,6 @@ RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 COPY . /app
 WORKDIR /app
 
-RUN yarn
+RUN yarn install --frozen-lockfile
 
 CMD yarn start
