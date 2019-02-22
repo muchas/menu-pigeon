@@ -3,12 +3,18 @@ import { Recipient } from "../Recipient/Recipient";
 import { Message, MessagePriority } from "../Entity/Message";
 import { LUNCH_OFFER_EVENT_TYPE, LunchOfferEvent } from "./LunchOfferEvent";
 import { min } from "moment-timezone";
-import { capitalize } from "../utils";
+import { capitalize, sample } from "../utils";
 import { Event } from "../Interfaces/Event";
 import { LUNCH_NOTIFICATION_TYPE } from "./constants";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 
 export class LunchOfferMessageComposer implements MessageComposer {
+    private readonly universalMessageTitles: string[] = [
+        "Gotowy na lunch?",
+        "Sprawdź dzisiejsze lunche!",
+        "Wybierz swój lunch",
+    ];
+
     public compose(recipient: Recipient, events: Event[]): Message[] {
         const offerEvents = events
             .filter(event => event.eventType === LUNCH_OFFER_EVENT_TYPE)
@@ -28,7 +34,6 @@ export class LunchOfferMessageComposer implements MessageComposer {
                     offerEvents,
                     "Nowa oferta lunchowa",
                     `Oferta na dziś od ${businessName} jest już dostępna`,
-                    "high",
                 ),
             ];
         }
@@ -38,9 +43,8 @@ export class LunchOfferMessageComposer implements MessageComposer {
                 this.createMessage(
                     recipient,
                     offerEvents,
-                    "Twoje podsumowanie",
-                    `${businessCount} obserwowane lokale zamieściły już ofertę lunchową.`,
-                    "high",
+                    "Twoje codzienne podsumowanie",
+                    this.getMessageBody(businessCount),
                 ),
             ];
         }
@@ -49,9 +53,8 @@ export class LunchOfferMessageComposer implements MessageComposer {
             this.createMessage(
                 recipient,
                 offerEvents,
-                "Gotowy na lunch?",
-                `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`,
-                "high",
+                this.getRandomMessageTitle(),
+                this.getMessageBody(businessCount),
             ),
         ];
     }
@@ -61,7 +64,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
         events: LunchOfferEvent[],
         title: string,
         body: string,
-        priority: MessagePriority,
+        priority: MessagePriority = "high",
     ): Message {
         const minExpirationTime = min(events.map(e => e.expirationTime)).toDate();
         const slugs = events.map(event => event.content.businessSlug);
@@ -82,5 +85,25 @@ export class LunchOfferMessageComposer implements MessageComposer {
         return events
             .map(event => event.topics.filter(topic => recipient.followedTopics.has(topic)))
             .reduce((memo, item) => memo.concat(item), []);
+    }
+
+    private getRandomMessageTitle(): string {
+        return sample(this.universalMessageTitles);
+    }
+
+    private getMessageBody(businessCount: number): string {
+        if (businessCount === 1) {
+            return "1 obserwowany lokal zamieścił już ofertę lunchową";
+        }
+
+        if (businessCount > 1 && businessCount < 5) {
+            return `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`;
+        }
+
+        if (businessCount >= 5) {
+            return `${businessCount} obserwowanych lokali zamieściło już ofertę lunchową`;
+        }
+
+        return "Kliknij, aby sprawdzić szczegóły";
     }
 }
