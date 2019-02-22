@@ -61,6 +61,7 @@ describe("ExpoTransport", () => {
                 data: message.data.notificationData,
                 ttl: 0,
                 priority: message.priority,
+                sound: "default",
             };
 
             expect(expoClient.sendPushNotificationsAsync).to.have.been.calledOnceWith([
@@ -112,6 +113,7 @@ describe("ExpoTransport", () => {
                 data: message.data.notificationData,
                 ttl: 0,
                 priority: message.priority,
+                sound: "default",
             };
             const expectedPush2 = {
                 to: notification2.pushToken,
@@ -120,6 +122,7 @@ describe("ExpoTransport", () => {
                 data: message.data.notificationData,
                 ttl: 0,
                 priority: message.priority,
+                sound: "default",
             };
 
             expect(expoClient.chunkPushNotifications).to.have.been.calledWith([
