@@ -6,6 +6,7 @@ import { min } from "moment-timezone";
 import { capitalize } from "../utils";
 import { Event } from "../Interfaces/Event";
 import { LUNCH_NOTIFICATION_TYPE } from "./constants";
+import { NotificationLevel } from "queue/lib/Messages/Recipient";
 
 export class LunchOfferMessageComposer implements MessageComposer {
     public compose(recipient: Recipient, events: Event[]): Message[] {
@@ -20,14 +21,25 @@ export class LunchOfferMessageComposer implements MessageComposer {
         }
         if (businessCount === 1) {
             const event = offerEvents[0];
-            const greeting = this.makeGreeting(recipient);
             const businessName = event.content.businessName;
             return [
                 this.createMessage(
                     recipient,
                     offerEvents,
-                    "Czas na lunch",
-                    `${greeting}${businessName} opublikował nową ofertę. Kliknij, aby sprawdzić szczegóły.`,
+                    "Nowa oferta lunchowa",
+                    `Oferta na dziś od ${businessName} jest już dostępna`,
+                    "high",
+                ),
+            ];
+        }
+
+        if (recipient.preferences.level === NotificationLevel.Daily) {
+            return [
+                this.createMessage(
+                    recipient,
+                    offerEvents,
+                    "Twoje podsumowanie",
+                    `${businessCount} obserwowane lokale zamieściły już ofertę lunchową.`,
                     "high",
                 ),
             ];
@@ -37,18 +49,11 @@ export class LunchOfferMessageComposer implements MessageComposer {
             this.createMessage(
                 recipient,
                 offerEvents,
-                `${this.makeGreeting(recipient)}sprawdź dzisiejszy lunch!`,
+                "Gotowy na lunch?",
                 `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`,
                 "high",
             ),
         ];
-    }
-
-    private makeGreeting(recipient: Recipient): string {
-        if (recipient.name) {
-            return `Hej ${recipient.name}, `;
-        }
-        return "";
     }
 
     private createMessage(
