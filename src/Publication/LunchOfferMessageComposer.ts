@@ -92,15 +92,21 @@ export class LunchOfferMessageComposer implements MessageComposer {
     }
 
     private getMessageBody(businessCount: number): string {
+        const modulo = businessCount % 10;
+
+        if (businessCount <= 0) {
+            return "Kliknij, aby sprawdzić szczegóły";
+        }
+
         if (businessCount === 1) {
             return "1 obserwowany lokal zamieścił już ofertę lunchową";
         }
 
-        if (businessCount > 1 && businessCount < 5) {
+        if (modulo > 1 && modulo < 5) {
             return `${businessCount} obserwowane lokale zamieściły już ofertę lunchową`;
         }
 
-        if (businessCount >= 5) {
+        if (modulo >= 5 || modulo === 1) {
             return `${businessCount} obserwowanych lokali zamieściło już ofertę lunchową`;
         }
 
