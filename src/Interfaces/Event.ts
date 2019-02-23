@@ -7,6 +7,7 @@ export interface Event {
     topics: string[];
     readyTime: Moment;
     expirationTime: Moment;
+    registeredAt: Moment;
     location?: Location;
     content?: any;
 }

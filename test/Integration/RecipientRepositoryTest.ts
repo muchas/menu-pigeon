@@ -20,7 +20,7 @@ describe("RecipientRepository test", () => {
         recipient = new Recipient(
             "#r1",
             "John",
-            ["business-1", "business-5"],
+            new Map([["business-1", moment()], ["business-5", moment()]]),
             [
                 new RecipientDevice("awopk124pko", moment()),
                 new RecipientDevice("pok1po2k4ij", moment()),
@@ -53,6 +53,7 @@ describe("RecipientRepository test", () => {
             topics: ["business-50"],
             readyTime: moment(),
             expirationTime: moment(),
+            registeredAt: moment(),
         };
 
         await recipientRepository.add(recipient);
@@ -69,7 +70,7 @@ describe("RecipientRepository test", () => {
         const got = await recipientRepository.findOne("#r1");
         expect(got).not.undefined;
         expect(got.name).to.equal(recipient.name);
-        expect([...got.followedTopics]).to.deep.equal(["business-5", "business-50"]);
+        expect([...got.followedTopics.keys()]).to.deep.equal(["business-5", "business-50"]);
         expect([...got.notifiedEventIds]).to.deep.equal(["#japwjo", "#12mlk1", "#jm214", "8128"]);
         expect([...got.topicLastNotification.keys()]).to.deep.equal(["1241", "125", "business-50"]);
     });

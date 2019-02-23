@@ -79,6 +79,7 @@ describe("MessageThrottleService", () => {
             topics: ["business-5"],
             readyTime: weekAgo,
             expirationTime: weekAgo,
+            registeredAt: weekAgo,
         };
 
         recipient.preferences = new RecipientPreferences(9, 0, NotificationLevel.Seldom);
@@ -110,6 +111,7 @@ describe("MessageThrottleService", () => {
             topics: ["business-5"],
             readyTime: weekAgo,
             expirationTime: weekAgo,
+            registeredAt: weekAgo,
         };
 
         recipient.preferences = new RecipientPreferences(9, 0, NotificationLevel.Seldom);
@@ -140,6 +142,7 @@ describe("MessageThrottleService", () => {
             topics: ["business-5"],
             readyTime: dayAgo,
             expirationTime: dayAgo,
+            registeredAt: dayAgo,
         };
 
         recipient.preferences = new RecipientPreferences(9, 0, NotificationLevel.Daily);
@@ -169,6 +172,7 @@ describe("MessageThrottleService", () => {
             topics: ["business-5"],
             readyTime: hourAgo,
             expirationTime: hourAgo,
+            registeredAt: hourAgo,
         };
 
         recipient.preferences = new RecipientPreferences(9, 0, NotificationLevel.Often);

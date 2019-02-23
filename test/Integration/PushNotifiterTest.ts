@@ -14,7 +14,9 @@ import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import { RecipientUpsertConsumer } from "../../src/Recipient/RecipientUpsertConsumer";
 import { Job, Queue } from "queue";
-import { Connection, createConnection } from "typeorm";
+import { Connection } from "typeorm";
+import { createORMConnection } from "../../src/typeorm.config";
+import Config from "../../src/Config";
 
 const createRecipientUpsertJob = (upsert: RecipientUpsert): Job<RecipientUpsert> => {
     const queue = sinon.createStubInstance(Queue);
@@ -42,7 +44,8 @@ describe("PushNotifier", () => {
     let publication4: PersistedPublication;
 
     beforeEach(async () => {
-        const connection = await createConnection();
+        const config = container.get<Config>(Config);
+        const connection = await createORMConnection(config);
         container = await setupWithMongo();
         container.bind(Connection).toConstantValue(connection);
 
@@ -83,6 +86,7 @@ describe("PushNotifier", () => {
 
     it.skip("should send messages to interested recipients @slow", async () => {
         // given
+        const now = moment();
         const preferences = new RecipientPreferences(7, 0, NotificationLevel.Often);
         const recipientUpsert1 = new RecipientUpsert(
             "r#1",
@@ -109,15 +113,26 @@ describe("PushNotifier", () => {
         const recipient1 = new Recipient(
             "r#1",
             "Iza",
-            ["business-2", "business-3"],
+            new Map([["business-2", now], ["business-3", now]]),
             [],
             preferences,
         );
-        const recipient2 = new Recipient("r#2", "Michal", ["business-3"], [], preferences);
+        const recipient2 = new Recipient(
+            "r#2",
+            "Michal",
+            new Map([["business-3", now]]),
+            [],
+            preferences,
+        );
         const recipient3 = new Recipient(
             "r#3",
             "Slawek",
-            ["business-1", "business-2", "business-3", "business-4"],
+            new Map([
+                ["business-1", now],
+                ["business-2", now],
+                ["business-3", now],
+                ["business-4", now],
+            ]),
             [],
             preferences,
         );

@@ -42,6 +42,7 @@ export class EventMongoRepository extends EventRepository {
                 ...document,
                 readyTime: moment(document.readyTime),
                 expirationTime: moment(document.expirationTime),
+                registeredAt: moment(document.registeredAt),
             };
         }
     }
@@ -62,6 +63,7 @@ export class EventMongoRepository extends EventRepository {
             ...document,
             readyTime: moment(document.readyTime),
             expirationTime: moment(document.expirationTime),
+            registeredAt: moment(document.registeredAt),
         }));
     }
 
@@ -76,6 +78,7 @@ export class EventMongoRepository extends EventRepository {
             topics: event.topics,
             readyTime: event.readyTime.toDate(),
             expirationTime: event.expirationTime.toDate(),
+            registeredAt: event.registeredAt.toDate(),
             location: event.location,
             content: event.content,
         };

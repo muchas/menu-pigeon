@@ -70,15 +70,19 @@ describe("Push notification integration test", () => {
         const recipient1 = new Recipient(
             "r#1",
             "Iza",
-            ["business-2", "business-3", "business-4"],
+            new Map([["business-2", moment()], ["business-3", moment()], ["business-4", moment()]]),
             [device3],
         );
 
         const device2 = new RecipientDevice("ExponentPushToken[dtdyV1PhS9NpKWze4p29VE]", morning);
-        const recipient2 = new Recipient("r#2", "Michal", ["business-3"], [device2]);
+        const recipient2 = new Recipient("r#2", "Michal", new Map([["business-3", moment()]]), [
+            device2,
+        ]);
 
         const device1 = new RecipientDevice("ExponentPushToken[tLEWtTPeOvkhYxrVxIvE7q]", morning);
-        const recipient3 = new Recipient("r#3", "Sławek", ["business-1"], [device1]);
+        const recipient3 = new Recipient("r#3", "Sławek", new Map([["business-1", moment()]]), [
+            device1,
+        ]);
 
         const recipients = [recipient1, recipient2, recipient3];
 
