@@ -27,6 +27,7 @@ describe("EventRepository test", () => {
             topics: ["business-50"],
             readyTime: moment(),
             expirationTime: moment(),
+            registeredAt: moment(),
         };
 
         // when
@@ -39,5 +40,6 @@ describe("EventRepository test", () => {
         expect(got.topics).to.deep.equal(event.topics);
         expect(got.readyTime.toISOString()).to.equal(event.readyTime.toISOString());
         expect(got.expirationTime.toISOString()).to.equal(event.expirationTime.toISOString());
+        expect(got.registeredAt.toISOString()).to.equal(event.registeredAt.toISOString());
     });
 });

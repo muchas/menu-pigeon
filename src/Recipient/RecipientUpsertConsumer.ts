@@ -30,13 +30,13 @@ export class RecipientUpsertConsumer implements Consumer {
             preferences.earliestMinute,
             preferences.level,
         );
-        const recipient = new Recipient(
-            id,
-            name,
-            followedTopics,
-            recipientDevices,
-            recipientPreferences,
-        );
+
+        let recipient = await this.recipientRepository.findOne(id);
+        if (!recipient) {
+            recipient = new Recipient(id, name, recipientDevices, recipientPreferences);
+        }
+
+        recipient.followOnly(followedTopics);
 
         await this.recipientRepository.add(recipient);
         await this.notifierClock.tick();

@@ -84,7 +84,6 @@ export class RecipientMongoRepository extends RecipientRepository {
     private toDocument(recipient: Recipient): object {
         return {
             name: recipient.name,
-            followedTopics: [...recipient.followedTopics],
             devices: recipient.devices.map(device => ({
                 pushToken: device.pushToken,
                 createdAt: device.createdAt.toDate(),
@@ -94,6 +93,10 @@ export class RecipientMongoRepository extends RecipientRepository {
                 earliestMinute: recipient.preferences.earliestMinute,
                 level: recipient.preferences.level,
             },
+            followedTopics: [...recipient.followedTopics].map(([key, date]) => [
+                key,
+                date.toDate(),
+            ]),
         };
     }
 
@@ -101,7 +104,6 @@ export class RecipientMongoRepository extends RecipientRepository {
         return new Recipient(
             data.id,
             data.name,
-            data.followedTopics,
             data.devices.map(
                 deviceData =>
                     new RecipientDevice(deviceData.pushToken, moment(deviceData.createdAt)),
@@ -113,6 +115,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             ),
             new Set(data.notifiedEventIds),
             new Map(data.topicLastNotification.map(([key, date]) => [key, moment(date)])),
+            new Map(data.followedTopics.map(([key, date]) => [key, moment(date)])),
         );
     }
 }

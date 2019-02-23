@@ -16,12 +16,9 @@ export class RecipientPreferences implements NotificationPreferences {
 }
 
 export class Recipient {
-    public followedTopics: Set<string>;
-
     public constructor(
         public id: string,
         public name?: string,
-        followedTopics: string[] = [],
         public devices: RecipientDevice[] = [],
         public preferences: RecipientPreferences = new RecipientPreferences(
             9,
@@ -29,9 +26,10 @@ export class Recipient {
             NotificationLevel.Daily,
         ),
         public notifiedEventIds: Set<string> = new Set(),
-        public topicLastNotification: Map<string, Moment> = new Map(),
+        public topicLastNotification: Map<string, moment.Moment> = new Map(),
+        public followedTopics: Map<string, moment.Moment> = new Map(),
     ) {
-        this.followedTopics = new Set(followedTopics);
+        //
     }
 
     public get pushTokens(): string[] {
@@ -53,8 +51,26 @@ export class Recipient {
         }
     }
 
+    public followOnly(topics: string[]): void {
+        const followedTopics = [...this.followedTopics.keys()];
+        const topicsToFollow = topics.filter(topic => followedTopics.indexOf(topic) === -1);
+        const topicsToUnfollow = followedTopics.filter(topic => topics.indexOf(topic) === -1);
+
+        for (const topic of topicsToFollow) {
+            this.follow(topic);
+        }
+
+        for (const topic of topicsToUnfollow) {
+            this.unfollow(topic);
+        }
+    }
+
     public follow(topic: string): void {
-        this.followedTopics.add(topic);
+        if (this.followedTopics.has(topic)) {
+            return;
+        }
+
+        this.followedTopics.set(topic, moment());
     }
 
     public unfollow(topic: string): void {
