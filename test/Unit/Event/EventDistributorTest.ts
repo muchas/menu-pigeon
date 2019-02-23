@@ -1,8 +1,9 @@
 import { expect } from "chai";
 import { EventDistributor } from "../../../src/Event/EventDistributor";
-import { Recipient } from "../../../src/Recipient/Recipient";
+import { Recipient, RecipientPreferences } from "../../../src/Recipient/Recipient";
 import { Event } from "../../../src/Interfaces/Event";
 import * as moment from "moment-timezone";
+import { NotificationLevel } from "queue/lib/Messages/Recipient";
 
 describe("EventDistributor", () => {
     it("filterRelevantFor events to recipients based on followed topics", async () => {
@@ -34,6 +35,10 @@ describe("EventDistributor", () => {
         const recipient = new Recipient(
             "recipient#1",
             "John",
+            [],
+            new RecipientPreferences(9, 0, NotificationLevel.Daily),
+            new Set(),
+            new Map(),
             new Map([["topic-1", justBeforeNow]]),
         );
 
@@ -74,6 +79,10 @@ describe("EventDistributor", () => {
         const recipient = new Recipient(
             "recipient#1",
             "John",
+            [],
+            new RecipientPreferences(9, 0, NotificationLevel.Daily),
+            new Set(),
+            new Map(),
             new Map([["topic-1", justAfterNow]]),
         );
 

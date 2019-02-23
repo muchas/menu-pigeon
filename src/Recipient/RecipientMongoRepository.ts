@@ -104,7 +104,6 @@ export class RecipientMongoRepository extends RecipientRepository {
         return new Recipient(
             data.id,
             data.name,
-            new Map(data.followedTopics.map(([key, date]) => [key, moment(date)])),
             data.devices.map(
                 deviceData =>
                     new RecipientDevice(deviceData.pushToken, moment(deviceData.createdAt)),
@@ -116,6 +115,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             ),
             new Set(data.notifiedEventIds),
             new Map(data.topicLastNotification.map(([key, date]) => [key, moment(date)])),
+            new Map(data.followedTopics.map(([key, date]) => [key, moment(date)])),
         );
     }
 }

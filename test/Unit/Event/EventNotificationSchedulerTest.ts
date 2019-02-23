@@ -19,7 +19,7 @@ describe("EventNotificationScheduler", () => {
 
         _today = moment();
         preferences = new RecipientPreferences(12, 0, NotificationLevel.Often);
-        recipient = new Recipient("recipient#1", "John", [], [], preferences);
+        recipient = new Recipient("recipient#1", "John", [], preferences);
         scheduler = new EventNotificationScheduler();
     });
 
@@ -33,7 +33,12 @@ describe("EventNotificationScheduler", () => {
             expirationTime: today().set("hour", 18),
         };
 
-        recipient = new Recipient("recipient#2", "Yui", [], []);
+        recipient = new Recipient(
+            "recipient#2",
+            "Yui",
+            [],
+            new RecipientPreferences(9, 0, NotificationLevel.Daily),
+        );
 
         // when
         const notifications = scheduler.schedule(recipient, [event as Event], today());

@@ -19,7 +19,6 @@ export class Recipient {
     public constructor(
         public id: string,
         public name?: string,
-        public followedTopics: Map<string, Moment> = new Map(),
         public devices: RecipientDevice[] = [],
         public preferences: RecipientPreferences = new RecipientPreferences(
             9,
@@ -27,7 +26,8 @@ export class Recipient {
             NotificationLevel.Daily,
         ),
         public notifiedEventIds: Set<string> = new Set(),
-        public topicLastNotification: Map<string, Moment> = new Map(),
+        public topicLastNotification: Map<string, moment.Moment> = new Map(),
+        public followedTopics: Map<string, moment.Moment> = new Map(),
     ) {
         //
     }
@@ -48,6 +48,20 @@ export class Recipient {
         this.notifiedEventIds.add(event.id);
         for (const topic of event.topics) {
             this.topicLastNotification.set(topic, notificationTime);
+        }
+    }
+
+    public followOnly(topics: string[]): void {
+        const followedTopics = [...this.followedTopics.keys()];
+        const topicsToFollow = topics.filter(topic => followedTopics.indexOf(topic) === -1);
+        const topicsToUnfollow = followedTopics.filter(topic => topics.indexOf(topic) === -1);
+
+        for (const topic of topicsToFollow) {
+            this.follow(topic);
+        }
+
+        for (const topic of topicsToUnfollow) {
+            this.unfollow(topic);
         }
     }
 

@@ -44,9 +44,9 @@ describe("PushNotifier", () => {
     let publication4: PersistedPublication;
 
     beforeEach(async () => {
+        container = await setupWithMongo();
         const config = container.get<Config>(Config);
         const connection = await createORMConnection(config);
-        container = await setupWithMongo();
         container.bind(Connection).toConstantValue(connection);
 
         today = moment();
@@ -113,28 +113,34 @@ describe("PushNotifier", () => {
         const recipient1 = new Recipient(
             "r#1",
             "Iza",
-            new Map([["business-2", now], ["business-3", now]]),
             [],
             preferences,
+            new Set(),
+            new Map(),
+            new Map([["business-2", now], ["business-3", now]]),
         );
         const recipient2 = new Recipient(
             "r#2",
             "Michal",
-            new Map([["business-3", now]]),
             [],
             preferences,
+            new Set(),
+            new Map(),
+            new Map([["business-3", now]]),
         );
         const recipient3 = new Recipient(
             "r#3",
             "Slawek",
+            [],
+            preferences,
+            new Set(),
+            new Map(),
             new Map([
                 ["business-1", now],
                 ["business-2", now],
                 ["business-3", now],
                 ["business-4", now],
             ]),
-            [],
-            preferences,
         );
         const recipients = [recipient1, recipient2, recipient3];
 
@@ -142,25 +148,21 @@ describe("PushNotifier", () => {
         const notifier = new PushNotifier(recipientRepository, eventRepository, sender as any);
 
         // when
+        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert1));
+        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert2));
+        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert3));
+
         await publicationConsumer.consume(createPersistedPublicationJob(publication1));
         await publicationConsumer.consume(createPersistedPublicationJob(publication2));
         await publicationConsumer.consume(createPersistedPublicationJob(publication3));
         await publicationConsumer.consume(createPersistedPublicationJob(publication4));
 
-        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert1));
-        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert2));
-        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert3));
-
-        await notifier.notifyAll(today.toDate());
+        await notifier.notifyAll(today);
 
         // then
         expect(sender.schedule).to.have.been.calledWith(recipients);
         const persistedRecipients = await recipientRepository.findAll();
         const notifiedTopics = persistedRecipients.map(r => [...r.topicLastNotification.keys()]);
-        expect(notifiedTopics).deep.equals([
-            ["business-2", "business-3"],
-            ["business-3"],
-            ["business-1", "business-2", "business-3", "business-4"],
-        ]);
+        expect(notifiedTopics).deep.equals([["business-2"], ["business-3"], ["business-1"]]);
     });
 });

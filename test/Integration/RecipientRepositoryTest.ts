@@ -20,7 +20,6 @@ describe("RecipientRepository test", () => {
         recipient = new Recipient(
             "#r1",
             "John",
-            new Map([["business-1", moment()], ["business-5", moment()]]),
             [
                 new RecipientDevice("awopk124pko", moment()),
                 new RecipientDevice("pok1po2k4ij", moment()),
@@ -28,6 +27,7 @@ describe("RecipientRepository test", () => {
             new RecipientPreferences(9, 15, NotificationLevel.Seldom),
             new Set(["#japwjo", "#12mlk1", "#jm214"]),
             new Map([["1241", moment()], ["125", moment()]]),
+            new Map([["business-1", moment()], ["business-5", moment()]]),
         );
     });
 

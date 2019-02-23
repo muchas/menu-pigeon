@@ -4,7 +4,7 @@ import * as moment from "moment-timezone";
 import { Event } from "../../src/Interfaces/Event";
 import { EventMemoryRepository } from "../../src/Event/EventMemoryRepository";
 import { LunchOfferEvent } from "../../src/Publication/LunchOfferEvent";
-import { Recipient } from "../../src/Recipient/Recipient";
+import { Recipient, RecipientPreferences } from "../../src/Recipient/Recipient";
 import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
 import { PushNotifier } from "../../src/PushNotification/PushNotifier";
 import { Connection, createConnection } from "typeorm";
@@ -13,6 +13,7 @@ import { RecipientDevice } from "../../src/Recipient/RecipientDevice";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { Container } from "inversify";
 import { PushNotificationStatusChecker } from "../../src/PushNotification/PushNotificationStatusChecker";
+import { NotificationLevel } from "queue/lib/Messages/Recipient";
 
 describe("Push notification integration test", () => {
     let container: Container;
@@ -70,19 +71,34 @@ describe("Push notification integration test", () => {
         const recipient1 = new Recipient(
             "r#1",
             "Iza",
-            new Map([["business-2", moment()], ["business-3", moment()], ["business-4", moment()]]),
             [device3],
+            new RecipientPreferences(9, 0, NotificationLevel.Daily),
+            new Set(),
+            new Map(),
+            new Map([["business-2", moment()], ["business-3", moment()], ["business-4", moment()]]),
         );
 
         const device2 = new RecipientDevice("ExponentPushToken[dtdyV1PhS9NpKWze4p29VE]", morning);
-        const recipient2 = new Recipient("r#2", "Michal", new Map([["business-3", moment()]]), [
-            device2,
-        ]);
+        const recipient2 = new Recipient(
+            "r#2",
+            "Michal",
+            [device2],
+            new RecipientPreferences(9, 0, NotificationLevel.Daily),
+            new Set(),
+            new Map(),
+            new Map([["business-3", moment()]]),
+        );
 
         const device1 = new RecipientDevice("ExponentPushToken[tLEWtTPeOvkhYxrVxIvE7q]", morning);
-        const recipient3 = new Recipient("r#3", "Sławek", new Map([["business-1", moment()]]), [
-            device1,
-        ]);
+        const recipient3 = new Recipient(
+            "r#3",
+            "Sławek",
+            [device1],
+            new RecipientPreferences(9, 0, NotificationLevel.Daily),
+            new Set(),
+            new Map(),
+            new Map([["business-1", moment()]]),
+        );
 
         const recipients = [recipient1, recipient2, recipient3];
 

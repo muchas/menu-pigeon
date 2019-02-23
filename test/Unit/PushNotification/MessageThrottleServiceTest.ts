@@ -25,7 +25,7 @@ describe("MessageThrottleService", () => {
         setup();
 
         throttleService = new MessageThrottleService();
-        recipient = new Recipient("#r1", "John", []);
+        recipient = new Recipient("#r1", "John");
     });
 
     it("should stop messages if disabled", async () => {
