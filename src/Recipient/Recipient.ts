@@ -51,6 +51,18 @@ export class Recipient {
         }
     }
 
+    public setName(name: string): void {
+        this.name = name;
+    }
+
+    public setDevices(devices: RecipientDevice[]): void {
+        this.devices = devices;
+    }
+
+    public setPreferences(preferences: RecipientPreferences): void {
+        this.preferences = preferences;
+    }
+
     public followOnly(topics: string[]): void {
         const followedTopics = [...this.followedTopics.keys()];
         const topicsToFollow = topics.filter(topic => followedTopics.indexOf(topic) === -1);

@@ -156,9 +156,9 @@ describe("MessageThrottleService", () => {
         expect(throttledMessages[0].id).to.equal("#1");
     });
 
-    it("should receive at most one per hour if often", async () => {
+    it("should receive at most one per 20 minutes if often", async () => {
         // given
-        const hourAgo = moment().subtract("1", "hour");
+        const hourAgo = moment().subtract("20", "minute");
 
         const messages = [
             createMessage("#1", [], "default"),

@@ -3,6 +3,7 @@ import { Message } from "../Entity/Message";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import * as moment from "moment-timezone";
 import { DurationInputArg2 } from "moment-timezone";
+import { DurationInputArg1 } from "moment";
 
 interface MessageThrottleRule {
     filter(recipient: Recipient, messages: Message[]): Message[];
@@ -40,6 +41,7 @@ class FrequencyMessageRule implements MessageThrottleRule {
 class CycleMessageRule implements MessageThrottleRule {
     public constructor(
         private readonly notificationLevel: NotificationLevel,
+        private readonly amount: DurationInputArg1,
         private readonly unit: DurationInputArg2,
     ) {}
 
@@ -48,7 +50,7 @@ class CycleMessageRule implements MessageThrottleRule {
             recipient.preferences.level === this.notificationLevel &&
             recipient.lastNotificationTime
         ) {
-            const cycleStart = moment().subtract("1", this.unit);
+            const cycleStart = moment().subtract(this.amount, this.unit);
             if (recipient.lastNotificationTime <= cycleStart) {
                 return messages;
             }
@@ -74,7 +76,7 @@ export class MessageThrottleService {
             new NeverMessageRule(),
             new FrequencyMessageRule(NotificationLevel.Seldom, "week"),
             new FrequencyMessageRule(NotificationLevel.Daily, "day"),
-            new CycleMessageRule(NotificationLevel.Often, "hour"),
+            new CycleMessageRule(NotificationLevel.Often, 20, "minute"),
             new LimitRule(1),
         ];
     }

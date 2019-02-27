@@ -31,11 +31,10 @@ export class RecipientUpsertConsumer implements Consumer {
             preferences.level,
         );
 
-        let recipient = await this.recipientRepository.findOne(id);
-        if (!recipient) {
-            recipient = new Recipient(id, name, recipientDevices, recipientPreferences);
-        }
-
+        const recipient = await this.getOrCreateRecipient(id);
+        recipient.setName(name);
+        recipient.setDevices(recipientDevices);
+        recipient.setPreferences(recipientPreferences);
         recipient.followOnly(followedTopics);
 
         await this.recipientRepository.add(recipient);
@@ -44,5 +43,13 @@ export class RecipientUpsertConsumer implements Consumer {
         winston.info("Consumption of recipient add finished", {
             recipient_id: id,
         });
+    }
+
+    private async getOrCreateRecipient(id: string): Promise<Recipient> {
+        const recipient = await this.recipientRepository.findOne(id);
+        if (!recipient) {
+            return new Recipient(id);
+        }
+        return recipient;
     }
 }
