@@ -25,15 +25,27 @@ export class Recipient {
             0,
             NotificationLevel.Daily,
         ),
-        public notifiedEventIds: Set<string> = new Set(),
-        public topicLastNotification: Map<string, moment.Moment> = new Map(),
-        public followedTopics: Map<string, moment.Moment> = new Map(),
+        private readonly _notifiedEventIds: Set<string> = new Set(),
+        private readonly _topicLastNotification: Map<string, moment.Moment> = new Map(),
+        private readonly _followedTopics: Map<string, moment.Moment> = new Map(),
     ) {
         //
     }
 
     public get pushTokens(): string[] {
         return this.devices.map(device => device.pushToken);
+    }
+
+    public get followedTopics(): Map<string, moment.Moment> {
+        return this._followedTopics;
+    }
+
+    public get topicLastNotification(): Map<string, moment.Moment> {
+        return this._topicLastNotification;
+    }
+
+    public get notifiedEventIds(): Set<string> {
+        return this._notifiedEventIds;
     }
 
     public get lastNotificationTime(): Moment | undefined {
@@ -49,18 +61,6 @@ export class Recipient {
         for (const topic of event.topics) {
             this.topicLastNotification.set(topic, notificationTime);
         }
-    }
-
-    public setName(name: string): void {
-        this.name = name;
-    }
-
-    public setDevices(devices: RecipientDevice[]): void {
-        this.devices = devices;
-    }
-
-    public setPreferences(preferences: RecipientPreferences): void {
-        this.preferences = preferences;
     }
 
     public followOnly(topics: string[]): void {

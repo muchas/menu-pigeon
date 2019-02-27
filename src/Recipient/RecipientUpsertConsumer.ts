@@ -32,9 +32,9 @@ export class RecipientUpsertConsumer implements Consumer {
         );
 
         const recipient = await this.getOrCreateRecipient(id);
-        recipient.setName(name);
-        recipient.setDevices(recipientDevices);
-        recipient.setPreferences(recipientPreferences);
+        recipient.name = name;
+        recipient.devices = recipientDevices;
+        recipient.preferences = recipientPreferences;
         recipient.followOnly(followedTopics);
 
         await this.recipientRepository.add(recipient);
