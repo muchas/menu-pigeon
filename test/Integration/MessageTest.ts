@@ -1,4 +1,3 @@
-import { createContainer } from "../../src/inversify.config";
 import "reflect-metadata";
 import * as moment from "moment-timezone";
 import { Event } from "../../src/Interfaces/Event";
@@ -8,19 +7,20 @@ import { Recipient, RecipientPreferences } from "../../src/Recipient/Recipient";
 import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
 import { PushNotifier } from "../../src/PushNotification/PushNotifier";
 import { Connection, createConnection } from "typeorm";
-import { RecipientMemoryRepository } from "../../src/Recipient/RecipientMemoryRepository";
 import { RecipientDevice } from "../../src/Recipient/RecipientDevice";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { Container } from "inversify";
 import { PushNotificationStatusChecker } from "../../src/PushNotification/PushNotificationStatusChecker";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
+import { RecipientMongoRepository } from "../../src/Recipient/RecipientMongoRepository";
+import { setupWithMongo } from "../utils";
 
 describe("Push notification integration test", () => {
     let container: Container;
 
     beforeEach(async () => {
         const connection = await createConnection();
-        container = createContainer();
+        container = await setupWithMongo();
         container.bind(Connection).toConstantValue(connection);
     });
 
@@ -105,8 +105,8 @@ describe("Push notification integration test", () => {
         const notifier = container.get<PushNotifier>(PushNotifier);
         const sender = container.get<PushNotificationSender>(PushNotificationSender);
         const eventRepository = container.get<EventMemoryRepository>(EventMemoryRepository);
-        const recipientRepository = container.get<RecipientMemoryRepository>(
-            RecipientMemoryRepository,
+        const recipientRepository = container.get<RecipientMongoRepository>(
+            RecipientMongoRepository,
         );
 
         await eventRepository.addMany(events);

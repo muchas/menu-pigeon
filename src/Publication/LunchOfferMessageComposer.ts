@@ -32,7 +32,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
                 this.createMessage(
                     recipient,
                     offerEvents,
-                    "Nowa oferta lunchowa",
+                    sample([this.getRandomMessageTitle(), "Nowa oferta lunchowa"]),
                     `Oferta na dziś od ${businessName} jest już dostępna`,
                 ),
             ];
