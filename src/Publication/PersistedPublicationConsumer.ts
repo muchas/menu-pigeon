@@ -5,6 +5,7 @@ import { injectable } from "inversify";
 import { NotifierClock } from "../PushNotification/NotifierClock";
 import * as winston from "winston";
 import { EventRepository } from "../Interfaces/EventRepository";
+import { PersistedPublicationRepository } from "./PersistedPublicationRepository";
 
 @injectable()
 export class PersistedPublicationConsumer implements Consumer {
@@ -12,6 +13,7 @@ export class PersistedPublicationConsumer implements Consumer {
 
     public constructor(
         private readonly eventRepository: EventRepository,
+        private readonly publicationRepository: PersistedPublicationRepository,
         private readonly notifierClock: NotifierClock,
     ) {
         this.factory = new LunchOfferEventFactory();
@@ -22,6 +24,15 @@ export class PersistedPublicationConsumer implements Consumer {
             publication_id: job.message.id,
             business_id: job.message.businessId,
         });
+
+        const inserted = this.publicationRepository.add(job.message);
+        if (!inserted) {
+            winston.info("Publication has been already processed", {
+                publication_id: job.message.id,
+                business_id: job.message.businessId,
+            });
+            return;
+        }
 
         const events = this.factory.create(job.message);
         await this.eventRepository.addMany(events);
