@@ -6,7 +6,7 @@ import { PersistedPublicationRepository } from "../../src/Publication/PersistedP
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import * as moment from "moment-timezone";
 
-describe("PersistedPublicationRepository test", () => {
+describe("PersistedPublicationRepository", () => {
     let container: Container;
     let publicationRepository: PersistedPublicationRepository;
     let persistedPublication: PersistedPublication;
