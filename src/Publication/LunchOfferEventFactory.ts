@@ -7,7 +7,10 @@ import * as uuid from "uuid";
 export class LunchOfferEventFactory {
     public create(publication: PersistedPublication): LunchOfferEvent[] {
         return publication.lunchOffers.map(offer => {
-            const readyTime = this.resetToDayStart(offer.date);
+            const readyTime = moment.max([
+                this.resetToDayStart(offer.date),
+                moment(publication.readyTime),
+            ]);
             const expirationTime = this.resetToDayStart(offer.date).add("1", "day");
 
             const topics = this.getPublicationTopics(publication);
