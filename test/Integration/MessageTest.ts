@@ -41,13 +41,22 @@ describe("Push notification integration test", () => {
         const morning = today.toDate();
         const tomorrow = today.add(1, "day").toDate();
 
-        publication1 = new PersistedPublication(1, "1", "Bococa Bistro", "bococa", [], morning);
+        publication1 = new PersistedPublication(
+            1,
+            "1",
+            "Bococa Bistro",
+            "bococa",
+            [],
+            morning,
+            morning,
+        );
         publication2 = new PersistedPublication(
             2,
             "2",
             "I Love Coffee Kawiarnia",
             "ilc",
             [],
+            morning,
             morning,
         );
         publication3 = new PersistedPublication(
@@ -57,8 +66,17 @@ describe("Push notification integration test", () => {
             "majeranek",
             [],
             morning,
+            morning,
         );
-        publication4 = new PersistedPublication(4, "4", "Bistro Maro", "maro", [], morning);
+        publication4 = new PersistedPublication(
+            4,
+            "4",
+            "Bistro Maro",
+            "maro",
+            [],
+            morning,
+            morning,
+        );
 
         event1 = new LunchOfferEvent("e#1", morning, tomorrow, ["business-1"], publication1);
         event2 = new LunchOfferEvent("e#2", morning, tomorrow, ["business-2"], publication2);

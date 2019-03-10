@@ -53,13 +53,22 @@ describe("PushNotifier", () => {
         const morning = today.set(8, "hour").toDate();
 
         const offers = [{ date: today.toDate(), lunches: [], soups: [], prices: [], texts: [] }];
-        publication1 = new PersistedPublication(1, "1", "Bococa Bistro", "bococa", offers, morning);
+        publication1 = new PersistedPublication(
+            1,
+            "1",
+            "Bococa Bistro",
+            "bococa",
+            offers,
+            morning,
+            morning,
+        );
         publication2 = new PersistedPublication(
             2,
             "2",
             "I Love Coffee Kawiarnia",
             "ilc",
             offers,
+            morning,
             morning,
         );
         publication3 = new PersistedPublication(
@@ -69,8 +78,17 @@ describe("PushNotifier", () => {
             "majeranek",
             offers,
             morning,
+            morning,
         );
-        publication4 = new PersistedPublication(4, "4", "Bistro Maro", "maro", offers, morning);
+        publication4 = new PersistedPublication(
+            4,
+            "4",
+            "Bistro Maro",
+            "maro",
+            offers,
+            morning,
+            morning,
+        );
 
         publicationConsumer = container.get<PersistedPublicationConsumer>(
             PersistedPublicationConsumer,

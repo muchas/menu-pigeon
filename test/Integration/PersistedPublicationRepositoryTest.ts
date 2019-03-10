@@ -33,6 +33,7 @@ describe("PersistedPublicationRepository", () => {
             "awesome-biz",
             [],
             now,
+            now,
         );
 
         // when
@@ -51,6 +52,7 @@ describe("PersistedPublicationRepository", () => {
             "Awesome Biz",
             "awesome-biz",
             [],
+            now,
             now,
         );
 
