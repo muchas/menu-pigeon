@@ -90,8 +90,8 @@ export class PushNotificationRepository {
             notification.status = PushNotificationStatus.SENT;
             notification.sentAt = pushTicket.sentAt.toDate();
             notification.data = {
-                ticket_data: pushTicket.data,
                 ...notification.data,
+                ticket_data: pushTicket.data,
             };
             await this.notificationRepository.save(notification);
         }
@@ -102,8 +102,8 @@ export class PushNotificationRepository {
         if (receipt.fetchedSuccessfully) {
             notification.status = receipt.status;
             notification.data = {
-                receipt_data: receipt.data,
                 ...notification.data,
+                receipt_data: receipt.data,
             };
             await this.notificationRepository.save(notification);
         }
