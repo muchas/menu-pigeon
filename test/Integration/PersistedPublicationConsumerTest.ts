@@ -1,4 +1,4 @@
-import { setupWithMongo, tearDownWithMongo } from "../utils";
+import { setupWithMongo, tearDownWithDb, tearDownWithMongo } from "../utils";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import { SinonStubbedInstance } from "sinon";
@@ -20,7 +20,7 @@ const createPersistedPublicationJob = (
     return new Job<PersistedPublication>(queue as any, {}, publication);
 };
 
-describe("PersistedPublication", () => {
+describe("PersistedPublicationConsumer", () => {
     let today;
     let container: Container;
     let publicationConsumer: PersistedPublicationConsumer;
@@ -45,6 +45,7 @@ describe("PersistedPublication", () => {
     });
 
     afterEach(async () => {
+        await tearDownWithDb(container);
         await tearDownWithMongo(container);
     });
 
