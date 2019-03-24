@@ -25,7 +25,7 @@ export class PersistedPublicationConsumer implements Consumer {
             business_id: job.message.businessId,
         });
 
-        const inserted = this.publicationRepository.add(job.message);
+        const inserted = await this.publicationRepository.add(job.message);
         if (!inserted) {
             winston.info("Publication has been already processed", {
                 publication_id: job.message.id,

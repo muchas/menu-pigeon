@@ -1,4 +1,4 @@
-import { setupWithMongo, tearDownWithMongo } from "../utils";
+import { setupWithMongo, tearDownWithDb, tearDownWithMongo } from "../utils";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as moment from "moment-timezone";
@@ -99,6 +99,7 @@ describe("PushNotifier", () => {
     });
 
     afterEach(async () => {
+        await tearDownWithDb(container);
         await tearDownWithMongo(container);
     });
 
