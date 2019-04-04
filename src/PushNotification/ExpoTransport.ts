@@ -85,7 +85,14 @@ export class ExpoTransport implements PushNotificationTransport {
                 yield new PushNotificationReceipt(notification, true, status, receipt);
             }
         } catch (e) {
-            winston.error(e);
+            if (e.code === "ECONNRESET") {
+                winston.warn("Confirming notifications failed - connection reset", {
+                    push_receipt_ids: chunk,
+                    notification_ids: notifications.map(n => n.id),
+                });
+            } else {
+                winston.error(e);
+            }
 
             for (const notification of notifications) {
                 yield new PushNotificationReceipt(notification, false);
