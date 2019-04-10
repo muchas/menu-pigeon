@@ -1,4 +1,4 @@
-import * as winston from "winston";
+import * as winstonInstance from "winston";
 import { PushNotificationTransport } from "../Interfaces/PushNotificationTransport";
 import { PushNotification } from "../Entity/PushNotification";
 import Expo, { ExpoPushMessage, ExpoPushReceiptId } from "expo-server-sdk";
@@ -9,11 +9,10 @@ import { injectable } from "inversify";
 
 @injectable()
 export class ExpoTransport implements PushNotificationTransport {
-    private readonly client: Expo;
-
-    public constructor(client: Expo) {
-        this.client = client;
-    }
+    public constructor(
+        private readonly client: Expo,
+        private readonly winston: winstonInstance.Winston = winstonInstance,
+    ) {}
 
     public async confirmStatus(notification: PushNotification): Promise<PushNotificationReceipt> {
         const receipts = await toArray(this.confirmStatuses([notification]));
@@ -76,7 +75,7 @@ export class ExpoTransport implements PushNotificationTransport {
                 const notification = notificationsByReceiptId.get(receiptId);
                 const status = this.toInternalStatus(receipt.status);
                 if (status === PushNotificationStatus.ERROR) {
-                    winston.error("Push notification delivery error", {
+                    this.winston.error("Push notification delivery error", {
                         notification_id: notification.id,
                         data: receipt,
                     });
@@ -86,12 +85,12 @@ export class ExpoTransport implements PushNotificationTransport {
             }
         } catch (e) {
             if (e.code === "ECONNRESET") {
-                winston.warn("Confirming notifications failed - connection reset", {
+                this.winston.warn("Confirming notifications failed - connection reset", {
                     push_receipt_ids: chunk,
                     notification_ids: notifications.map(n => n.id),
                 });
             } else {
-                winston.error(e);
+                this.winston.error(e);
             }
 
             for (const notification of notifications) {
@@ -107,7 +106,7 @@ export class ExpoTransport implements PushNotificationTransport {
         try {
             const tickets = await this.client.sendPushNotificationsAsync(chunk);
 
-            winston.info("sent notifications tickets", tickets);
+            this.winston.info("sent notifications tickets", tickets);
 
             for (let i = 0; i < notifications.length; i++) {
                 yield new PushNotificationTicket(
@@ -119,7 +118,7 @@ export class ExpoTransport implements PushNotificationTransport {
                 );
             }
         } catch (e) {
-            winston.error(e);
+            this.winston.error(e);
 
             for (const notification of notifications) {
                 yield new PushNotificationTicket(notification, false);
