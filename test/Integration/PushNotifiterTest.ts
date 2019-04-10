@@ -1,4 +1,4 @@
-import { setupWithMongo, tearDownWithDb, tearDownWithMongo } from "../utils";
+import { createJob, setupWithAllDbs, tearDownWithAllDbs } from "../utils";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as moment from "moment-timezone";
@@ -13,22 +13,6 @@ import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import { RecipientUpsertConsumer } from "../../src/Recipient/RecipientUpsertConsumer";
-import { Job, Queue } from "queue";
-import { Connection } from "typeorm";
-import { createORMConnection } from "../../src/typeorm.config";
-import Config from "../../src/Config";
-
-const createRecipientUpsertJob = (upsert: RecipientUpsert): Job<RecipientUpsert> => {
-    const queue = sinon.createStubInstance(Queue);
-    return new Job<RecipientUpsert>(queue as any, {}, upsert);
-};
-
-const createPersistedPublicationJob = (
-    publication: PersistedPublication,
-): Job<PersistedPublication> => {
-    const queue = sinon.createStubInstance(Queue);
-    return new Job<PersistedPublication>(queue as any, {}, publication);
-};
 
 describe("PushNotifier", () => {
     let eventRepository: EventRepository;
@@ -44,10 +28,7 @@ describe("PushNotifier", () => {
     let publication4: PersistedPublication;
 
     beforeEach(async () => {
-        container = await setupWithMongo();
-        const config = container.get<Config>(Config);
-        const connection = await createORMConnection(config);
-        container.bind(Connection).toConstantValue(connection);
+        container = await setupWithAllDbs();
 
         today = moment();
         const morning = today.set(8, "hour").toDate();
@@ -99,8 +80,7 @@ describe("PushNotifier", () => {
     });
 
     afterEach(async () => {
-        await tearDownWithDb(container);
-        await tearDownWithMongo(container);
+        await tearDownWithAllDbs(container);
     });
 
     it.skip("should send messages to interested recipients @slow", async () => {
@@ -167,14 +147,14 @@ describe("PushNotifier", () => {
         const notifier = new PushNotifier(recipientRepository, eventRepository, sender as any);
 
         // when
-        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert1));
-        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert2));
-        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert3));
+        await recipientUpsertConsumer.consume(createJob(recipientUpsert1));
+        await recipientUpsertConsumer.consume(createJob(recipientUpsert2));
+        await recipientUpsertConsumer.consume(createJob(recipientUpsert3));
 
-        await publicationConsumer.consume(createPersistedPublicationJob(publication1));
-        await publicationConsumer.consume(createPersistedPublicationJob(publication2));
-        await publicationConsumer.consume(createPersistedPublicationJob(publication3));
-        await publicationConsumer.consume(createPersistedPublicationJob(publication4));
+        await publicationConsumer.consume(createJob(publication1));
+        await publicationConsumer.consume(createJob(publication2));
+        await publicationConsumer.consume(createJob(publication3));
+        await publicationConsumer.consume(createJob(publication4));
 
         await notifier.notifyAll(today);
 

@@ -4,7 +4,7 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as sinonChai from "sinon-chai";
 import * as sinon from "sinon";
 import { SinonStubbedInstance } from "sinon";
-import { Queue } from "queue";
+import { Job, Queue } from "queue";
 import { Container } from "inversify";
 import { createContainer } from "../src/inversify.config";
 import { Connection } from "typeorm";
@@ -55,8 +55,26 @@ export const tearDownWithDb = async (container: Container): Promise<void> => {
     await connection.close();
 };
 
+export const setupWithAllDbs = async (): Promise<Container> => {
+    const container = await setupWithMongo();
+    const config = container.get<Config>(Config);
+    const connection = await createORMConnection(config);
+    container.bind(Connection).toConstantValue(connection);
+    return container;
+};
+
+export const tearDownWithAllDbs = async (container: Container): Promise<void> => {
+    await tearDownWithDb(container);
+    await tearDownWithMongo(container);
+};
+
 export const mockQueue = (container: Container): SinonStubbedInstance<Queue> => {
     const queue = sinon.createStubInstance(Queue);
     container.rebind(Queue).toConstantValue(queue as any);
     return queue;
+};
+
+export const createJob = <T>(message: T): Job<T> => {
+    const queue = sinon.createStubInstance(Queue);
+    return new Job<T>(queue as any, {}, message);
 };
