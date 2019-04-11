@@ -2,7 +2,7 @@ import { createJob, setupWithAllDbs, tearDownWithAllDbs } from "../utils";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as moment from "moment-timezone";
-import { RecipientPreferences } from "../../src/Recipient/Recipient";
+import { RecipientPreferences } from "../../src/Recipient/Models/Recipient";
 import { PushNotifier } from "../../src/PushNotification/PushNotifier";
 import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
@@ -12,7 +12,7 @@ import { EventRepository } from "../../src/Interfaces/EventRepository";
 import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { RecipientUpsertConsumer } from "../../src/Recipient/RecipientUpsertConsumer";
+import { RecipientUpsertConsumer } from "../../src/Recipient/Consumers/RecipientUpsertConsumer";
 
 describe("PushNotifier", () => {
     let eventRepository: EventRepository;

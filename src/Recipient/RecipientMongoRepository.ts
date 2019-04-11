@@ -1,9 +1,9 @@
-import { Recipient, RecipientPreferences } from "./Recipient";
+import { Recipient, RecipientPreferences } from "./Models/Recipient";
 import { injectable } from "inversify";
 import { RecipientRepository } from "../Interfaces/RecipientRepository";
 import Mongo from "../Mongo";
 import { Collection } from "mongodb";
-import { RecipientDevice } from "./RecipientDevice";
+import { RecipientDevice } from "./Models/RecipientDevice";
 import * as moment from "moment-timezone";
 
 @injectable()

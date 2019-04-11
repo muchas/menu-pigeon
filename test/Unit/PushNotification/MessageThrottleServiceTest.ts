@@ -1,10 +1,10 @@
 import { setup } from "../../utils";
 import { expect } from "chai";
-import { Recipient, RecipientPreferences } from "../../../src/Recipient/Recipient";
+import { Recipient, RecipientPreferences } from "../../../src/Recipient/Models/Recipient";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import { MessageThrottleService } from "../../../src/PushNotification/MessageThrottleService";
 import { Message } from "../../../src/Entity/Message";
-import { LUNCH_EVENT_TYPE } from "../../../src/Publication/constants";
+import { LUNCH_EVENT_TYPE } from "../../../src/Publication/LunchOffer/constants";
 import * as moment from "moment";
 
 const createMessage = (id: string, topics: string[] = [], eventType = "default") => {

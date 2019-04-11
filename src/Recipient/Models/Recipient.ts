@@ -1,5 +1,5 @@
 import { RecipientDevice } from "./RecipientDevice";
-import { Event } from "../Interfaces/Event";
+import { Event } from "../../Interfaces/Event";
 import { NotificationLevel, NotificationPreferences } from "queue/lib/Messages/Recipient";
 import { max, Moment } from "moment-timezone";
 import * as moment from "moment-timezone";

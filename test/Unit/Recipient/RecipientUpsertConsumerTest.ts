@@ -3,13 +3,13 @@ import * as sinon from "sinon";
 import { SinonStubbedInstance } from "sinon";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { Recipient, RecipientPreferences } from "../../../src/Recipient/Recipient";
-import { RecipientUpsertConsumer } from "../../../src/Recipient/RecipientUpsertConsumer";
+import { Recipient, RecipientPreferences } from "../../../src/Recipient/Models/Recipient";
+import { RecipientUpsertConsumer } from "../../../src/Recipient/Consumers/RecipientUpsertConsumer";
 import { RecipientRepository } from "../../../src/Interfaces/RecipientRepository";
 import { NotifierClock } from "../../../src/PushNotification/NotifierClock";
 import { expect } from "chai";
 import { RecipientMongoRepository } from "../../../src/Recipient/RecipientMongoRepository";
-import { RecipientDevice } from "../../../src/Recipient/RecipientDevice";
+import { RecipientDevice } from "../../../src/Recipient/Models/RecipientDevice";
 import * as moment from "moment-timezone";
 
 const createRecipientUpsertJob = (upsert: RecipientUpsert): Job<RecipientUpsert> => {

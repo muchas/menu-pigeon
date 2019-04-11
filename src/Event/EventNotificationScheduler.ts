@@ -1,7 +1,7 @@
 import * as moment from "moment-timezone";
 import { Event } from "../Interfaces/Event";
 import { EventNotification } from "./EventNotification";
-import { Recipient } from "../Recipient/Recipient";
+import { Recipient } from "../Recipient/Models/Recipient";
 import { max, min } from "../utils";
 import { Moment } from "moment-timezone";
 

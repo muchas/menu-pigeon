@@ -1,4 +1,4 @@
-import { Event } from "../Interfaces/Event";
+import { Event } from "../../Interfaces/Event";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { Moment } from "moment-timezone";
 import * as moment from "moment-timezone";

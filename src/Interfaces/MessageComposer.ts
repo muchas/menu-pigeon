@@ -1,4 +1,4 @@
-import { Recipient } from "../Recipient/Recipient";
+import { Recipient } from "../Recipient/Models/Recipient";
 import { Event } from "./Event";
 import { Message } from "../Entity/Message";
 

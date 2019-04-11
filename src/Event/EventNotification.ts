@@ -1,5 +1,5 @@
 import { Event } from "../Interfaces/Event";
-import { Recipient } from "../Recipient/Recipient";
+import { Recipient } from "../Recipient/Models/Recipient";
 import { Moment } from "moment-timezone";
 
 export class EventNotification {

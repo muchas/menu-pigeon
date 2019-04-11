@@ -1,4 +1,4 @@
-import { Recipient } from "../Recipient/Recipient";
+import { Recipient } from "../Recipient/Models/Recipient";
 import { Message } from "../Entity/Message";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import * as moment from "moment-timezone";
