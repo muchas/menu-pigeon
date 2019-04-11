@@ -50,6 +50,14 @@ export class RecipientMongoRepository extends RecipientRepository {
         await this.collection().deleteOne({ id });
     }
 
+    public async removeMany(ids: string[]): Promise<void> {
+        await this.collection().deleteMany({
+            id: {
+                $in: ids,
+            },
+        });
+    }
+
     public async findAll(): Promise<Recipient[]> {
         const documents = await this.collection()
             .find()
@@ -58,9 +66,15 @@ export class RecipientMongoRepository extends RecipientRepository {
     }
 
     public async findByDevice(pushToken: string): Promise<Recipient[]> {
+        return this.findByDevices([pushToken]);
+    }
+
+    public async findByDevices(pushTokens: string[]): Promise<Recipient[]> {
         const documents = await this.collection()
             .find({
-                "devices.pushToken": pushToken,
+                "devices.pushToken": {
+                    $in: pushTokens,
+                },
             })
             .toArray();
 

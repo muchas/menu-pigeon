@@ -31,6 +31,8 @@ export class RecipientUpsertConsumer implements Consumer {
             preferences.level,
         );
 
+        await this.updateOldDeviceHolders(recipientDevices);
+
         const recipient = await this.getOrCreateRecipient(id);
         recipient.name = name;
         recipient.devices = recipientDevices;
@@ -43,6 +45,28 @@ export class RecipientUpsertConsumer implements Consumer {
         winston.info("Consumption of recipient add finished", {
             recipient_id: id,
         });
+    }
+
+    private async updateOldDeviceHolders(devices: RecipientDevice[]): Promise<void> {
+        const pushTokens: string[] = devices.map(device => device.pushToken);
+        const oldDeviceHolders = await this.recipientRepository.findByDevices(pushTokens);
+        const updatedRecipients: Recipient[] = [];
+        const removedRecipients: Recipient[] = [];
+
+        for (const recipient of oldDeviceHolders) {
+            recipient.devices = recipient.devices.filter(
+                device => pushTokens.find(token => token === device.pushToken) === undefined,
+            );
+
+            if (recipient.devices.length > 0) {
+                updatedRecipients.push(recipient);
+            } else {
+                removedRecipients.push(recipient);
+            }
+        }
+
+        await this.recipientRepository.addMany(updatedRecipients);
+        await this.recipientRepository.removeMany(removedRecipients.map(r => r.id));
     }
 
     private async getOrCreateRecipient(id: string): Promise<Recipient> {

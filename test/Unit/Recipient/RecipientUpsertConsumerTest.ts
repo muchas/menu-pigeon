@@ -43,6 +43,7 @@ describe("RecipientUpsertConsumer", () => {
         );
 
         recipientRepository.findOne.returns(undefined);
+        recipientRepository.findByDevices.returns([]);
 
         // when
         await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert));
@@ -83,6 +84,7 @@ describe("RecipientUpsertConsumer", () => {
         );
 
         recipientRepository.findOne.returns(existingRecipient);
+        recipientRepository.findByDevices.returns([]);
 
         // when
         await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert));

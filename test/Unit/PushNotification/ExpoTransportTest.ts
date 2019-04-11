@@ -217,5 +217,26 @@ describe("ExpoTransport", () => {
             expect(receipts[0].fetchedSuccessfully).to.be.false;
             expect(receipts[0].notification).to.deep.equal(pushNotification);
         });
+
+        it("should log warning instead of error in case of connection reset", async () => {
+            // given
+            const winston = {
+                warn: sinon.stub(),
+                error: sinon.stub(),
+            };
+            const chunk = [pushNotification.receiptId];
+            const chunks = [chunk];
+            expoClient.chunkPushNotificationReceiptIds.returns(chunks);
+            expoClient.getPushNotificationReceiptsAsync.throws({ code: "ECONNRESET" });
+
+            const transport = new ExpoTransport(expoClient, winston as any);
+
+            // when
+            await toArray(transport.confirmStatuses([pushNotification]));
+
+            // then
+            expect(winston.warn).to.be.called;
+            expect(winston.error).to.be.not.called;
+        });
     });
 });
