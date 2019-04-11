@@ -60,6 +60,7 @@ describe("RecipientUpsertConsumer", () => {
 
         expect(recipient1).to.be.undefined;
         expect(recipient2).not.to.be.undefined;
+        expect(recipient3).not.to.be.undefined;
         expect(recipient2.devices.map(d => d.pushToken)).to.deep.equal([device3.pushToken]);
         expect(recipient3.devices.map(d => d.pushToken)).to.deep.equal([
             device4.pushToken,

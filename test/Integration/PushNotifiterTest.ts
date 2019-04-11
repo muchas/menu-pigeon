@@ -2,7 +2,7 @@ import { createJob, setupWithAllDbs, tearDownWithAllDbs } from "../utils";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as moment from "moment-timezone";
-import { Recipient, RecipientPreferences } from "../../src/Recipient/Recipient";
+import { RecipientPreferences } from "../../src/Recipient/Recipient";
 import { PushNotifier } from "../../src/PushNotification/PushNotifier";
 import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
@@ -83,9 +83,8 @@ describe("PushNotifier", () => {
         await tearDownWithAllDbs(container);
     });
 
-    it.skip("should send messages to interested recipients @slow", async () => {
+    it("should send messages to interested recipients @slow", async () => {
         // given
-        const now = moment();
         const preferences = new RecipientPreferences(7, 0, NotificationLevel.Often);
         const recipientUpsert1 = new RecipientUpsert(
             "r#1",
@@ -109,40 +108,6 @@ describe("PushNotifier", () => {
             "Slawek",
         );
 
-        const recipient1 = new Recipient(
-            "r#1",
-            "Iza",
-            [],
-            preferences,
-            new Set(),
-            new Map(),
-            new Map([["business-2", now], ["business-3", now]]),
-        );
-        const recipient2 = new Recipient(
-            "r#2",
-            "Michal",
-            [],
-            preferences,
-            new Set(),
-            new Map(),
-            new Map([["business-3", now]]),
-        );
-        const recipient3 = new Recipient(
-            "r#3",
-            "Slawek",
-            [],
-            preferences,
-            new Set(),
-            new Map(),
-            new Map([
-                ["business-1", now],
-                ["business-2", now],
-                ["business-3", now],
-                ["business-4", now],
-            ]),
-        );
-        const recipients = [recipient1, recipient2, recipient3];
-
         const sender = sinon.createStubInstance(PushNotificationSender);
         const notifier = new PushNotifier(recipientRepository, eventRepository, sender as any);
 
@@ -159,7 +124,8 @@ describe("PushNotifier", () => {
         await notifier.notifyAll(today);
 
         // then
-        expect(sender.schedule).to.have.been.calledWith(recipients);
+        const recipients = sender.schedule.getCall(0).args[0];
+        expect(recipients.map(r => r.id)).to.deep.equal(["r#1", "r#2", "r#3"]);
         const persistedRecipients = await recipientRepository.findAll();
         const notifiedTopics = persistedRecipients.map(r => [...r.topicLastNotification.keys()]);
         expect(notifiedTopics).deep.equals([["business-2"], ["business-3"], ["business-1"]]);
