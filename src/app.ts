@@ -19,6 +19,7 @@ import Mongo from "./Mongo";
 import { SenderClock } from "./PushNotification/SenderClock";
 import * as moment from "moment-timezone";
 import { createORMConnection } from "./typeorm.config";
+import { ReminderNotifierClock } from "./Reminder/ReminderNotifierClock";
 
 moment.tz.setDefault("Europe/Warsaw");
 
@@ -33,6 +34,7 @@ createORMConnection(config)
 
         const mongo = container.get<Mongo>(Mongo);
         const queue = container.get<Queue>(Queue);
+        const reminderNotifierClock = container.get<ReminderNotifierClock>(ReminderNotifierClock);
         const notifierClock = container.get<NotifierClock>(NotifierClock);
         const senderClock = container.get<SenderClock>(SenderClock);
         const statusCheckerClock = container.get<StatusCheckerClock>(StatusCheckerClock);
@@ -52,6 +54,7 @@ createORMConnection(config)
 
         await mongo.connect();
 
+        await reminderNotifierClock.start();
         await notifierClock.start();
         await statusCheckerClock.start();
         await senderClock.start();

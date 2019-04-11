@@ -4,7 +4,10 @@ import { Recipient } from "../Recipient/Models/Recipient";
 import * as moment from "moment-timezone";
 import { Moment } from "moment-timezone";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
+import { ReminderMessageFactory } from "./ReminderMessageFactory";
+import { injectable } from "inversify";
 
+@injectable()
 export class ReminderNotifier {
     private static readonly SILENT_DAYS: number = 14;
     private static readonly FORBIDDEN_DAYS: number[] = [5, 6, 0]; // Fri, Sat, Sun
@@ -13,11 +16,13 @@ export class ReminderNotifier {
     private static readonly END_HOUR: number = 12;
     private static readonly END_MINUTE: number = 0;
 
+    private readonly reminderMessageFactory: ReminderMessageFactory;
+
     public constructor(
         private readonly recipientRepository: RecipientRepository,
         private readonly pushNotificationSender: PushNotificationSender,
     ) {
-        //
+        this.reminderMessageFactory = new ReminderMessageFactory();
     }
 
     public async notifyRareRecipients(currentTime: Moment = moment()): Promise<void> {
@@ -26,7 +31,7 @@ export class ReminderNotifier {
         }
 
         const recipients = await this.getRareRecipients(currentTime);
-        const messages = [];
+        const messages = recipients.map(this.reminderMessageFactory.create);
 
         await this.pushNotificationSender.schedule(recipients, messages);
     }
