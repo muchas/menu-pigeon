@@ -54,10 +54,10 @@ createORMConnection(config)
 
         await mongo.connect();
 
-        await reminderNotifierClock.start();
         await notifierClock.start();
         await statusCheckerClock.start();
         await senderClock.start();
+        await reminderNotifierClock.start();
 
         await queue.consume(
             `${config.get("APP_NAME")}.default`,

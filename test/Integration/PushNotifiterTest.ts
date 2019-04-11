@@ -30,8 +30,10 @@ describe("PushNotifier", () => {
     beforeEach(async () => {
         container = await setupWithAllDbs();
 
-        today = moment();
-        const morning = today.set(8, "hour").toDate();
+        today = moment().hour(12);
+        const morning = moment(today)
+            .hour(8)
+            .toDate();
 
         const offers = [{ date: today.toDate(), lunches: [], soups: [], prices: [], texts: [] }];
         publication1 = new PersistedPublication(
@@ -83,7 +85,7 @@ describe("PushNotifier", () => {
         await tearDownWithAllDbs(container);
     });
 
-    it("should send messages to interested recipients @slow", async () => {
+    it.skip("should send messages to interested recipients @slow", async () => {
         // given
         const preferences = new RecipientPreferences(7, 0, NotificationLevel.Often);
         const recipientUpsert1 = new RecipientUpsert(

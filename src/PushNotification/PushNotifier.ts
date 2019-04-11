@@ -79,7 +79,6 @@ export class PushNotifier {
     ): Promise<void> {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
         const eventsById = new Map(events.map((e): [string, Event] => [e.id, e]));
-
         for (const message of messages) {
             const recipient = recipientsById.get(message.recipientId);
 
