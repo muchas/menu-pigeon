@@ -13,9 +13,11 @@ import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import { RecipientUpsertConsumer } from "../../src/Recipient/Consumers/RecipientUpsertConsumer";
+import { SinonFakeTimers } from "sinon";
 
 describe("PushNotifier", () => {
     let eventRepository: EventRepository;
+    let clock: SinonFakeTimers;
     let recipientRepository: RecipientRepository;
     let today;
     let container: Container;
@@ -30,7 +32,8 @@ describe("PushNotifier", () => {
     beforeEach(async () => {
         container = await setupWithAllDbs();
 
-        today = moment().hour(12);
+        today = moment().hour(11);
+        clock = sinon.useFakeTimers(today.toDate());
         const morning = moment(today)
             .hour(8)
             .toDate();
@@ -83,9 +86,10 @@ describe("PushNotifier", () => {
 
     afterEach(async () => {
         await tearDownWithAllDbs(container);
+        clock.restore();
     });
 
-    it.skip("should send messages to interested recipients @slow", async () => {
+    it("should send messages to interested recipients @slow", async () => {
         // given
         const preferences = new RecipientPreferences(7, 0, NotificationLevel.Often);
         const recipientUpsert1 = new RecipientUpsert(
@@ -117,6 +121,10 @@ describe("PushNotifier", () => {
         await recipientUpsertConsumer.consume(createJob(recipientUpsert1));
         await recipientUpsertConsumer.consume(createJob(recipientUpsert2));
         await recipientUpsertConsumer.consume(createJob(recipientUpsert3));
+
+        // recipients will be notified about the events after topic subscription
+        // therefore any time need to elapse between recipients and event consumption
+        clock.tick(1000);
 
         await publicationConsumer.consume(createJob(publication1));
         await publicationConsumer.consume(createJob(publication2));

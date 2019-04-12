@@ -31,7 +31,7 @@ export class ReminderNotifier {
         }
 
         const recipients = await this.getRareRecipients(currentTime);
-        const messages = recipients.map(this.reminderMessageFactory.create);
+        const messages = recipients.map(recipient => this.reminderMessageFactory.create(recipient));
 
         await this.pushNotificationSender.schedule(recipients, messages);
     }
@@ -47,7 +47,7 @@ export class ReminderNotifier {
             .second(0);
 
         return (
-            ReminderNotifier.FORBIDDEN_DAYS.indexOf(currentTime.weekday()) === -1 &&
+            !ReminderNotifier.FORBIDDEN_DAYS.includes(currentTime.weekday()) &&
             currentTime.isBetween(startTime, endTime, "minute", "[]")
         );
     }

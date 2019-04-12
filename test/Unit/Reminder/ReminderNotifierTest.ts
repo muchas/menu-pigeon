@@ -63,6 +63,7 @@ describe("ReminderNotifierTest", () => {
         await reminderNotifier.notifyRareRecipients(now);
 
         // then
+        expect(pushNotificationSender.schedule).to.be.calledOnce;
         const targetRecipients = pushNotificationSender.schedule.getCall(0).args[0];
         expect(targetRecipients.map(r => r.id)).to.deep.equal(["r#1", "r#3"]);
     });
