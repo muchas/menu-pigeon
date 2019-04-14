@@ -106,7 +106,10 @@ export class ExpoTransport implements PushNotificationTransport {
         try {
             const tickets = await this.client.sendPushNotificationsAsync(chunk);
 
-            this.winston.info("sent notifications tickets", tickets);
+            this.winston.info("Sent notifications tickets", {
+                tickets,
+                count: tickets.length,
+            });
 
             for (let i = 0; i < notifications.length; i++) {
                 yield new PushNotificationTicket(
