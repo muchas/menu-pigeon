@@ -1,6 +1,7 @@
 import { Recipient } from "../Recipient/Models/Recipient";
 import { sample } from "../utils";
 import { Message } from "../Entity/Message";
+import { boundMethod } from "autobind-decorator";
 
 interface MessageFormat {
     title: string;
@@ -25,6 +26,7 @@ export class ReminderMessageFactory {
 
     private static readonly NOTIFICATION_TYPE: string = "APP_REMINDER";
 
+    @boundMethod
     public create(recipient: Recipient): Message {
         const sampledMessage = sample(this.messages);
         const message = new Message();
