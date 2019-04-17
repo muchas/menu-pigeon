@@ -90,6 +90,12 @@ export class Recipient {
     }
 
     public removeDevice(pushToken: string): void {
-        this.devices = this.devices.filter(device => device.pushToken !== pushToken);
+        this.removeDevices([pushToken]);
+    }
+
+    public removeDevices(pushTokens: string[]): void {
+        this.devices = this.devices.filter(
+            device => pushTokens.find(token => token === device.pushToken) === undefined,
+        );
     }
 }

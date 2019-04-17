@@ -1,4 +1,3 @@
-import { Job, Queue } from "queue";
 import * as sinon from "sinon";
 import { SinonStubbedInstance } from "sinon";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
@@ -11,22 +10,22 @@ import { expect } from "chai";
 import { RecipientMongoRepository } from "../../../src/Recipient/RecipientMongoRepository";
 import { RecipientDevice } from "../../../src/Recipient/Models/RecipientDevice";
 import * as moment from "moment-timezone";
-
-const createRecipientUpsertJob = (upsert: RecipientUpsert): Job<RecipientUpsert> => {
-    const queue = sinon.createStubInstance(Queue);
-    return new Job<RecipientUpsert>(queue as any, {}, upsert);
-};
+import { createJob } from "../../utils";
+import { RecipientService } from "../../../src/Recipient/RecipientService";
 
 describe("RecipientUpsertConsumer", () => {
     let recipientUpsertConsumer: RecipientUpsertConsumer;
     let recipientRepository: SinonStubbedInstance<RecipientRepository>;
+    let recipientService: SinonStubbedInstance<RecipientService>;
     let notifierClock: SinonStubbedInstance<NotifierClock>;
 
     beforeEach(async () => {
         recipientRepository = sinon.createStubInstance(RecipientMongoRepository);
+        recipientService = sinon.createStubInstance(RecipientService);
         notifierClock = sinon.createStubInstance(NotifierClock);
         recipientUpsertConsumer = new RecipientUpsertConsumer(
             recipientRepository,
+            recipientService as any,
             notifierClock as any,
         );
     });
@@ -46,7 +45,7 @@ describe("RecipientUpsertConsumer", () => {
         recipientRepository.findByDevices.returns([]);
 
         // when
-        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert));
+        await recipientUpsertConsumer.consume(createJob(recipientUpsert));
 
         // then
         expect(recipientRepository.add).to.have.been.calledOnce;
@@ -87,7 +86,7 @@ describe("RecipientUpsertConsumer", () => {
         recipientRepository.findByDevices.returns([]);
 
         // when
-        await recipientUpsertConsumer.consume(createRecipientUpsertJob(recipientUpsert));
+        await recipientUpsertConsumer.consume(createJob(recipientUpsert));
 
         // then
         expect(recipientRepository.add).to.have.been.calledOnce;
