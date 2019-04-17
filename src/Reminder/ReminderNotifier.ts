@@ -31,7 +31,7 @@ export class ReminderNotifier {
         }
 
         const recipients = await this.getRareRecipients(currentTime);
-        const messages = recipients.map(recipient => this.reminderMessageFactory.create(recipient));
+        const messages = recipients.map(this.reminderMessageFactory.create);
 
         await this.pushNotificationSender.schedule(recipients, messages);
     }
