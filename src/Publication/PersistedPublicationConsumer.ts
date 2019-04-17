@@ -1,5 +1,5 @@
 import { Consumer, Job } from "queue";
-import { LunchOfferEventFactory } from "./LunchOfferEventFactory";
+import { LunchOfferEventFactory } from "./LunchOffer/LunchOfferEventFactory";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { injectable } from "inversify";
 import { NotifierClock } from "../PushNotification/NotifierClock";

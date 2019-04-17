@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { EventDistributor } from "../../../src/Event/EventDistributor";
-import { Recipient, RecipientPreferences } from "../../../src/Recipient/Recipient";
+import { Recipient, RecipientPreferences } from "../../../src/Recipient/Models/Recipient";
 import { Event } from "../../../src/Interfaces/Event";
 import * as moment from "moment-timezone";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";

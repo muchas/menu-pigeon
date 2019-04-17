@@ -1,10 +1,10 @@
-import { MessageComposer } from "../Interfaces/MessageComposer";
-import { Recipient } from "../Recipient/Recipient";
-import { Message, MessagePriority } from "../Entity/Message";
+import { MessageComposer } from "../../Interfaces/MessageComposer";
+import { Recipient } from "../../Recipient/Models/Recipient";
+import { Message, MessagePriority } from "../../Entity/Message";
 import { LUNCH_OFFER_EVENT_TYPE, LunchOfferEvent } from "./LunchOfferEvent";
 import { min } from "moment-timezone";
-import { capitalize, sample } from "../utils";
-import { Event } from "../Interfaces/Event";
+import { capitalize, sample } from "../../utils";
+import { Event } from "../../Interfaces/Event";
 import { LUNCH_NOTIFICATION_TYPE } from "./constants";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 

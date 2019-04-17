@@ -1,9 +1,9 @@
 import { EventDistributor } from "../Event/EventDistributor";
-import { Recipient } from "../Recipient/Recipient";
+import { Recipient } from "../Recipient/Models/Recipient";
 import { Message } from "../Entity/Message";
 import { Event } from "../Interfaces/Event";
 import { PushNotificationSender } from "./PushNotificationSender";
-import { LunchOfferMessageComposer } from "../Publication/LunchOfferMessageComposer";
+import { LunchOfferMessageComposer } from "../Publication/LunchOffer/LunchOfferMessageComposer";
 import { EventNotification } from "../Event/EventNotification";
 import { EventNotificationScheduler } from "../Event/EventNotificationScheduler";
 import { MessageThrottleService } from "./MessageThrottleService";
@@ -79,7 +79,6 @@ export class PushNotifier {
     ): Promise<void> {
         const recipientsById = new Map(recipients.map((r): [string, Recipient] => [r.id, r]));
         const eventsById = new Map(events.map((e): [string, Event] => [e.id, e]));
-
         for (const message of messages) {
             const recipient = recipientsById.get(message.recipientId);
 

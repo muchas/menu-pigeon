@@ -2,7 +2,7 @@ import { createJob, setupWithAllDbs, tearDownWithAllDbs } from "../utils";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as moment from "moment-timezone";
-import { RecipientPreferences } from "../../src/Recipient/Recipient";
+import { RecipientPreferences } from "../../src/Recipient/Models/Recipient";
 import { PushNotifier } from "../../src/PushNotification/PushNotifier";
 import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
@@ -12,10 +12,12 @@ import { EventRepository } from "../../src/Interfaces/EventRepository";
 import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { RecipientUpsertConsumer } from "../../src/Recipient/RecipientUpsertConsumer";
+import { RecipientUpsertConsumer } from "../../src/Recipient/Consumers/RecipientUpsertConsumer";
+import { SinonFakeTimers } from "sinon";
 
 describe("PushNotifier", () => {
     let eventRepository: EventRepository;
+    let clock: SinonFakeTimers;
     let recipientRepository: RecipientRepository;
     let today;
     let container: Container;
@@ -30,8 +32,11 @@ describe("PushNotifier", () => {
     beforeEach(async () => {
         container = await setupWithAllDbs();
 
-        today = moment();
-        const morning = today.set(8, "hour").toDate();
+        today = moment().hour(11);
+        clock = sinon.useFakeTimers(today.toDate());
+        const morning = moment(today)
+            .hour(8)
+            .toDate();
 
         const offers = [{ date: today.toDate(), lunches: [], soups: [], prices: [], texts: [] }];
         publication1 = new PersistedPublication(
@@ -81,6 +86,7 @@ describe("PushNotifier", () => {
 
     afterEach(async () => {
         await tearDownWithAllDbs(container);
+        clock.restore();
     });
 
     it("should send messages to interested recipients @slow", async () => {
@@ -115,6 +121,10 @@ describe("PushNotifier", () => {
         await recipientUpsertConsumer.consume(createJob(recipientUpsert1));
         await recipientUpsertConsumer.consume(createJob(recipientUpsert2));
         await recipientUpsertConsumer.consume(createJob(recipientUpsert3));
+
+        // recipients will be notified about the events after topic subscription
+        // therefore any time need to elapse between recipients and event consumption
+        clock.tick(1000);
 
         await publicationConsumer.consume(createJob(publication1));
         await publicationConsumer.consume(createJob(publication2));
