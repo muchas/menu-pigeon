@@ -2,6 +2,7 @@ import { Recipient } from "../Recipient/Models/Recipient";
 import { sample } from "../utils";
 import { Message } from "../Entity/Message";
 import { boundMethod } from "autobind-decorator";
+import * as moment from "moment-timezone";
 
 interface MessageFormat {
     title: string;
@@ -34,6 +35,9 @@ export class ReminderMessageFactory {
         message.title = sampledMessage.title;
         message.body = sampledMessage.body;
         message.priority = "high";
+        message.expirationTime = moment()
+            .hour(13)
+            .toDate();
         message.setEventType(ReminderMessageFactory.NOTIFICATION_TYPE);
         message.setNotificationData({ type: ReminderMessageFactory.NOTIFICATION_TYPE });
         return message;
