@@ -1,7 +1,7 @@
 import { RecipientDevice } from "./RecipientDevice";
 import { Event } from "../../Interfaces/Event";
 import { NotificationLevel, NotificationPreferences } from "queue/lib/Messages/Recipient";
-import { max, Moment } from "moment-timezone";
+import { Moment } from "moment-timezone";
 import * as moment from "moment-timezone";
 
 export class RecipientPreferences implements NotificationPreferences {
@@ -28,6 +28,7 @@ export class Recipient {
         private readonly _notifiedEventIds: Set<string> = new Set(),
         private readonly _topicLastNotification: Map<string, moment.Moment> = new Map(),
         private readonly _followedTopics: Map<string, moment.Moment> = new Map(),
+        public lastNotificationTime?: Moment,
     ) {
         //
     }
@@ -48,18 +49,14 @@ export class Recipient {
         return this._notifiedEventIds;
     }
 
-    public get lastNotificationTime(): Moment | undefined {
-        const dates = Array.from(this.topicLastNotification.values());
-        if (dates.length === 0) {
-            return undefined;
-        }
-        return max(dates);
-    }
-
     public markNotifiedAbout(event: Event, notificationTime: Moment = moment()): void {
         this.notifiedEventIds.add(event.id);
         for (const topic of event.topics) {
             this.topicLastNotification.set(topic, notificationTime);
+        }
+
+        if (!this.lastNotificationTime || notificationTime > this.lastNotificationTime) {
+            this.lastNotificationTime = notificationTime;
         }
     }
 
