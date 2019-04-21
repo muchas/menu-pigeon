@@ -18,6 +18,7 @@ export class PushNotificationSender {
 
         for (const message of messages) {
             const recipient = recipientsById.get(message.recipientId);
+            recipient.markAsNotified();
 
             message.pushNotifications = recipient.pushTokens.map(token => {
                 const notification = new PushNotification();

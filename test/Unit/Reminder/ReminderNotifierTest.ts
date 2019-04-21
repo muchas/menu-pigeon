@@ -24,6 +24,7 @@ const makeRecipient = (
         new Set(["1"]),
         new Map([["topic1", lastNotified]]),
         new Map([["topic1", lastNotified]]),
+        lastNotified,
     );
 
 describe("ReminderNotifierTest", () => {

@@ -111,6 +111,9 @@ export class RecipientMongoRepository extends RecipientRepository {
                 key,
                 date.toDate(),
             ]),
+            lastNotificationTime: recipient.lastNotificationTime
+                ? recipient.lastNotificationTime.toDate()
+                : undefined,
         };
     }
 
@@ -130,6 +133,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             new Set(data.notifiedEventIds),
             new Map(data.topicLastNotification.map(([key, date]) => [key, moment(date)])),
             new Map(data.followedTopics.map(([key, date]) => [key, moment(date)])),
+            data.lastNotificationTime ? moment(data.lastNotificationTime) : undefined,
         );
     }
 }

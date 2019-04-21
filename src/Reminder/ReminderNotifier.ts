@@ -34,6 +34,7 @@ export class ReminderNotifier {
         const messages = recipients.map(this.reminderMessageFactory.create);
 
         await this.pushNotificationSender.schedule(recipients, messages);
+        await this.recipientRepository.addMany(recipients);
     }
 
     private isAllowedToNotify(currentTime: Moment): boolean {
