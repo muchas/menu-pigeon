@@ -5,7 +5,6 @@ import { Recipient } from "../Recipient/Models/Recipient";
 import { PushNotification } from "../Entity/PushNotification";
 import { injectable } from "inversify";
 import * as winston from "winston";
-import * as moment from "moment-timezone";
 
 @injectable()
 export class PushNotificationSender {
@@ -19,7 +18,7 @@ export class PushNotificationSender {
 
         for (const message of messages) {
             const recipient = recipientsById.get(message.recipientId);
-            recipient.lastNotificationTime = moment();
+            recipient.markAsNotified();
 
             message.pushNotifications = recipient.pushTokens.map(token => {
                 const notification = new PushNotification();

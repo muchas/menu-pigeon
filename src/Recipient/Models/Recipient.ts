@@ -28,7 +28,7 @@ export class Recipient {
         private readonly _notifiedEventIds: Set<string> = new Set(),
         private readonly _topicLastNotification: Map<string, moment.Moment> = new Map(),
         private readonly _followedTopics: Map<string, moment.Moment> = new Map(),
-        public lastNotificationTime?: Moment,
+        private _lastNotificationTime?: Moment,
     ) {
         //
     }
@@ -49,6 +49,14 @@ export class Recipient {
         return this._notifiedEventIds;
     }
 
+    public get lastNotificationTime(): Moment | undefined {
+        return this._lastNotificationTime;
+    }
+
+    public markAsNotified(): void {
+        this._lastNotificationTime = moment();
+    }
+
     public markNotifiedAbout(event: Event, notificationTime: Moment = moment()): void {
         this.notifiedEventIds.add(event.id);
         for (const topic of event.topics) {
@@ -56,7 +64,7 @@ export class Recipient {
         }
 
         if (!this.lastNotificationTime || notificationTime > this.lastNotificationTime) {
-            this.lastNotificationTime = notificationTime;
+            this._lastNotificationTime = notificationTime;
         }
     }
 

@@ -60,7 +60,7 @@ describe("ReminderNotifier", () => {
         await recipientRepository.add(makeRecipient("r#1", twoWeeksAgo));
 
         // when
-        await reminderNotifier.notifyRareRecipients(now);
+        await reminderNotifier.notifyRareRecipients();
 
         // then
         const recipient = await recipientRepository.findOne("r#1");
