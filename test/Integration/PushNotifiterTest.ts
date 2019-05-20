@@ -38,7 +38,7 @@ describe("PushNotifier", () => {
             .hour(8)
             .toDate();
 
-        const offers = [{ date: today.toDate(), lunches: [], soups: [], prices: [], texts: [] }];
+        const offers = [{ date: today.toDate(), foods: [], prices: [], texts: [] }];
         publication1 = new PersistedPublication(
             1,
             "1",

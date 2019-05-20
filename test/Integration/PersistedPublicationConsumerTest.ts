@@ -36,7 +36,7 @@ describe("PersistedPublicationConsumer", () => {
 
     it("should not process the same publication more than once @slow", async () => {
         // given
-        const offers = [{ date: today.toDate(), lunches: [], soups: [], prices: [], texts: [] }];
+        const offers = [{ date: today.toDate(), foods: [], prices: [], texts: [] }];
         const publication = new PersistedPublication(
             1,
             "1",
