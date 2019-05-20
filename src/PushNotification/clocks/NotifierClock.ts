@@ -1,10 +1,10 @@
-import { Clock } from "../../Clock";
+import { SerialClock } from "../../SerialClock";
 import { PushNotifier } from "../services/PushNotifier";
 import { injectable } from "inversify";
 import * as moment from "moment-timezone";
 
 @injectable()
-export class NotifierClock extends Clock {
+export class NotifierClock extends SerialClock {
     public constructor(private readonly notifier: PushNotifier) {
         super();
         this.period = 20 * 1000;
