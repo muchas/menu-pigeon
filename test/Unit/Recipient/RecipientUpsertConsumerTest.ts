@@ -2,16 +2,16 @@ import * as sinon from "sinon";
 import { SinonStubbedInstance } from "sinon";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { Recipient, RecipientPreferences } from "../../../src/Recipient/Models/Recipient";
-import { RecipientUpsertConsumer } from "../../../src/Recipient/Consumers/RecipientUpsertConsumer";
+import { Recipient, RecipientPreferences } from "../../../src/Recipient/models/Recipient";
+import { RecipientUpsertConsumer } from "../../../src/Recipient/consumers/RecipientUpsertConsumer";
 import { RecipientRepository } from "../../../src/Interfaces/RecipientRepository";
-import { NotifierClock } from "../../../src/PushNotification/NotifierClock";
+import { NotifierClock } from "../../../src/PushNotification/clocks/NotifierClock";
 import { expect } from "chai";
-import { RecipientMongoRepository } from "../../../src/Recipient/RecipientMongoRepository";
-import { RecipientDevice } from "../../../src/Recipient/Models/RecipientDevice";
+import { RecipientMongoRepository } from "../../../src/Recipient/repositories/RecipientMongoRepository";
+import { RecipientDevice } from "../../../src/Recipient/models/RecipientDevice";
 import * as moment from "moment-timezone";
 import { createJob } from "../../utils";
-import { RecipientService } from "../../../src/Recipient/RecipientService";
+import { RecipientService } from "../../../src/Recipient/services/RecipientService";
 
 describe("RecipientUpsertConsumer", () => {
     let recipientUpsertConsumer: RecipientUpsertConsumer;

@@ -2,17 +2,17 @@ import { createJob, setupWithAllDbs, tearDownWithAllDbs } from "../utils";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as moment from "moment-timezone";
-import { RecipientPreferences } from "../../src/Recipient/Models/Recipient";
-import { PushNotifier } from "../../src/PushNotification/PushNotifier";
-import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
+import { RecipientPreferences } from "../../src/Recipient/models/Recipient";
+import { PushNotifier } from "../../src/PushNotification/services/PushNotifier";
+import { PushNotificationSender } from "../../src/PushNotification/services/PushNotificationSender";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
-import { PersistedPublicationConsumer } from "../../src/Publication/PersistedPublicationConsumer";
+import { PersistedPublicationConsumer } from "../../src/Publication/consumers/PersistedPublicationConsumer";
 import { Container } from "inversify";
 import { EventRepository } from "../../src/Interfaces/EventRepository";
 import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { RecipientUpsertConsumer } from "../../src/Recipient/Consumers/RecipientUpsertConsumer";
+import { RecipientUpsertConsumer } from "../../src/Recipient/consumers/RecipientUpsertConsumer";
 import { SinonFakeTimers } from "sinon";
 
 describe("PushNotifier", () => {

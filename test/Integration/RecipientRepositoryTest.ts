@@ -3,8 +3,8 @@ import "reflect-metadata";
 import { Container } from "inversify";
 import { setupWithMongo, tearDownWithMongo } from "../utils";
 import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
-import { Recipient, RecipientPreferences } from "../../src/Recipient/Models/Recipient";
-import { RecipientDevice } from "../../src/Recipient/Models/RecipientDevice";
+import { Recipient, RecipientPreferences } from "../../src/Recipient/models/Recipient";
+import { RecipientDevice } from "../../src/Recipient/models/RecipientDevice";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import * as moment from "moment-timezone";
 

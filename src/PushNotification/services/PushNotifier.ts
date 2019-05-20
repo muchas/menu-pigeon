@@ -1,15 +1,15 @@
-import { EventDistributor } from "../Event/EventDistributor";
-import { Recipient } from "../Recipient/Models/Recipient";
-import { Message } from "../Entity/Message";
-import { Event } from "../Interfaces/Event";
+import { EventDistributor } from "../../Event/services/EventDistributor";
+import { Recipient } from "../../Recipient/models/Recipient";
+import { Message } from "../../Entity/Message";
+import { Event } from "../../Interfaces/Event";
 import { PushNotificationSender } from "./PushNotificationSender";
-import { LunchOfferMessageComposer } from "../Publication/LunchOffer/LunchOfferMessageComposer";
-import { EventNotification } from "../Event/EventNotification";
-import { EventNotificationScheduler } from "../Event/EventNotificationScheduler";
+import { LunchOfferMessageComposer } from "../../Publication/LunchOffer/LunchOfferMessageComposer";
+import { EventNotification } from "../../Event/models/EventNotification";
+import { EventNotificationScheduler } from "../../Event/services/EventNotificationScheduler";
 import { MessageThrottleService } from "./MessageThrottleService";
 import { injectable } from "inversify";
-import { RecipientRepository } from "../Interfaces/RecipientRepository";
-import { EventRepository } from "../Interfaces/EventRepository";
+import { RecipientRepository } from "../../Interfaces/RecipientRepository";
+import { EventRepository } from "../../Interfaces/EventRepository";
 import { Moment } from "moment-timezone";
 
 /**

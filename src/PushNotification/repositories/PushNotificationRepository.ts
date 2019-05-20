@@ -1,7 +1,7 @@
-import { PushNotification } from "../Entity/PushNotification";
-import { PushNotificationTicket } from "./PushNotificationTicket";
-import { PushNotificationReceipt, PushNotificationStatus } from "./PushNotificationReceipt";
-import { Message } from "../Entity/Message";
+import { PushNotification } from "../../Entity/PushNotification";
+import { PushNotificationTicket } from "../models/PushNotificationTicket";
+import { PushNotificationReceipt, PushNotificationStatus } from "../models/PushNotificationReceipt";
+import { Message } from "../../Entity/Message";
 import { Brackets, Connection, EntityManager, Repository } from "typeorm";
 import { injectable } from "inversify";
 import * as moment from "moment-timezone";

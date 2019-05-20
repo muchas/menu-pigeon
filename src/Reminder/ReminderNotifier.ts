@@ -1,6 +1,6 @@
-import { PushNotificationSender } from "../PushNotification/PushNotificationSender";
+import { PushNotificationSender } from "../PushNotification/services/PushNotificationSender";
 import { RecipientRepository } from "../Interfaces/RecipientRepository";
-import { Recipient } from "../Recipient/Models/Recipient";
+import { Recipient } from "../Recipient/models/Recipient";
 import * as moment from "moment-timezone";
 import { Moment } from "moment-timezone";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";

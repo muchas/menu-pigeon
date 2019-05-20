@@ -2,10 +2,10 @@ import { expect } from "chai";
 import "reflect-metadata";
 import { Container } from "inversify";
 import { setupWithDb, tearDownWithDb } from "../utils";
-import { PushNotificationRepository } from "../../src/PushNotification/PushNotificationRepository";
+import { PushNotificationRepository } from "../../src/PushNotification/repositories/PushNotificationRepository";
 import { Message } from "../../src/Entity/Message";
 import { PushNotification } from "../../src/Entity/PushNotification";
-import { PushNotificationStatus } from "../../src/PushNotification/PushNotificationReceipt";
+import { PushNotificationStatus } from "../../src/PushNotification/models/PushNotificationReceipt";
 import * as moment from "moment-timezone";
 
 const createMessage = (recipientId: string, topics: string[] = [], eventType = "default") => {

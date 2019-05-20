@@ -2,7 +2,7 @@ import { expect } from "chai";
 import "reflect-metadata";
 import { Container } from "inversify";
 import { setupWithMongo, tearDownWithMongo } from "../utils";
-import { PersistedPublicationRepository } from "../../src/Publication/PersistedPublicationRepository";
+import { PersistedPublicationRepository } from "../../src/Publication/repositories/PersistedPublicationRepository";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import * as moment from "moment-timezone";
 

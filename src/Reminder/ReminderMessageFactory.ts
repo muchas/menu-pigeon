@@ -1,4 +1,4 @@
-import { Recipient } from "../Recipient/Models/Recipient";
+import { Recipient } from "../Recipient/models/Recipient";
 import { sample } from "../utils";
 import { Message } from "../Entity/Message";
 import { boundMethod } from "autobind-decorator";

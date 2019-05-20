@@ -3,11 +3,11 @@ import { SinonStubbedInstance } from "sinon";
 import { expect } from "chai";
 import { setup } from "../../utils";
 import { ReminderNotifier } from "../../../src/Reminder/ReminderNotifier";
-import { PushNotificationSender } from "../../../src/PushNotification/PushNotificationSender";
-import { Recipient, RecipientPreferences } from "../../../src/Recipient/Models/Recipient";
-import { RecipientDevice } from "../../../src/Recipient/Models/RecipientDevice";
+import { PushNotificationSender } from "../../../src/PushNotification/services/PushNotificationSender";
+import { Recipient, RecipientPreferences } from "../../../src/Recipient/models/Recipient";
+import { RecipientDevice } from "../../../src/Recipient/models/RecipientDevice";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { RecipientMongoRepository } from "../../../src/Recipient/RecipientMongoRepository";
+import { RecipientMongoRepository } from "../../../src/Recipient/repositories/RecipientMongoRepository";
 import { Moment } from "moment-timezone";
 import * as moment from "moment-timezone";
 

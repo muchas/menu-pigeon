@@ -1,8 +1,8 @@
-import { PushNotificationTransport } from "../Interfaces/PushNotificationTransport";
-import { PushNotificationRepository } from "./PushNotificationRepository";
-import { Message } from "../Entity/Message";
-import { Recipient } from "../Recipient/Models/Recipient";
-import { PushNotification } from "../Entity/PushNotification";
+import { PushNotificationTransport } from "../../Interfaces/PushNotificationTransport";
+import { PushNotificationRepository } from "../repositories/PushNotificationRepository";
+import { Message } from "../../Entity/Message";
+import { Recipient } from "../../Recipient/models/Recipient";
+import { PushNotification } from "../../Entity/PushNotification";
 import { injectable } from "inversify";
 import * as winston from "winston";
 

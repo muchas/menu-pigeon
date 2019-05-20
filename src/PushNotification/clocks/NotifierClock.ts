@@ -1,5 +1,5 @@
-import { Clock } from "../Clock";
-import { PushNotifier } from "./PushNotifier";
+import { Clock } from "../../Clock";
+import { PushNotifier } from "../services/PushNotifier";
 import { injectable } from "inversify";
 import * as moment from "moment-timezone";
 

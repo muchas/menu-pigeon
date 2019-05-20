@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
-import Mongo from "../Mongo";
+import Mongo from "../../Mongo";
 import { Collection } from "mongodb";
-import { Event } from "../Interfaces/Event";
-import { EventRepository } from "../Interfaces/EventRepository";
+import { Event } from "../../Interfaces/Event";
+import { EventRepository } from "../../Interfaces/EventRepository";
 import { Moment } from "moment-timezone";
 import * as moment from "moment-timezone";
 

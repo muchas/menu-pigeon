@@ -1,5 +1,5 @@
 import { RecipientTargetingPolicy } from "../../Interfaces/RecipientTargetingPolicy";
-import { Recipient } from "../../Recipient/Models/Recipient";
+import { Recipient } from "../../Recipient/models/Recipient";
 import { Event } from "../../Interfaces/Event";
 
 export class FollowedTopicsPolicy implements RecipientTargetingPolicy {

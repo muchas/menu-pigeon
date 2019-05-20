@@ -1,5 +1,5 @@
 import { MessageComposer } from "../../Interfaces/MessageComposer";
-import { Recipient } from "../../Recipient/Models/Recipient";
+import { Recipient } from "../../Recipient/models/Recipient";
 import { Message, MessagePriority } from "../../Entity/Message";
 import { LUNCH_OFFER_EVENT_TYPE, LunchOfferEvent } from "./LunchOfferEvent";
 import { min } from "moment-timezone";

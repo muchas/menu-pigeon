@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
-import Mongo from "../Mongo";
+import Mongo from "../../Mongo";
 import { Collection } from "mongodb";
 
 @injectable()

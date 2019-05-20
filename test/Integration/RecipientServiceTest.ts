@@ -1,12 +1,12 @@
 import { expect } from "chai";
 import { setupWithMongo, tearDownWithMongo } from "../utils";
 import { Container } from "inversify";
-import { Recipient } from "../../src/Recipient/Models/Recipient";
+import { Recipient } from "../../src/Recipient/models/Recipient";
 import * as sinon from "sinon";
 import { SinonStubbedInstance } from "sinon";
 import * as moment from "moment-timezone";
 import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
-import { RecipientService } from "../../src/Recipient/RecipientService";
+import { RecipientService } from "../../src/Recipient/services/RecipientService";
 import { Queue } from "queue";
 
 describe("RecipientServiceTest", () => {

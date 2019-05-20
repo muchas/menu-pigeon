@@ -15,6 +15,9 @@ export abstract class Clock {
     }
 
     public async tick(): Promise<void> {
+        // FIXME: only one tick should be performed at any single moment
+        // this is critical section for Pigeon
+        // uzyc: https://github.com/rogierschouten/async-lock
         if (this.lastTimeout !== undefined) {
             clearTimeout(this.lastTimeout);
             this.lastTimeout = undefined;

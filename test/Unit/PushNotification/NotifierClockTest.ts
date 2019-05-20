@@ -1,9 +1,9 @@
 import * as sinon from "sinon";
 import { setup } from "../../utils";
 import { expect } from "chai";
-import { NotifierClock } from "../../../src/PushNotification/NotifierClock";
+import { NotifierClock } from "../../../src/PushNotification/clocks/NotifierClock";
 import { SinonFakeTimers, SinonStubbedInstance } from "sinon";
-import { PushNotifier } from "../../../src/PushNotification/PushNotifier";
+import { PushNotifier } from "../../../src/PushNotification/services/PushNotifier";
 
 describe("NotifierClockTest", () => {
     let clock: SinonFakeTimers;

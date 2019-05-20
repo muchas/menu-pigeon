@@ -1,8 +1,8 @@
 import { setup } from "../../utils";
 import { expect } from "chai";
-import { Recipient, RecipientPreferences } from "../../../src/Recipient/Models/Recipient";
+import { Recipient, RecipientPreferences } from "../../../src/Recipient/models/Recipient";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { MessageThrottleService } from "../../../src/PushNotification/MessageThrottleService";
+import { MessageThrottleService } from "../../../src/PushNotification/services/MessageThrottleService";
 import { Message } from "../../../src/Entity/Message";
 import { LUNCH_EVENT_TYPE } from "../../../src/Publication/LunchOffer/constants";
 import * as moment from "moment";
