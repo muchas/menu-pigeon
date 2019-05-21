@@ -52,9 +52,10 @@ export class RecipientUpsertConsumer implements Consumer {
     }
 
     private async getOrCreateRecipient(id: string): Promise<Recipient> {
-        const recipient = await this.recipientRepository.findOne(id);
+        let recipient = await this.recipientRepository.findOne(id);
         if (!recipient) {
-            return new Recipient(id);
+            recipient = new Recipient(id);
+            recipient.markAsNotified();
         }
         return recipient;
     }
