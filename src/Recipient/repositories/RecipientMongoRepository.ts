@@ -2,10 +2,9 @@ import { Recipient, RecipientPreferences } from "../models/Recipient";
 import { injectable } from "inversify";
 import { RecipientRepository } from "../../Interfaces/RecipientRepository";
 import Mongo from "../../Mongo";
-import { Collection } from "mongodb";
+import { Collection, ObjectID } from "mongodb";
 import { RecipientDevice } from "../models/RecipientDevice";
 import * as moment from "moment-timezone";
-import * as uuid from "uuid";
 
 @injectable()
 export class RecipientMongoRepository extends RecipientRepository {
@@ -64,7 +63,7 @@ export class RecipientMongoRepository extends RecipientRepository {
         const documents = await this.collection()
             .find()
             .toArray();
-        return documents.map(document => this.fromDocument(document));
+        return documents.map(this.fromDocument);
     }
 
     public async findAndLockAll(): Promise<Recipient[]> {
@@ -75,25 +74,25 @@ export class RecipientMongoRepository extends RecipientRepository {
                 lockId,
             })
             .toArray();
-        return documents.map(document => this.fromDocument(document));
+        return documents.map(this.fromDocument);
     }
 
-    private async lockAll(): Promise<string> {
-        const lockId = uuid.v4();
+    private async lockAll(): Promise<ObjectID> {
+        const lockId = new ObjectID();
+        const lockStart = new Date().getTime() - RecipientMongoRepository.LOCK_TIMEOUT;
         await this.collection().updateMany(
             {
                 $or: [
-                    { lockedAt: null },
+                    { lockId: null },
                     {
-                        lockedAt: {
-                            $lt: new Date().getTime() - RecipientMongoRepository.LOCK_TIMEOUT,
+                        lockId: {
+                            $lt: ObjectID.createFromTime(lockStart / 1000),
                         },
                     },
                 ],
             },
             {
                 $set: {
-                    lockedAt: new Date().getTime(),
                     lockId,
                 },
             },
@@ -112,7 +111,6 @@ export class RecipientMongoRepository extends RecipientRepository {
             },
             {
                 $set: {
-                    lockedAt: null,
                     lockId: null,
                 },
             },
@@ -132,7 +130,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             })
             .toArray();
 
-        return documents.map(document => this.fromDocument(document));
+        return documents.map(this.fromDocument);
     }
 
     public async findOne(id: string): Promise<Recipient | undefined> {

@@ -61,7 +61,7 @@ describe("ReminderNotifierTest", () => {
         const recipient2 = makeRecipient("r#2", justBeforeTwoWeeksAgo);
         const recipient3 = makeRecipient("r#3", justAfterTwoWeeksAgo);
         const recipients = [recipient1, recipient2, recipient3];
-        recipientRepository.findAndLockAll.returns(recipients);
+        recipientRepository.findAndLockAll.resolves(recipients);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -81,7 +81,7 @@ describe("ReminderNotifierTest", () => {
         const days = [friday, saturday, sunday];
 
         const recipient = makeRecipient("r#1", monthAgo);
-        recipientRepository.findAndLockAll.returns([recipient]);
+        recipientRepository.findAndLockAll.resolves([recipient]);
 
         // when
         for (const day of days) {
@@ -104,7 +104,7 @@ describe("ReminderNotifierTest", () => {
             new Map(),
         );
 
-        recipientRepository.findAndLockAll.returns([recipient]);
+        recipientRepository.findAndLockAll.resolves([recipient]);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -116,7 +116,7 @@ describe("ReminderNotifierTest", () => {
 
     it("should not break when no recipients available", async () => {
         // given
-        recipientRepository.findAndLockAll.returns([]);
+        recipientRepository.findAndLockAll.resolves([]);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -133,7 +133,7 @@ describe("ReminderNotifierTest", () => {
         const recipient3 = makeRecipient("r#3", monthAgo, NotificationLevel.Often);
         const recipient4 = makeRecipient("r#4", monthAgo, NotificationLevel.Never);
         const recipients = [recipient1, recipient2, recipient3, recipient4];
-        recipientRepository.findAndLockAll.returns(recipients);
+        recipientRepository.findAndLockAll.resolves(recipients);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -165,7 +165,7 @@ describe("ReminderNotifierTest", () => {
         ];
 
         const recipient = makeRecipient("r#1", monthAgo, NotificationLevel.Seldom);
-        recipientRepository.findAndLockAll.returns([recipient]);
+        recipientRepository.findAndLockAll.resolves([recipient]);
 
         // when
         for (const hour of hours) {
@@ -195,7 +195,7 @@ describe("ReminderNotifierTest", () => {
         ];
 
         const recipient = makeRecipient("r#1", monthAgo, NotificationLevel.Seldom);
-        recipientRepository.findAndLockAll.returns([recipient]);
+        recipientRepository.findAndLockAll.resolves([recipient]);
 
         // when
         for (const hour of hours) {
