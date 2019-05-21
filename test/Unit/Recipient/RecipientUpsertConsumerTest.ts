@@ -5,7 +5,6 @@ import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import { Recipient, RecipientPreferences } from "../../../src/Recipient/models/Recipient";
 import { RecipientUpsertConsumer } from "../../../src/Recipient/consumers/RecipientUpsertConsumer";
 import { RecipientRepository } from "../../../src/Interfaces/RecipientRepository";
-import { NotifierClock } from "../../../src/PushNotification/clocks/NotifierClock";
 import { expect } from "chai";
 import { RecipientMongoRepository } from "../../../src/Recipient/repositories/RecipientMongoRepository";
 import { RecipientDevice } from "../../../src/Recipient/models/RecipientDevice";
@@ -17,16 +16,13 @@ describe("RecipientUpsertConsumer", () => {
     let recipientUpsertConsumer: RecipientUpsertConsumer;
     let recipientRepository: SinonStubbedInstance<RecipientRepository>;
     let recipientService: SinonStubbedInstance<RecipientService>;
-    let notifierClock: SinonStubbedInstance<NotifierClock>;
 
     beforeEach(async () => {
         recipientRepository = sinon.createStubInstance(RecipientMongoRepository);
         recipientService = sinon.createStubInstance(RecipientService);
-        notifierClock = sinon.createStubInstance(NotifierClock);
         recipientUpsertConsumer = new RecipientUpsertConsumer(
             recipientRepository,
             recipientService as any,
-            notifierClock as any,
         );
     });
 
@@ -49,7 +45,6 @@ describe("RecipientUpsertConsumer", () => {
 
         // then
         expect(recipientRepository.add).to.have.been.calledOnce;
-        expect(notifierClock.tick).to.have.been.calledOnce;
         const addArgs = recipientRepository.add.getCall(0).args;
         expect(addArgs).to.have.lengthOf(1);
         const recipient = addArgs[0];
@@ -90,7 +85,6 @@ describe("RecipientUpsertConsumer", () => {
 
         // then
         expect(recipientRepository.add).to.have.been.calledOnce;
-        expect(notifierClock.tick).to.have.been.calledOnce;
         const addArgs = recipientRepository.add.getCall(0).args;
         expect(addArgs).to.have.lengthOf(1);
         const recipient = addArgs[0];

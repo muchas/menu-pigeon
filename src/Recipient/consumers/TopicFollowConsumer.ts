@@ -1,16 +1,12 @@
 import { Consumer, Job } from "queue";
 import { TopicFollow } from "queue/lib/Messages/TopicFollow";
-import { NotifierClock } from "../../PushNotification/clocks/NotifierClock";
 import { injectable } from "inversify";
 import * as winston from "winston";
 import { RecipientRepository } from "../../Interfaces/RecipientRepository";
 
 @injectable()
 export class TopicFollowConsumer implements Consumer {
-    public constructor(
-        private readonly recipientRepository: RecipientRepository,
-        private readonly notifierClock: NotifierClock,
-    ) {}
+    public constructor(private readonly recipientRepository: RecipientRepository) {}
 
     public async consume(job: Job<TopicFollow>): Promise<void> {
         const { topicName, recipientId } = job.message;
@@ -35,7 +31,6 @@ export class TopicFollowConsumer implements Consumer {
         }
 
         await this.recipientRepository.add(recipient);
-        await this.notifierClock.tick();
 
         winston.info("Consumption of topic follow finished", {
             recipient_id: recipientId,

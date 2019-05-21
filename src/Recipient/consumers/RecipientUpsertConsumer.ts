@@ -2,7 +2,6 @@ import { Consumer, Job } from "queue";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { Recipient, RecipientPreferences } from "../models/Recipient";
 import { RecipientDevice } from "../models/RecipientDevice";
-import { NotifierClock } from "../../PushNotification/clocks/NotifierClock";
 import { injectable } from "inversify";
 import * as winston from "winston";
 import { RecipientRepository } from "../../Interfaces/RecipientRepository";
@@ -14,7 +13,6 @@ export class RecipientUpsertConsumer implements Consumer {
     public constructor(
         private readonly recipientRepository: RecipientRepository,
         private readonly recipientService: RecipientService,
-        private readonly notifierClock: NotifierClock,
     ) {}
 
     public async consume(job: Job<RecipientUpsert>): Promise<void> {
@@ -42,7 +40,6 @@ export class RecipientUpsertConsumer implements Consumer {
         recipient.followOnly(followedTopics);
 
         await this.recipientRepository.add(recipient);
-        await this.notifierClock.tick();
 
         winston.info("Consumption of recipient add finished", {
             recipient_id: id,

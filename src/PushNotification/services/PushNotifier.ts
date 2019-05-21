@@ -8,9 +8,9 @@ import { EventNotification } from "../../Event/models/EventNotification";
 import { EventNotificationScheduler } from "../../Event/services/EventNotificationScheduler";
 import { MessageThrottleService } from "./MessageThrottleService";
 import { injectable } from "inversify";
-import { RecipientRepository } from "../../Interfaces/RecipientRepository";
 import { EventRepository } from "../../Interfaces/EventRepository";
 import { Moment } from "moment-timezone";
+import { RecipientMongoRepository } from "../../Recipient/repositories/RecipientMongoRepository";
 
 /**
  * Responsibility:
@@ -24,7 +24,7 @@ export class PushNotifier {
     private readonly throttleService: MessageThrottleService;
 
     public constructor(
-        private readonly recipientRepository: RecipientRepository,
+        private readonly recipientRepository: RecipientMongoRepository,
         private readonly eventRepository: EventRepository,
         private readonly pushNotificationSender: PushNotificationSender,
     ) {
@@ -36,14 +36,18 @@ export class PushNotifier {
 
     public async notifyAll(currentTime: Moment): Promise<void> {
         const events = await this.eventRepository.findRelevant(currentTime);
-        const recipients = await this.recipientRepository.findAll();
+        const recipients = await this.recipientRepository.findAndLockAll();
 
-        const messages = recipients
-            .map(recipient => this.makeMessages(recipient, events, currentTime))
-            .reduce((previous, current) => previous.concat(current), []);
+        try {
+            const messages = recipients
+                .map(recipient => this.makeMessages(recipient, events, currentTime))
+                .reduce((previous, current) => previous.concat(current), []);
 
-        await this.pushNotificationSender.schedule(recipients, messages);
-        await this.markNotified(recipients, events, messages);
+            await this.pushNotificationSender.schedule(recipients, messages);
+            await this.markNotified(recipients, events, messages);
+        } finally {
+            await this.recipientRepository.unlock(recipients);
+        }
     }
 
     private makeMessages(recipient: Recipient, events: Event[], currentTime: Moment): Message[] {

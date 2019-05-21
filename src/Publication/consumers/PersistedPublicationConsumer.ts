@@ -2,7 +2,6 @@ import { Consumer, Job } from "queue";
 import { LunchOfferEventFactory } from "../LunchOffer/LunchOfferEventFactory";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { injectable } from "inversify";
-import { NotifierClock } from "../../PushNotification/clocks/NotifierClock";
 import * as winston from "winston";
 import { EventRepository } from "../../Interfaces/EventRepository";
 import { PersistedPublicationRepository } from "../repositories/PersistedPublicationRepository";
@@ -14,7 +13,6 @@ export class PersistedPublicationConsumer implements Consumer {
     public constructor(
         private readonly eventRepository: EventRepository,
         private readonly publicationRepository: PersistedPublicationRepository,
-        private readonly notifierClock: NotifierClock,
     ) {
         this.factory = new LunchOfferEventFactory();
     }
@@ -36,7 +34,6 @@ export class PersistedPublicationConsumer implements Consumer {
 
         const events = this.factory.create(job.message);
         await this.eventRepository.addMany(events);
-        await this.notifierClock.tick();
 
         winston.info("Consumption of persisted publication finished", {
             publication_id: job.message.id,

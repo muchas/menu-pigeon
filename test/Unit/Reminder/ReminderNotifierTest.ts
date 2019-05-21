@@ -44,7 +44,10 @@ describe("ReminderNotifierTest", () => {
         recipientRepository = sinon.createStubInstance(RecipientMongoRepository);
         pushNotificationSender = sinon.createStubInstance(PushNotificationSender);
 
-        reminderNotifier = new ReminderNotifier(recipientRepository, pushNotificationSender as any);
+        reminderNotifier = new ReminderNotifier(
+            recipientRepository as any,
+            pushNotificationSender as any,
+        );
     });
 
     it("should notify recipients that did not hear any message for at least 2 weeks", async () => {
@@ -58,7 +61,7 @@ describe("ReminderNotifierTest", () => {
         const recipient2 = makeRecipient("r#2", justBeforeTwoWeeksAgo);
         const recipient3 = makeRecipient("r#3", justAfterTwoWeeksAgo);
         const recipients = [recipient1, recipient2, recipient3];
-        recipientRepository.findAll.returns(recipients);
+        recipientRepository.findAndLockAll.returns(recipients);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -78,7 +81,7 @@ describe("ReminderNotifierTest", () => {
         const days = [friday, saturday, sunday];
 
         const recipient = makeRecipient("r#1", monthAgo);
-        recipientRepository.findAll.returns([recipient]);
+        recipientRepository.findAndLockAll.returns([recipient]);
 
         // when
         for (const day of days) {
@@ -101,7 +104,7 @@ describe("ReminderNotifierTest", () => {
             new Map(),
         );
 
-        recipientRepository.findAll.returns([recipient]);
+        recipientRepository.findAndLockAll.returns([recipient]);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -113,7 +116,7 @@ describe("ReminderNotifierTest", () => {
 
     it("should not break when no recipients available", async () => {
         // given
-        recipientRepository.findAll.returns([]);
+        recipientRepository.findAndLockAll.returns([]);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -130,7 +133,7 @@ describe("ReminderNotifierTest", () => {
         const recipient3 = makeRecipient("r#3", monthAgo, NotificationLevel.Often);
         const recipient4 = makeRecipient("r#4", monthAgo, NotificationLevel.Never);
         const recipients = [recipient1, recipient2, recipient3, recipient4];
-        recipientRepository.findAll.returns(recipients);
+        recipientRepository.findAndLockAll.returns(recipients);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -162,7 +165,7 @@ describe("ReminderNotifierTest", () => {
         ];
 
         const recipient = makeRecipient("r#1", monthAgo, NotificationLevel.Seldom);
-        recipientRepository.findAll.returns([recipient]);
+        recipientRepository.findAndLockAll.returns([recipient]);
 
         // when
         for (const hour of hours) {
@@ -192,7 +195,7 @@ describe("ReminderNotifierTest", () => {
         ];
 
         const recipient = makeRecipient("r#1", monthAgo, NotificationLevel.Seldom);
-        recipientRepository.findAll.returns([recipient]);
+        recipientRepository.findAndLockAll.returns([recipient]);
 
         // when
         for (const hour of hours) {

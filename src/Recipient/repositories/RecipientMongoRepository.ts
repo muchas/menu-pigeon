@@ -5,10 +5,12 @@ import Mongo from "../../Mongo";
 import { Collection } from "mongodb";
 import { RecipientDevice } from "../models/RecipientDevice";
 import * as moment from "moment-timezone";
+import * as uuid from "uuid";
 
 @injectable()
 export class RecipientMongoRepository extends RecipientRepository {
     private static readonly COLLECTION_NAME: string = "recipients";
+    private static readonly LOCK_TIMEOUT: number = 5 * 60 * 1000;
 
     public constructor(private readonly mongo: Mongo) {
         super();
@@ -63,6 +65,58 @@ export class RecipientMongoRepository extends RecipientRepository {
             .find()
             .toArray();
         return documents.map(document => this.fromDocument(document));
+    }
+
+    public async findAndLockAll(): Promise<Recipient[]> {
+        const lockId = await this.lockAll();
+
+        const documents = await this.collection()
+            .find({
+                lockId,
+            })
+            .toArray();
+        return documents.map(document => this.fromDocument(document));
+    }
+
+    private async lockAll(): Promise<string> {
+        const lockId = uuid.v4();
+        await this.collection().updateMany(
+            {
+                $or: [
+                    { lockedAt: null },
+                    {
+                        lockedAt: {
+                            $lt: new Date().getTime() - RecipientMongoRepository.LOCK_TIMEOUT,
+                        },
+                    },
+                ],
+            },
+            {
+                $set: {
+                    lockedAt: new Date().getTime(),
+                    lockId,
+                },
+            },
+        );
+        return lockId;
+    }
+
+    public async unlock(recipients: Recipient[]): Promise<void> {
+        const recipientIds = recipients.map(recipient => recipient.id);
+
+        await this.collection().updateMany(
+            {
+                id: {
+                    $in: recipientIds,
+                },
+            },
+            {
+                $set: {
+                    lockedAt: null,
+                    lockId: null,
+                },
+            },
+        );
     }
 
     public async findByDevice(pushToken: string): Promise<Recipient[]> {
