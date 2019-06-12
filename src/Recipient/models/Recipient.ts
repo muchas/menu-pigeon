@@ -29,6 +29,7 @@ export class Recipient {
         private readonly _topicLastNotification: Map<string, moment.Moment> = new Map(),
         private readonly _followedTopics: Map<string, moment.Moment> = new Map(),
         private _lastNotificationTime?: Moment,
+        private readonly _createdAt: Moment = moment(),
     ) {
         //
     }
@@ -51,6 +52,10 @@ export class Recipient {
 
     public get lastNotificationTime(): Moment | undefined {
         return this._lastNotificationTime;
+    }
+
+    public get createdAt(): Moment {
+        return this._createdAt;
     }
 
     public markAsNotified(): void {

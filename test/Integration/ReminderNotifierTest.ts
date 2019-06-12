@@ -16,6 +16,7 @@ const makeRecipient = (
     id: string,
     lastNotified: Moment,
     preference: NotificationLevel = NotificationLevel.Daily,
+    createdAt: Moment = moment(),
 ): Recipient =>
     new Recipient(
         id,
@@ -26,6 +27,7 @@ const makeRecipient = (
         new Map([["topic1", lastNotified]]),
         new Map([["topic1", lastNotified]]),
         lastNotified,
+        createdAt,
     );
 
 describe("ReminderNotifier", () => {
@@ -57,7 +59,9 @@ describe("ReminderNotifier", () => {
     it("should update recipient last notification time", async () => {
         // given
         const twoWeeksAgo = moment(now).subtract(14, "day");
-        await recipientRepository.add(makeRecipient("r#1", twoWeeksAgo));
+        await recipientRepository.add(
+            makeRecipient("r#1", twoWeeksAgo, NotificationLevel.Daily, twoWeeksAgo),
+        );
 
         // when
         await reminderNotifier.notifyRareRecipients();

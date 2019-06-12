@@ -64,7 +64,9 @@ export class ReminderNotifier {
         return recipients.filter(
             recipient =>
                 recipient.preferences.level !== NotificationLevel.Never &&
-                (!recipient.lastNotificationTime || recipient.lastNotificationTime <= boundaryDate),
+                (recipient.createdAt <= boundaryDate &&
+                    (!recipient.lastNotificationTime ||
+                        recipient.lastNotificationTime <= boundaryDate)),
         );
     }
 }

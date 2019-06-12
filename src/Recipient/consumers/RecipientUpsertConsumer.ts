@@ -55,7 +55,6 @@ export class RecipientUpsertConsumer implements Consumer {
         let recipient = await this.recipientRepository.findOne(id);
         if (!recipient) {
             recipient = new Recipient(id);
-            recipient.markAsNotified();
         }
         return recipient;
     }

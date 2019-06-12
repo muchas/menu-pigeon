@@ -123,8 +123,8 @@ describe("PushNotifier", () => {
         await recipientUpsertConsumer.consume(createJob(recipientUpsert3));
 
         // recipients will be notified about the events after topic subscription
-        // due to the throttling rules 20 minutes need to elapse in order to start receiving notifications
-        clock.tick(1000 * 60 * 20 + 1);
+        // therefore any time need to elapse between recipients and event consumption
+        clock.tick(1000);
 
         await publicationConsumer.consume(createJob(publication1));
         await publicationConsumer.consume(createJob(publication2));

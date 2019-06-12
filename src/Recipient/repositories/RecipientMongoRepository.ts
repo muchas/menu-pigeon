@@ -143,7 +143,7 @@ export class RecipientMongoRepository extends RecipientRepository {
         return this.fromDocument(document);
     }
 
-    public collection(): Collection {
+    private collection(): Collection {
         return this.mongo.db.collection(RecipientMongoRepository.COLLECTION_NAME);
     }
 
@@ -166,6 +166,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             lastNotificationTime: recipient.lastNotificationTime
                 ? recipient.lastNotificationTime.toDate()
                 : undefined,
+            createdAt: recipient.createdAt.toDate(),
         };
     }
 
@@ -186,6 +187,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             new Map(data.topicLastNotification.map(([key, date]) => [key, moment(date)])),
             new Map(data.followedTopics.map(([key, date]) => [key, moment(date)])),
             data.lastNotificationTime ? moment(data.lastNotificationTime) : undefined,
+            data.createdAt ? moment(data.createdAt) : moment(),
         );
     }
 }
