@@ -4,10 +4,10 @@ import * as sinon from "sinon";
 import { SinonStubbedInstance } from "sinon";
 import * as moment from "moment-timezone";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
-import { PersistedPublicationConsumer } from "../../src/Publication/PersistedPublicationConsumer";
+import { PersistedPublicationConsumer } from "../../src/Publication/consumers/PersistedPublicationConsumer";
 import { Container } from "inversify";
 import { EventRepository } from "../../src/Interfaces/EventRepository";
-import { EventMongoRepository } from "../../src/Event/EventMongoRepository";
+import { EventMongoRepository } from "../../src/Event/repositories/EventMongoRepository";
 
 describe("PersistedPublicationConsumer", () => {
     let today;
@@ -36,7 +36,7 @@ describe("PersistedPublicationConsumer", () => {
 
     it("should not process the same publication more than once @slow", async () => {
         // given
-        const offers = [{ date: today.toDate(), lunches: [], soups: [], prices: [], texts: [] }];
+        const offers = [{ date: today.toDate(), foods: [], prices: [], texts: [] }];
         const publication = new PersistedPublication(
             1,
             "1",

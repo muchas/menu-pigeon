@@ -1,7 +1,7 @@
-import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
+import { PushNotificationSender } from "../../src/PushNotification/services/PushNotificationSender";
 import { setupWithAllDbs, tearDownWithAllDbs } from "../utils";
 import { Container } from "inversify";
-import { Recipient } from "../../src/Recipient/Models/Recipient";
+import { Recipient } from "../../src/Recipient/models/Recipient";
 import * as sinon from "sinon";
 import * as moment from "moment-timezone";
 import { SinonFakeTimers } from "sinon";

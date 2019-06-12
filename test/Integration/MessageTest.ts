@@ -1,18 +1,18 @@
 import "reflect-metadata";
 import * as moment from "moment-timezone";
 import { Event } from "../../src/Interfaces/Event";
-import { EventMemoryRepository } from "../../src/Event/EventMemoryRepository";
+import { EventMemoryRepository } from "../../src/Event/repositories/EventMemoryRepository";
 import { LunchOfferEvent } from "../../src/Publication/LunchOffer/LunchOfferEvent";
-import { Recipient, RecipientPreferences } from "../../src/Recipient/Models/Recipient";
-import { PushNotificationSender } from "../../src/PushNotification/PushNotificationSender";
-import { PushNotifier } from "../../src/PushNotification/PushNotifier";
+import { Recipient, RecipientPreferences } from "../../src/Recipient/models/Recipient";
+import { PushNotificationSender } from "../../src/PushNotification/services/PushNotificationSender";
+import { PushNotifier } from "../../src/PushNotification/services/PushNotifier";
 import { Connection, createConnection } from "typeorm";
-import { RecipientDevice } from "../../src/Recipient/Models/RecipientDevice";
+import { RecipientDevice } from "../../src/Recipient/models/RecipientDevice";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { Container } from "inversify";
-import { PushNotificationStatusChecker } from "../../src/PushNotification/PushNotificationStatusChecker";
+import { PushNotificationStatusChecker } from "../../src/PushNotification/services/PushNotificationStatusChecker";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { RecipientMongoRepository } from "../../src/Recipient/RecipientMongoRepository";
+import { RecipientMongoRepository } from "../../src/Recipient/repositories/RecipientMongoRepository";
 import { setupWithMongo } from "../utils";
 
 describe("Push notification integration test", () => {

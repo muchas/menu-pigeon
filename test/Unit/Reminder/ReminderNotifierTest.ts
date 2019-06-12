@@ -3,18 +3,19 @@ import { SinonStubbedInstance } from "sinon";
 import { expect } from "chai";
 import { setup } from "../../utils";
 import { ReminderNotifier } from "../../../src/Reminder/ReminderNotifier";
-import { PushNotificationSender } from "../../../src/PushNotification/PushNotificationSender";
-import { Recipient, RecipientPreferences } from "../../../src/Recipient/Models/Recipient";
-import { RecipientDevice } from "../../../src/Recipient/Models/RecipientDevice";
+import { PushNotificationSender } from "../../../src/PushNotification/services/PushNotificationSender";
+import { Recipient, RecipientPreferences } from "../../../src/Recipient/models/Recipient";
+import { RecipientDevice } from "../../../src/Recipient/models/RecipientDevice";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { RecipientMongoRepository } from "../../../src/Recipient/RecipientMongoRepository";
+import { RecipientMongoRepository } from "../../../src/Recipient/repositories/RecipientMongoRepository";
 import { Moment } from "moment-timezone";
 import * as moment from "moment-timezone";
 
 const makeRecipient = (
-    id: string,
-    lastNotified: Moment,
-    preference: NotificationLevel = NotificationLevel.Daily,
+    id,
+    lastNotified,
+    createdAt = moment(),
+    preference = NotificationLevel.Daily,
 ): Recipient =>
     new Recipient(
         id,
@@ -25,6 +26,7 @@ const makeRecipient = (
         new Map([["topic1", lastNotified]]),
         new Map([["topic1", lastNotified]]),
         lastNotified,
+        createdAt,
     );
 
 describe("ReminderNotifierTest", () => {
@@ -44,21 +46,25 @@ describe("ReminderNotifierTest", () => {
         recipientRepository = sinon.createStubInstance(RecipientMongoRepository);
         pushNotificationSender = sinon.createStubInstance(PushNotificationSender);
 
-        reminderNotifier = new ReminderNotifier(recipientRepository, pushNotificationSender as any);
+        reminderNotifier = new ReminderNotifier(
+            recipientRepository as any,
+            pushNotificationSender as any,
+        );
     });
 
     it("should notify recipients that did not hear any message for at least 2 weeks", async () => {
         // given
+        const monthAgo = moment().subtract(30, "day");
         const twoWeeksAgo = moment(now).subtract(14, "day");
 
         const justBeforeTwoWeeksAgo = moment(twoWeeksAgo).add(1, "minute");
         const justAfterTwoWeeksAgo = moment(twoWeeksAgo).subtract(1, "minute");
 
-        const recipient1 = makeRecipient("r#1", twoWeeksAgo);
-        const recipient2 = makeRecipient("r#2", justBeforeTwoWeeksAgo);
-        const recipient3 = makeRecipient("r#3", justAfterTwoWeeksAgo);
+        const recipient1 = makeRecipient("r#1", twoWeeksAgo, monthAgo);
+        const recipient2 = makeRecipient("r#2", justBeforeTwoWeeksAgo, monthAgo);
+        const recipient3 = makeRecipient("r#3", justAfterTwoWeeksAgo, monthAgo);
         const recipients = [recipient1, recipient2, recipient3];
-        recipientRepository.findAll.returns(recipients);
+        recipientRepository.findAndLockAll.resolves(recipients);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -77,8 +83,8 @@ describe("ReminderNotifierTest", () => {
         const sunday = moment().day(0);
         const days = [friday, saturday, sunday];
 
-        const recipient = makeRecipient("r#1", monthAgo);
-        recipientRepository.findAll.returns([recipient]);
+        const recipient = makeRecipient("r#1", monthAgo, monthAgo);
+        recipientRepository.findAndLockAll.resolves([recipient]);
 
         // when
         for (const day of days) {
@@ -89,8 +95,9 @@ describe("ReminderNotifierTest", () => {
         expect(pushNotificationSender.schedule).to.have.been.not.called;
     });
 
-    it("should notify recipients that did not receive any message at all", async () => {
+    it("should notify 2 weeks recipients that did not receive any message at all", async () => {
         // given
+        const twoWeeksAgo = moment(now).subtract(14, "day");
         const recipient = new Recipient(
             "r#1",
             "John",
@@ -99,9 +106,11 @@ describe("ReminderNotifierTest", () => {
             new Set(),
             new Map(),
             new Map(),
+            undefined,
+            twoWeeksAgo,
         );
 
-        recipientRepository.findAll.returns([recipient]);
+        recipientRepository.findAndLockAll.resolves([recipient]);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -113,7 +122,7 @@ describe("ReminderNotifierTest", () => {
 
     it("should not break when no recipients available", async () => {
         // given
-        recipientRepository.findAll.returns([]);
+        recipientRepository.findAndLockAll.resolves([]);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -125,12 +134,12 @@ describe("ReminderNotifierTest", () => {
     it("should not send to recipients with NEVER preference", async () => {
         const monthAgo = moment(now).subtract(30, "day");
 
-        const recipient1 = makeRecipient("r#1", monthAgo, NotificationLevel.Seldom);
-        const recipient2 = makeRecipient("r#2", monthAgo, NotificationLevel.Daily);
-        const recipient3 = makeRecipient("r#3", monthAgo, NotificationLevel.Often);
-        const recipient4 = makeRecipient("r#4", monthAgo, NotificationLevel.Never);
+        const recipient1 = makeRecipient("r#1", monthAgo, monthAgo, NotificationLevel.Seldom);
+        const recipient2 = makeRecipient("r#2", monthAgo, monthAgo, NotificationLevel.Daily);
+        const recipient3 = makeRecipient("r#3", monthAgo, monthAgo, NotificationLevel.Often);
+        const recipient4 = makeRecipient("r#4", monthAgo, monthAgo, NotificationLevel.Never);
         const recipients = [recipient1, recipient2, recipient3, recipient4];
-        recipientRepository.findAll.returns(recipients);
+        recipientRepository.findAndLockAll.resolves(recipients);
 
         // when
         await reminderNotifier.notifyRareRecipients(now);
@@ -161,8 +170,8 @@ describe("ReminderNotifierTest", () => {
                 .minutes(0),
         ];
 
-        const recipient = makeRecipient("r#1", monthAgo, NotificationLevel.Seldom);
-        recipientRepository.findAll.returns([recipient]);
+        const recipient = makeRecipient("r#1", monthAgo, monthAgo, NotificationLevel.Seldom);
+        recipientRepository.findAndLockAll.resolves([recipient]);
 
         // when
         for (const hour of hours) {
@@ -191,8 +200,8 @@ describe("ReminderNotifierTest", () => {
                 .minutes(40),
         ];
 
-        const recipient = makeRecipient("r#1", monthAgo, NotificationLevel.Seldom);
-        recipientRepository.findAll.returns([recipient]);
+        const recipient = makeRecipient("r#1", monthAgo, monthAgo, NotificationLevel.Seldom);
+        recipientRepository.findAndLockAll.resolves([recipient]);
 
         // when
         for (const hour of hours) {
@@ -201,5 +210,44 @@ describe("ReminderNotifierTest", () => {
 
         // then
         expect(pushNotificationSender.schedule).to.have.callCount(4);
+    });
+
+    it("should not send notification to newly created recipients", async () => {
+        // given
+        const hour = moment(now)
+            .hour(11)
+            .minutes(30);
+
+        const twoWeeksAgo = moment(now).subtract(14, "day");
+        const justBeforeTwoWeeksAgo = moment(twoWeeksAgo).add(1, "minute");
+
+        const recipients = [
+            new Recipient(
+                "r#1",
+                `Johny`,
+                [new RecipientDevice(`token-01`, moment())],
+                new RecipientPreferences(9, 0, NotificationLevel.Often),
+            ),
+            new Recipient(
+                "r#2",
+                `Johny II`,
+                [new RecipientDevice(`token-02`, moment())],
+                new RecipientPreferences(9, 0, NotificationLevel.Often),
+                new Set(),
+                new Map(),
+                new Map(),
+                undefined,
+                justBeforeTwoWeeksAgo,
+            ),
+        ];
+        recipientRepository.findAndLockAll.resolves(recipients);
+
+        // when
+        await reminderNotifier.notifyRareRecipients(hour);
+
+        // then
+        expect(pushNotificationSender.schedule).to.have.callCount(1);
+        const targetRecipients = pushNotificationSender.schedule.getCall(0).args[0];
+        expect(targetRecipients.map(r => r.id)).to.deep.equal([]);
     });
 });

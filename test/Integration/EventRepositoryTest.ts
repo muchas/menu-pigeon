@@ -19,7 +19,7 @@ describe("EventRepository test", () => {
         await tearDownWithMongo(container);
     });
 
-    it("should persist new events on add @slow", async () => {
+    it("should persist new events on register @slow", async () => {
         // given
         const event = {
             id: "#e1",

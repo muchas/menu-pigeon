@@ -1,9 +1,9 @@
-import { PushNotificationRepository } from "./PushNotificationRepository";
-import { PushNotificationTransport } from "../Interfaces/PushNotificationTransport";
+import { PushNotificationRepository } from "../repositories/PushNotificationRepository";
+import { PushNotificationTransport } from "../../Interfaces/PushNotificationTransport";
 import { injectable } from "inversify";
 import * as winston from "winston";
-import { PushNotificationReceipt } from "./PushNotificationReceipt";
-import { RecipientService } from "../Recipient/RecipientService";
+import { PushNotificationReceipt } from "../models/PushNotificationReceipt";
+import { RecipientService } from "../../Recipient/services/RecipientService";
 
 @injectable()
 export class PushNotificationStatusChecker {

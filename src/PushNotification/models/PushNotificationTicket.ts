@@ -1,4 +1,4 @@
-import { PushNotification } from "../Entity/PushNotification";
+import { PushNotification } from "../../Entity/PushNotification";
 import { Moment } from "moment-timezone";
 import * as moment from "moment-timezone";
 

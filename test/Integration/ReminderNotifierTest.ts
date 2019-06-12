@@ -2,12 +2,12 @@ import { ReminderNotifier } from "../../src/Reminder/ReminderNotifier";
 import { setupWithAllDbs, tearDownWithAllDbs } from "../utils";
 import { Container } from "inversify";
 import { RecipientRepository } from "../../src/Interfaces/RecipientRepository";
-import { Recipient, RecipientPreferences } from "../../src/Recipient/Models/Recipient";
+import { Recipient, RecipientPreferences } from "../../src/Recipient/models/Recipient";
 import * as moment from "moment-timezone";
 import { Moment } from "moment-timezone";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { RecipientDevice } from "../../src/Recipient/Models/RecipientDevice";
-import { RecipientMongoRepository } from "../../src/Recipient/RecipientMongoRepository";
+import { RecipientDevice } from "../../src/Recipient/models/RecipientDevice";
+import { RecipientMongoRepository } from "../../src/Recipient/repositories/RecipientMongoRepository";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import { SinonFakeTimers } from "sinon";
@@ -16,6 +16,7 @@ const makeRecipient = (
     id: string,
     lastNotified: Moment,
     preference: NotificationLevel = NotificationLevel.Daily,
+    createdAt: Moment = moment(),
 ): Recipient =>
     new Recipient(
         id,
@@ -26,6 +27,7 @@ const makeRecipient = (
         new Map([["topic1", lastNotified]]),
         new Map([["topic1", lastNotified]]),
         lastNotified,
+        createdAt,
     );
 
 describe("ReminderNotifier", () => {
@@ -57,7 +59,9 @@ describe("ReminderNotifier", () => {
     it("should update recipient last notification time", async () => {
         // given
         const twoWeeksAgo = moment(now).subtract(14, "day");
-        await recipientRepository.add(makeRecipient("r#1", twoWeeksAgo));
+        await recipientRepository.add(
+            makeRecipient("r#1", twoWeeksAgo, NotificationLevel.Daily, twoWeeksAgo),
+        );
 
         // when
         await reminderNotifier.notifyRareRecipients();

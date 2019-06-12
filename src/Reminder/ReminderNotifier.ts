@@ -1,11 +1,11 @@
-import { PushNotificationSender } from "../PushNotification/PushNotificationSender";
-import { RecipientRepository } from "../Interfaces/RecipientRepository";
-import { Recipient } from "../Recipient/Models/Recipient";
+import { PushNotificationSender } from "../PushNotification/services/PushNotificationSender";
+import { Recipient } from "../Recipient/models/Recipient";
 import * as moment from "moment-timezone";
 import { Moment } from "moment-timezone";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import { ReminderMessageFactory } from "./ReminderMessageFactory";
 import { injectable } from "inversify";
+import { RecipientMongoRepository } from "../Recipient/repositories/RecipientMongoRepository";
 
 @injectable()
 export class ReminderNotifier {
@@ -19,7 +19,7 @@ export class ReminderNotifier {
     private readonly reminderMessageFactory: ReminderMessageFactory;
 
     public constructor(
-        private readonly recipientRepository: RecipientRepository,
+        private readonly recipientRepository: RecipientMongoRepository,
         private readonly pushNotificationSender: PushNotificationSender,
     ) {
         this.reminderMessageFactory = new ReminderMessageFactory();
@@ -30,11 +30,15 @@ export class ReminderNotifier {
             return;
         }
 
-        const recipients = await this.getRareRecipients(currentTime);
-        const messages = recipients.map(this.reminderMessageFactory.create);
+        const recipients = await this.getAndLockRareRecipients(currentTime);
+        try {
+            const messages = recipients.map(this.reminderMessageFactory.create);
 
-        await this.pushNotificationSender.schedule(recipients, messages);
-        await this.recipientRepository.addMany(recipients);
+            await this.pushNotificationSender.schedule(recipients, messages);
+            await this.recipientRepository.addMany(recipients);
+        } finally {
+            await this.recipientRepository.unlock(recipients);
+        }
     }
 
     private isAllowedToNotify(currentTime: Moment): boolean {
@@ -53,14 +57,16 @@ export class ReminderNotifier {
         );
     }
 
-    private async getRareRecipients(currentTime: Moment): Promise<Recipient[]> {
+    private async getAndLockRareRecipients(currentTime: Moment): Promise<Recipient[]> {
         const boundaryDate = moment(currentTime).subtract(ReminderNotifier.SILENT_DAYS, "day");
-        const recipients = await this.recipientRepository.findAll();
+        const recipients = await this.recipientRepository.findAndLockAll();
 
         return recipients.filter(
             recipient =>
                 recipient.preferences.level !== NotificationLevel.Never &&
-                (!recipient.lastNotificationTime || recipient.lastNotificationTime <= boundaryDate),
+                (recipient.createdAt <= boundaryDate &&
+                    (!recipient.lastNotificationTime ||
+                        recipient.lastNotificationTime <= boundaryDate)),
         );
     }
 }

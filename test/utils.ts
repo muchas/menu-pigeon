@@ -78,3 +78,6 @@ export const createJob = <T>(message: T): Job<T> => {
     const queue = sinon.createStubInstance(Queue);
     return new Job<T>(queue as any, {}, message);
 };
+
+export const sleep = async (ms: number): Promise<void> =>
+    new Promise(resolve => setTimeout(resolve, ms));

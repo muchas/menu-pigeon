@@ -1,11 +1,10 @@
 import { Consumer, Job } from "queue";
-import { LunchOfferEventFactory } from "./LunchOffer/LunchOfferEventFactory";
+import { LunchOfferEventFactory } from "../LunchOffer/LunchOfferEventFactory";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { injectable } from "inversify";
-import { NotifierClock } from "../PushNotification/NotifierClock";
 import * as winston from "winston";
-import { EventRepository } from "../Interfaces/EventRepository";
-import { PersistedPublicationRepository } from "./PersistedPublicationRepository";
+import { EventRepository } from "../../Interfaces/EventRepository";
+import { PersistedPublicationRegister } from "../services/PersistedPublicationRegister";
 
 @injectable()
 export class PersistedPublicationConsumer implements Consumer {
@@ -13,8 +12,7 @@ export class PersistedPublicationConsumer implements Consumer {
 
     public constructor(
         private readonly eventRepository: EventRepository,
-        private readonly publicationRepository: PersistedPublicationRepository,
-        private readonly notifierClock: NotifierClock,
+        private readonly publicationRegister: PersistedPublicationRegister,
     ) {
         this.factory = new LunchOfferEventFactory();
     }
@@ -25,9 +23,9 @@ export class PersistedPublicationConsumer implements Consumer {
             business_id: job.message.businessId,
         });
 
-        const inserted = await this.publicationRepository.add(job.message);
-        if (!inserted) {
-            winston.info("Publication has been already processed", {
+        const shouldProcess = await this.publicationRegister.register(job.message);
+        if (!shouldProcess) {
+            winston.info("Publication should not be processed", {
                 publication_id: job.message.id,
                 business_id: job.message.businessId,
             });
@@ -36,7 +34,6 @@ export class PersistedPublicationConsumer implements Consumer {
 
         const events = this.factory.create(job.message);
         await this.eventRepository.addMany(events);
-        await this.notifierClock.tick();
 
         winston.info("Consumption of persisted publication finished", {
             publication_id: job.message.id,

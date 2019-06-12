@@ -1,14 +1,15 @@
-import { Recipient, RecipientPreferences } from "./Models/Recipient";
+import { Recipient, RecipientPreferences } from "../models/Recipient";
 import { injectable } from "inversify";
-import { RecipientRepository } from "../Interfaces/RecipientRepository";
-import Mongo from "../Mongo";
-import { Collection } from "mongodb";
-import { RecipientDevice } from "./Models/RecipientDevice";
+import { RecipientRepository } from "../../Interfaces/RecipientRepository";
+import Mongo from "../../Mongo";
+import { Collection, ObjectID } from "mongodb";
+import { RecipientDevice } from "../models/RecipientDevice";
 import * as moment from "moment-timezone";
 
 @injectable()
 export class RecipientMongoRepository extends RecipientRepository {
     private static readonly COLLECTION_NAME: string = "recipients";
+    private static readonly LOCK_TIMEOUT: number = 5 * 60 * 1000;
 
     public constructor(private readonly mongo: Mongo) {
         super();
@@ -62,7 +63,58 @@ export class RecipientMongoRepository extends RecipientRepository {
         const documents = await this.collection()
             .find()
             .toArray();
-        return documents.map(document => this.fromDocument(document));
+        return documents.map(this.fromDocument);
+    }
+
+    public async findAndLockAll(): Promise<Recipient[]> {
+        const lockId = await this.lockAll();
+
+        const documents = await this.collection()
+            .find({
+                lockId,
+            })
+            .toArray();
+        return documents.map(this.fromDocument);
+    }
+
+    private async lockAll(): Promise<ObjectID> {
+        const lockId = new ObjectID();
+        const lockStart = new Date().getTime() - RecipientMongoRepository.LOCK_TIMEOUT;
+        await this.collection().updateMany(
+            {
+                $or: [
+                    { lockId: null },
+                    {
+                        lockId: {
+                            $lt: ObjectID.createFromTime(lockStart / 1000),
+                        },
+                    },
+                ],
+            },
+            {
+                $set: {
+                    lockId,
+                },
+            },
+        );
+        return lockId;
+    }
+
+    public async unlock(recipients: Recipient[]): Promise<void> {
+        const recipientIds = recipients.map(recipient => recipient.id);
+
+        await this.collection().updateMany(
+            {
+                id: {
+                    $in: recipientIds,
+                },
+            },
+            {
+                $set: {
+                    lockId: null,
+                },
+            },
+        );
     }
 
     public async findByDevice(pushToken: string): Promise<Recipient[]> {
@@ -78,7 +130,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             })
             .toArray();
 
-        return documents.map(document => this.fromDocument(document));
+        return documents.map(this.fromDocument);
     }
 
     public async findOne(id: string): Promise<Recipient | undefined> {
@@ -91,7 +143,7 @@ export class RecipientMongoRepository extends RecipientRepository {
         return this.fromDocument(document);
     }
 
-    public collection(): Collection {
+    private collection(): Collection {
         return this.mongo.db.collection(RecipientMongoRepository.COLLECTION_NAME);
     }
 
@@ -114,6 +166,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             lastNotificationTime: recipient.lastNotificationTime
                 ? recipient.lastNotificationTime.toDate()
                 : undefined,
+            createdAt: recipient.createdAt.toDate(),
         };
     }
 
@@ -134,6 +187,7 @@ export class RecipientMongoRepository extends RecipientRepository {
             new Map(data.topicLastNotification.map(([key, date]) => [key, moment(date)])),
             new Map(data.followedTopics.map(([key, date]) => [key, moment(date)])),
             data.lastNotificationTime ? moment(data.lastNotificationTime) : undefined,
+            data.createdAt ? moment(data.createdAt) : moment(),
         );
     }
 }

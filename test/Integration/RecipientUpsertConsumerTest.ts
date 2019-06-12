@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { createJob, setupWithAllDbs, tearDownWithAllDbs } from "../utils";
 import { Container } from "inversify";
-import { RecipientUpsertConsumer } from "../../src/Recipient/Consumers/RecipientUpsertConsumer";
-import { Recipient, RecipientPreferences } from "../../src/Recipient/Models/Recipient";
+import { RecipientUpsertConsumer } from "../../src/Recipient/consumers/RecipientUpsertConsumer";
+import { Recipient, RecipientPreferences } from "../../src/Recipient/models/Recipient";
 import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import * as moment from "moment-timezone";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";

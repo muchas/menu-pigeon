@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { RecipientRepository } from "../Interfaces/RecipientRepository";
+import { RecipientRepository } from "../../Interfaces/RecipientRepository";
 import { DeviceDeleted } from "queue/lib/Messages/DeviceDeleted";
 import { Queue } from "queue";
 

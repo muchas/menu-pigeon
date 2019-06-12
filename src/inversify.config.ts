@@ -3,17 +3,17 @@ import { Container } from "inversify";
 import * as env from "node-env-file";
 import Config from "./Config";
 import { MessageGateCollection, Queue, QueueConnection } from "queue";
-import { PushNotificationSender } from "./PushNotification/PushNotificationSender";
-import { ExpoTransport } from "./PushNotification/ExpoTransport";
-import { PushNotificationRepository } from "./PushNotification/PushNotificationRepository";
+import { PushNotificationSender } from "./PushNotification/services/PushNotificationSender";
+import { ExpoTransport } from "./PushNotification/services/ExpoTransport";
+import { PushNotificationRepository } from "./PushNotification/repositories/PushNotificationRepository";
 import Expo from "expo-server-sdk";
 import Mongo from "./Mongo";
 import { RecipientRepository } from "./Interfaces/RecipientRepository";
-import { RecipientMongoRepository } from "./Recipient/RecipientMongoRepository";
+import { RecipientMongoRepository } from "./Recipient/repositories/RecipientMongoRepository";
 import { EventRepository } from "./Interfaces/EventRepository";
-import { EventMongoRepository } from "./Event/EventMongoRepository";
-import { PushNotificationStatusChecker } from "./PushNotification/PushNotificationStatusChecker";
-import { RecipientService } from "./Recipient/RecipientService";
+import { EventMongoRepository } from "./Event/repositories/EventMongoRepository";
+import { PushNotificationStatusChecker } from "./PushNotification/services/PushNotificationStatusChecker";
+import { RecipientService } from "./Recipient/services/RecipientService";
 
 export const createContainer = (): Container => {
     env(`${__dirname}/../.env`);

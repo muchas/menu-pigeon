@@ -1,5 +1,5 @@
-import { Recipient } from "../Recipient/Models/Recipient";
-import { Message } from "../Entity/Message";
+import { Recipient } from "../../Recipient/models/Recipient";
+import { Message } from "../../Entity/Message";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import * as moment from "moment-timezone";
 import { DurationInputArg2 } from "moment-timezone";

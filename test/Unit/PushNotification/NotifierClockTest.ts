@@ -1,14 +1,15 @@
 import * as sinon from "sinon";
+import { SinonFakeTimers, SinonStubbedInstance } from "sinon";
 import { setup } from "../../utils";
 import { expect } from "chai";
-import { NotifierClock } from "../../../src/PushNotification/NotifierClock";
-import { SinonFakeTimers, SinonStubbedInstance } from "sinon";
-import { PushNotifier } from "../../../src/PushNotification/PushNotifier";
+import { NotifierClock } from "../../../src/PushNotification/clocks/NotifierClock";
+import { PushNotifier } from "../../../src/PushNotification/services/PushNotifier";
 
 describe("NotifierClockTest", () => {
     let clock: SinonFakeTimers;
     let notifierClock: NotifierClock;
     let pushNotifer: SinonStubbedInstance<PushNotifier>;
+    let emptyTask: () => Promise<void>;
 
     beforeEach(() => {
         setup();
@@ -16,42 +17,46 @@ describe("NotifierClockTest", () => {
 
         pushNotifer = sinon.createStubInstance(PushNotifier);
         notifierClock = new NotifierClock(pushNotifer as any);
+        emptyTask = async () => null;
     });
 
     afterEach(() => {
         clock.restore();
     });
 
-    it("should not notify before 20 seconds interval", async () => {
+    it("should not notify before 10 seconds interval", async () => {
         // given
         await notifierClock.start();
 
         // when
-        clock.tick(19.5 * 1000);
+        clock.tick(9.5 * 1000);
+        await emptyTask();
 
         // then
         expect(pushNotifer.notifyAll).to.have.callCount(1);
     });
 
-    it("should tick each 20 second interval", async () => {
+    it("should tick each 10 second interval", async () => {
         // given
         await notifierClock.start();
 
         // when
-        clock.tick(20.1 * 1000);
+        clock.tick(10.1 * 1000);
+        await emptyTask();
 
         // then
         expect(pushNotifer.notifyAll).to.be.callCount(2);
     });
 
-    it("should tick each ", async () => {
+    it("intermediate tick should cancel previous timeout", async () => {
         // given
         await notifierClock.start();
 
         // when
-        clock.tick(16 * 1000);
+        clock.tick(6 * 1000);
         await notifierClock.tick(); // should cancel previous call
-        clock.tick(19.5 * 1000);
+        clock.tick(9.5 * 1000);
+        await emptyTask();
 
         // then
         expect(pushNotifer.notifyAll).to.be.callCount(2);

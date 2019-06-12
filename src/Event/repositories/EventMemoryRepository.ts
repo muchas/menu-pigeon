@@ -1,6 +1,6 @@
-import { Event } from "../Interfaces/Event";
+import { Event } from "../../Interfaces/Event";
 import { injectable } from "inversify";
-import { EventRepository } from "../Interfaces/EventRepository";
+import { EventRepository } from "../../Interfaces/EventRepository";
 import { Moment } from "moment-timezone";
 
 @injectable()

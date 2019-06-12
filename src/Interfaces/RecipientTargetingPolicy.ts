@@ -1,4 +1,4 @@
-import { Recipient } from "../Recipient/Models/Recipient";
+import { Recipient } from "../Recipient/models/Recipient";
 import { Event } from "./Event";
 
 export interface RecipientTargetingPolicy {

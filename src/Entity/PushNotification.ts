@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Message, MessagePriority } from "./Message";
-import { PushNotificationStatus } from "../PushNotification/PushNotificationReceipt";
+import { PushNotificationStatus } from "../PushNotification/models/PushNotificationReceipt";
 import * as moment from "moment-timezone";
 
 @Entity()

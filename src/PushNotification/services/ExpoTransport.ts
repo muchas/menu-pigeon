@@ -1,10 +1,10 @@
 import * as winstonInstance from "winston";
-import { PushNotificationTransport } from "../Interfaces/PushNotificationTransport";
-import { PushNotification } from "../Entity/PushNotification";
+import { PushNotificationTransport } from "../../Interfaces/PushNotificationTransport";
+import { PushNotification } from "../../Entity/PushNotification";
 import Expo, { ExpoPushMessage, ExpoPushReceiptId } from "expo-server-sdk";
-import { PushNotificationTicket } from "./PushNotificationTicket";
-import { PushNotificationReceipt, PushNotificationStatus } from "./PushNotificationReceipt";
-import { toArray } from "../utils";
+import { PushNotificationTicket } from "../models/PushNotificationTicket";
+import { PushNotificationReceipt, PushNotificationStatus } from "../models/PushNotificationReceipt";
+import { toArray } from "../../utils";
 import { injectable } from "inversify";
 
 @injectable()

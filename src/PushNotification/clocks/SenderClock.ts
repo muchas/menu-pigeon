@@ -1,6 +1,6 @@
-import { Clock } from "../Clock";
+import { Clock } from "../../Clock";
 import { injectable } from "inversify";
-import { PushNotificationSender } from "./PushNotificationSender";
+import { PushNotificationSender } from "../services/PushNotificationSender";
 
 @injectable()
 export class SenderClock extends Clock {

@@ -1,12 +1,12 @@
 import * as sinon from "sinon";
 import { SinonStubbedInstance } from "sinon";
 import { expect } from "chai";
-import { ExpoTransport } from "../../../src/PushNotification/ExpoTransport";
+import { ExpoTransport } from "../../../src/PushNotification/services/ExpoTransport";
 import { PushNotification } from "../../../src/Entity/PushNotification";
 import Expo from "expo-server-sdk";
 import { Message } from "../../../src/Entity/Message";
 import { toArray } from "../../../src/utils";
-import { PushNotificationStatus } from "../../../src/PushNotification/PushNotificationReceipt";
+import { PushNotificationStatus } from "../../../src/PushNotification/models/PushNotificationReceipt";
 import { setup } from "../../utils";
 
 const createPushNotification = (

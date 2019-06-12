@@ -1,4 +1,4 @@
-import { PushNotification } from "../Entity/PushNotification";
+import { PushNotification } from "../../Entity/PushNotification";
 
 export enum PushNotificationStatus {
     SCHEDULED = 0,
