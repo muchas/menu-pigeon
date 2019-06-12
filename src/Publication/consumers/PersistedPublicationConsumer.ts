@@ -4,7 +4,7 @@ import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { injectable } from "inversify";
 import * as winston from "winston";
 import { EventRepository } from "../../Interfaces/EventRepository";
-import { PersistedPublicationRepository } from "../repositories/PersistedPublicationRepository";
+import { PersistedPublicationRegister } from "../services/PersistedPublicationRegister";
 
 @injectable()
 export class PersistedPublicationConsumer implements Consumer {
@@ -12,7 +12,7 @@ export class PersistedPublicationConsumer implements Consumer {
 
     public constructor(
         private readonly eventRepository: EventRepository,
-        private readonly publicationRepository: PersistedPublicationRepository,
+        private readonly publicationRegister: PersistedPublicationRegister,
     ) {
         this.factory = new LunchOfferEventFactory();
     }
@@ -23,9 +23,9 @@ export class PersistedPublicationConsumer implements Consumer {
             business_id: job.message.businessId,
         });
 
-        const inserted = await this.publicationRepository.add(job.message);
-        if (!inserted) {
-            winston.info("Publication has been already processed", {
+        const shouldProcess = await this.publicationRegister.register(job.message);
+        if (!shouldProcess) {
+            winston.info("Publication should not be processed", {
                 publication_id: job.message.id,
                 business_id: job.message.businessId,
             });

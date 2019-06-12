@@ -35,7 +35,7 @@ describe("RecipientRepository test", () => {
         await tearDownWithMongo(container);
     });
 
-    it("should persist new recipients on add @slow", async () => {
+    it("should persist new recipients on register @slow", async () => {
         // when
         await recipientRepository.add(recipient);
 
@@ -45,7 +45,7 @@ describe("RecipientRepository test", () => {
         expect(got.name).to.equal(recipient.name);
     });
 
-    it("should modify existing recipients on add @slow", async () => {
+    it("should modify existing recipients on register @slow", async () => {
         // given
         const event = {
             id: "8128",

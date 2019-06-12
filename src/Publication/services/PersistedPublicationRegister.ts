@@ -5,14 +5,14 @@ import { Collection } from "mongodb";
 import * as moment from "moment-timezone";
 
 @injectable()
-export class PersistedPublicationRepository {
+export class PersistedPublicationRegister {
     private static readonly COLLECTION_NAME: string = "persisted_publication_ids";
 
     public constructor(private readonly mongo: Mongo) {
         //
     }
 
-    public async add(publication: PersistedPublication): Promise<boolean> {
+    public async register(publication: PersistedPublication): Promise<boolean> {
         const date = moment(publication.readyTime).format("YYYY-MM-DD");
         const result = await this.collection().updateOne(
             {
@@ -33,6 +33,6 @@ export class PersistedPublicationRepository {
     }
 
     private collection(): Collection {
-        return this.mongo.db.collection(PersistedPublicationRepository.COLLECTION_NAME);
+        return this.mongo.db.collection(PersistedPublicationRegister.COLLECTION_NAME);
     }
 }

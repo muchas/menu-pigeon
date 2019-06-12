@@ -2,20 +2,20 @@ import { expect } from "chai";
 import "reflect-metadata";
 import { Container } from "inversify";
 import { setupWithMongo, tearDownWithMongo } from "../utils";
-import { PersistedPublicationRepository } from "../../src/Publication/repositories/PersistedPublicationRepository";
+import { PersistedPublicationRegister } from "../../src/Publication/services/PersistedPublicationRegister";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import * as moment from "moment-timezone";
 
-describe("PersistedPublicationRepository", () => {
+describe("PersistedPublicationRegister", () => {
     let container: Container;
-    let publicationRepository: PersistedPublicationRepository;
+    let publicationRegister: PersistedPublicationRegister;
     let persistedPublication: PersistedPublication;
 
     beforeEach(async () => {
         container = await setupWithMongo();
 
-        publicationRepository = container.get<PersistedPublicationRepository>(
-            PersistedPublicationRepository,
+        publicationRegister = container.get<PersistedPublicationRegister>(
+            PersistedPublicationRegister,
         );
     });
 
@@ -23,7 +23,7 @@ describe("PersistedPublicationRepository", () => {
         await tearDownWithMongo(container);
     });
 
-    it("should insert publications on add @slow", async () => {
+    it("should insert publications on register @slow", async () => {
         // given
         const now = moment().toDate();
         persistedPublication = new PersistedPublication(
@@ -37,13 +37,13 @@ describe("PersistedPublicationRepository", () => {
         );
 
         // when
-        const inserted = await publicationRepository.add(persistedPublication);
+        const shouldProcess = await publicationRegister.register(persistedPublication);
 
         // then
-        expect(inserted).to.be.true;
+        expect(shouldProcess).to.be.true;
     });
 
-    it("should not insert existing publications on add @slow", async () => {
+    it("should not insert existing publications on register @slow", async () => {
         // given
         const now = moment().toDate();
         persistedPublication = new PersistedPublication(
@@ -56,13 +56,13 @@ describe("PersistedPublicationRepository", () => {
             now,
         );
 
-        await publicationRepository.add(persistedPublication);
+        await publicationRegister.register(persistedPublication);
 
         // when
-        const inserted = await publicationRepository.add(persistedPublication);
+        const shouldProcess = await publicationRegister.register(persistedPublication);
 
         // then
-        expect(inserted).to.be.false;
+        expect(shouldProcess).to.be.false;
     });
 
     it("should not insert publications from the same business in one day @slow", async () => {
@@ -90,13 +90,13 @@ describe("PersistedPublicationRepository", () => {
             later,
         );
 
-        await publicationRepository.add(persistedPublication);
+        await publicationRegister.register(persistedPublication);
 
         // when
-        const inserted = await publicationRepository.add(otherPublication);
+        const shouldProcess = await publicationRegister.register(otherPublication);
 
         // then
-        expect(inserted).to.be.false;
+        expect(shouldProcess).to.be.false;
     });
 
     it("should insert publications from the same business on different days @slow", async () => {
@@ -124,12 +124,12 @@ describe("PersistedPublicationRepository", () => {
             later,
         );
 
-        await publicationRepository.add(persistedPublication);
+        await publicationRegister.register(persistedPublication);
 
         // when
-        const inserted = await publicationRepository.add(otherPublication);
+        const shouldProcess = await publicationRegister.register(otherPublication);
 
         // then
-        expect(inserted).to.be.true;
+        expect(shouldProcess).to.be.true;
     });
 });
