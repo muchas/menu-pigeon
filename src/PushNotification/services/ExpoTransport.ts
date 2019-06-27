@@ -74,12 +74,6 @@ export class ExpoTransport implements PushNotificationTransport {
             for (const [receiptId, receipt] of Object.entries(receipts)) {
                 const notification = notificationsByReceiptId.get(receiptId);
                 const status = this.toInternalStatus(receipt.status);
-                if (status === PushNotificationStatus.ERROR) {
-                    this.winston.error("Push notification delivery error", {
-                        notification_id: notification.id,
-                        data: receipt,
-                    });
-                }
 
                 yield new PushNotificationReceipt(notification, true, status, receipt);
             }
