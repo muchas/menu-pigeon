@@ -35,11 +35,11 @@ jobs:
 
     - run:
         name: Test
-        command: yarn junit
+        command: yarn test
         environment:
           DB_HOSTNAME: localhost
           DB_USERNAME: circleci
           DB_NAME: circle_test
 
-    - store_test_results:
-        path: test-results
+#    - store_test_results:
+#        path: test-results
