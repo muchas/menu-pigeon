@@ -20,16 +20,6 @@ import { SenderClock } from "./PushNotification/clocks/SenderClock";
 import * as moment from "moment-timezone";
 import { createORMConnection } from "./typeorm.config";
 import { ReminderNotifierClock } from "./Reminder/ReminderNotifierClock";
-import { EventDistributor } from "./Event/services/EventDistributor";
-import { FollowedTopicsPolicy } from "./Event/TargetingPolicies/FollowedTopicsPolicy";
-import {
-    CycleMessageRule,
-    FrequencyMessageRule,
-    LimitRule,
-    MessageThrottleService,
-    NeverMessageRule,
-} from "./PushNotification/services/MessageThrottleService";
-import { NotificationLevel } from "queue/lib/Messages/Recipient";
 
 moment.tz.setDefault("Europe/Warsaw");
 
@@ -41,23 +31,6 @@ setupLogging(config);
 createORMConnection(config)
     .then(async connection => {
         container.bind(Connection).toConstantValue(connection);
-
-        container
-            .bind(EventDistributor)
-            .toDynamicValue(() => new EventDistributor([new FollowedTopicsPolicy()]));
-
-        container
-            .bind(MessageThrottleService)
-            .toDynamicValue(
-                () =>
-                    new MessageThrottleService([
-                        new NeverMessageRule(),
-                        new FrequencyMessageRule(NotificationLevel.Seldom, "week"),
-                        new FrequencyMessageRule(NotificationLevel.Daily, "day"),
-                        new CycleMessageRule(NotificationLevel.Often, 20, "minute"),
-                        new LimitRule(1),
-                    ]),
-            );
 
         const mongo = container.get<Mongo>(Mongo);
         const queue = container.get<Queue>(Queue);

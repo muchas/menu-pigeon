@@ -11,35 +11,6 @@ import { Connection } from "typeorm";
 import Config from "../src/Config";
 import Mongo from "../src/Mongo";
 import { createORMConnection } from "../src/typeorm.config";
-import {
-    CycleMessageRule,
-    FrequencyMessageRule,
-    LimitRule,
-    MessageThrottleService,
-    NeverMessageRule,
-} from "../src/PushNotification/services/MessageThrottleService";
-import { EventDistributor } from "../src/Event/services/EventDistributor";
-import { FollowedTopicsPolicy } from "../src/Event/TargetingPolicies/FollowedTopicsPolicy";
-import { NotificationLevel } from "queue/lib/Messages/Recipient";
-
-export const bindDependencies = (container: Container) => {
-    container
-        .bind(EventDistributor)
-        .toDynamicValue(() => new EventDistributor([new FollowedTopicsPolicy()]));
-
-    container
-        .bind(MessageThrottleService)
-        .toDynamicValue(
-            () =>
-                new MessageThrottleService([
-                    new NeverMessageRule(),
-                    new FrequencyMessageRule(NotificationLevel.Seldom, "week"),
-                    new FrequencyMessageRule(NotificationLevel.Daily, "day"),
-                    new CycleMessageRule(NotificationLevel.Often, 20, "minute"),
-                    new LimitRule(1),
-                ]),
-        );
-};
 
 export const setup = (): Container => {
     chai.use(chaiAsPromised);
@@ -74,7 +45,6 @@ export const setupWithDb = async (): Promise<Container> => {
     const config = container.get<Config>(Config);
     const connection = await createORMConnection(config);
     container.bind(Connection).toConstantValue(connection);
-    bindDependencies(container);
     return container;
 };
 
@@ -89,7 +59,6 @@ export const setupWithAllDbs = async (): Promise<Container> => {
     const config = container.get<Config>(Config);
     const connection = await createORMConnection(config);
     container.bind(Connection).toConstantValue(connection);
-    bindDependencies(container);
     return container;
 };
 
