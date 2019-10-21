@@ -1,7 +1,6 @@
 import { Event } from "../../Interfaces/Event";
 import { Recipient } from "../../Recipient/models/Recipient";
 import { RecipientTargetingPolicy } from "../../Interfaces/RecipientTargetingPolicy";
-import { FollowedTopicsPolicy } from "../TargetingPolicies/FollowedTopicsPolicy";
 
 /**
  * Responsibility: targeting recipients
@@ -10,7 +9,7 @@ import { FollowedTopicsPolicy } from "../TargetingPolicies/FollowedTopicsPolicy"
  * TODO: - distance between event and recipient location,
  */
 export class EventDistributor {
-    private readonly targetingPolicies: RecipientTargetingPolicy[] = [new FollowedTopicsPolicy()];
+    public constructor(private readonly targetingPolicies: RecipientTargetingPolicy[]) {}
 
     public filterRelevantFor(recipient: Recipient, events: Event[]): Event[] {
         return events.filter(event => this.shouldKnowAbout(recipient, event));

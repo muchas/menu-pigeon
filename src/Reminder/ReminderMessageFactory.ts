@@ -3,12 +3,14 @@ import { sample } from "../utils";
 import { Message } from "../Entity/Message";
 import { boundMethod } from "autobind-decorator";
 import * as moment from "moment-timezone";
+import { injectable } from "inversify";
 
 interface MessageFormat {
     title: string;
     body: string;
 }
 
+@injectable()
 export class ReminderMessageFactory {
     private readonly messages: MessageFormat[] = [
         {

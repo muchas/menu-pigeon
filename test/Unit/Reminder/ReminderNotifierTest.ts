@@ -10,6 +10,7 @@ import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import { RecipientMongoRepository } from "../../../src/Recipient/repositories/RecipientMongoRepository";
 import { Moment } from "moment-timezone";
 import * as moment from "moment-timezone";
+import { ReminderMessageFactory } from "../../../src/Reminder/ReminderMessageFactory";
 
 const makeRecipient = (
     id,
@@ -49,6 +50,7 @@ describe("ReminderNotifierTest", () => {
         reminderNotifier = new ReminderNotifier(
             recipientRepository as any,
             pushNotificationSender as any,
+            new ReminderMessageFactory(),
         );
     });
 

@@ -4,6 +4,8 @@ import { injectable } from "inversify";
 @injectable()
 export abstract class RecipientRepository {
     public abstract async findAll(): Promise<Recipient[]>;
+    public abstract async findAndLockAll(): Promise<Recipient[]>;
+    public abstract async unlock(recipients: Recipient[]): Promise<void>;
     public abstract async findByDevice(pushToken: string): Promise<Recipient[]>;
     public abstract async findByDevices(pushTokens: string[]): Promise<Recipient[]>;
     public abstract async findOne(id: string): Promise<Recipient | undefined>;

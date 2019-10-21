@@ -3,7 +3,9 @@ import { LunchOfferEvent } from "./LunchOfferEvent";
 import { PersistedPublication } from "queue/lib/Messages/PersistedPublication";
 import { Moment } from "moment-timezone";
 import * as uuid from "uuid";
+import { injectable } from "inversify";
 
+@injectable()
 export class LunchOfferEventFactory {
     public create(publication: PersistedPublication): LunchOfferEvent[] {
         return publication.lunchOffers.map(offer => {

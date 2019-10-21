@@ -8,14 +8,11 @@ import { PersistedPublicationRegister } from "../services/PersistedPublicationRe
 
 @injectable()
 export class PersistedPublicationConsumer implements Consumer {
-    private readonly factory: LunchOfferEventFactory;
-
     public constructor(
         private readonly eventRepository: EventRepository,
         private readonly publicationRegister: PersistedPublicationRegister,
-    ) {
-        this.factory = new LunchOfferEventFactory();
-    }
+        private readonly factory: LunchOfferEventFactory,
+    ) {}
 
     public async consume(job: Job<PersistedPublication>): Promise<void> {
         winston.info("Consumption of persisted publication started", {

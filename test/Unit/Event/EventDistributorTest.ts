@@ -4,6 +4,7 @@ import { Recipient, RecipientPreferences } from "../../../src/Recipient/models/R
 import { Event } from "../../../src/Interfaces/Event";
 import * as moment from "moment-timezone";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
+import { FollowedTopicsPolicy } from "../../../src/Event/TargetingPolicies/FollowedTopicsPolicy";
 
 describe("EventDistributor", () => {
     it("filterRelevantFor events to recipients based on followed topics", async () => {
@@ -34,7 +35,7 @@ describe("EventDistributor", () => {
         };
         const events = [event1 as Event, event2 as Event, event3 as Event];
 
-        const distributor = new EventDistributor();
+        const distributor = new EventDistributor([new FollowedTopicsPolicy()]);
         const recipient = new Recipient(
             "recipient#1",
             "John",
@@ -74,7 +75,7 @@ describe("EventDistributor", () => {
         };
         const events = [event1 as Event, event2 as Event];
 
-        const distributor = new EventDistributor();
+        const distributor = new EventDistributor([new FollowedTopicsPolicy()]);
         const recipient = new Recipient(
             "recipient#1",
             "John",
@@ -114,7 +115,7 @@ describe("EventDistributor", () => {
         };
         const events = [event1 as Event, event2 as Event];
 
-        const distributor = new EventDistributor();
+        const distributor = new EventDistributor([new FollowedTopicsPolicy()]);
         const recipient = new Recipient(
             "recipient#1",
             "John",
