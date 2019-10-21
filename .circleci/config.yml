@@ -4,7 +4,7 @@ jobs:
     docker:
     - image: circleci/node:latest
     - image: circleci/mongo:latest
-    - image: circleci/postgres:latest
+    - image: circleci/postgres:11.5
       environment:
         POSTGRES_USER: circleci
         POSTGRES_DB: circle_test
@@ -35,11 +35,11 @@ jobs:
 
     - run:
         name: Test
-        command: yarn test
+        command: yarn junit
         environment:
           DB_HOSTNAME: localhost
           DB_USERNAME: circleci
           DB_NAME: circle_test
 
-#    - store_test_results:
-#        path: test-results
+    - store_test_results:
+        path: test-results
