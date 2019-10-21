@@ -45,7 +45,6 @@ export const setupWithDb = async (): Promise<Container> => {
     const config = container.get<Config>(Config);
     const connection = await createORMConnection(config);
     container.bind(Connection).toConstantValue(connection);
-
     return container;
 };
 

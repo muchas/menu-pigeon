@@ -4,6 +4,7 @@ import { EventNotification } from "../models/EventNotification";
 import { Recipient } from "../../Recipient/models/Recipient";
 import { max, min } from "../../utils";
 import { Moment } from "moment-timezone";
+import { injectable } from "inversify";
 
 /**
  * Responsibility:
@@ -11,6 +12,7 @@ import { Moment } from "moment-timezone";
  * choose which time is the best to notify recipient about each of them
  * (in the edge case scenario there may be no such time)
  */
+@injectable()
 export class EventNotificationScheduler {
     public schedule(recipient: Recipient, events: Event[], targetDay: Moment): EventNotification[] {
         const preferences = recipient.preferences;

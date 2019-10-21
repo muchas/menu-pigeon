@@ -14,6 +14,7 @@ import { RecipientUpsert } from "queue/lib/Messages/RecipientUpsert";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import { RecipientUpsertConsumer } from "../../src/Recipient/consumers/RecipientUpsertConsumer";
 import { RecipientMongoRepository } from "../../src/Recipient/repositories/RecipientMongoRepository";
+import { RecipientMessagePlanner } from "../../src/PushNotification/services/RecipientMessagePlanner";
 
 describe("PushNotifier", () => {
     let eventRepository: EventRepository;
@@ -23,6 +24,7 @@ describe("PushNotifier", () => {
     let container: Container;
     let publicationConsumer: PersistedPublicationConsumer;
     let recipientUpsertConsumer: RecipientUpsertConsumer;
+    let recipientMessagePlanner: RecipientMessagePlanner;
 
     let publication1: PersistedPublication;
     let publication2: PersistedPublication;
@@ -82,11 +84,12 @@ describe("PushNotifier", () => {
         recipientUpsertConsumer = container.get<RecipientUpsertConsumer>(RecipientUpsertConsumer);
         eventRepository = container.get<EventRepository>(EventRepository);
         recipientRepository = container.get<RecipientMongoRepository>(RecipientMongoRepository);
+        recipientMessagePlanner = container.get<RecipientMessagePlanner>(RecipientMessagePlanner);
     });
 
     afterEach(async () => {
-        await tearDownWithAllDbs(container);
         clock.restore();
+        await tearDownWithAllDbs(container);
     });
 
     it("should send messages to interested recipients @slow", async () => {
@@ -115,7 +118,12 @@ describe("PushNotifier", () => {
         );
 
         const sender = sinon.createStubInstance(PushNotificationSender);
-        const notifier = new PushNotifier(recipientRepository, eventRepository, sender as any);
+        const notifier = new PushNotifier(
+            recipientRepository,
+            eventRepository,
+            recipientMessagePlanner,
+            sender as any,
+        );
 
         // when
         await recipientUpsertConsumer.consume(createJob(recipientUpsert1));
@@ -171,7 +179,12 @@ describe("PushNotifier", () => {
         );
 
         const sender = sinon.createStubInstance(PushNotificationSender);
-        const notifier = new PushNotifier(recipientRepository, eventRepository, sender as any);
+        const notifier = new PushNotifier(
+            recipientRepository,
+            eventRepository,
+            recipientMessagePlanner,
+            sender as any,
+        );
 
         // when
         await recipientUpsertConsumer.consume(createJob(recipientUpsert1));

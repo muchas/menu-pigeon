@@ -16,14 +16,11 @@ export class ReminderNotifier {
     private static readonly END_HOUR: number = 12;
     private static readonly END_MINUTE: number = 0;
 
-    private readonly reminderMessageFactory: ReminderMessageFactory;
-
     public constructor(
         private readonly recipientRepository: RecipientMongoRepository,
         private readonly pushNotificationSender: PushNotificationSender,
-    ) {
-        this.reminderMessageFactory = new ReminderMessageFactory();
-    }
+        private readonly reminderMessageFactory: ReminderMessageFactory,
+    ) {}
 
     public async notifyRareRecipients(currentTime: Moment = moment()): Promise<void> {
         if (!this.isAllowedToNotify(currentTime)) {

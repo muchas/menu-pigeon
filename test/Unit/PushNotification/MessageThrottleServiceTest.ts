@@ -2,7 +2,13 @@ import { setup } from "../../utils";
 import { expect } from "chai";
 import { Recipient, RecipientPreferences } from "../../../src/Recipient/models/Recipient";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
-import { MessageThrottleService } from "../../../src/PushNotification/services/MessageThrottleService";
+import {
+    CycleMessageRule,
+    FrequencyMessageRule,
+    LimitRule,
+    MessageThrottleService,
+    NeverMessageRule,
+} from "../../../src/PushNotification/services/MessageThrottleService";
 import { Message } from "../../../src/Entity/Message";
 import { LUNCH_EVENT_TYPE } from "../../../src/Publication/LunchOffer/constants";
 import * as moment from "moment";
@@ -24,7 +30,13 @@ describe("MessageThrottleService", () => {
     beforeEach(() => {
         setup();
 
-        throttleService = new MessageThrottleService();
+        throttleService = new MessageThrottleService([
+            new NeverMessageRule(),
+            new FrequencyMessageRule(NotificationLevel.Seldom, "week"),
+            new FrequencyMessageRule(NotificationLevel.Daily, "day"),
+            new CycleMessageRule(NotificationLevel.Often, 20, "minute"),
+            new LimitRule(1),
+        ]);
         recipient = new Recipient("#r1", "John");
     });
 

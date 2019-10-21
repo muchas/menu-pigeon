@@ -4,12 +4,13 @@ import { NotificationLevel } from "queue/lib/Messages/Recipient";
 import * as moment from "moment-timezone";
 import { DurationInputArg2 } from "moment-timezone";
 import { DurationInputArg1 } from "moment";
+import { injectable } from "inversify";
 
 interface MessageThrottleRule {
     filter(recipient: Recipient, messages: Message[]): Message[];
 }
 
-class NeverMessageRule implements MessageThrottleRule {
+export class NeverMessageRule implements MessageThrottleRule {
     public filter(recipient: Recipient, messages: Message[]): Message[] {
         if (recipient.preferences.level === NotificationLevel.Never) {
             return [];
@@ -18,7 +19,7 @@ class NeverMessageRule implements MessageThrottleRule {
     }
 }
 
-class FrequencyMessageRule implements MessageThrottleRule {
+export class FrequencyMessageRule implements MessageThrottleRule {
     public constructor(
         private readonly notificationLevel: NotificationLevel,
         private readonly granularity: moment.unitOfTime.StartOf,
@@ -38,7 +39,7 @@ class FrequencyMessageRule implements MessageThrottleRule {
     }
 }
 
-class CycleMessageRule implements MessageThrottleRule {
+export class CycleMessageRule implements MessageThrottleRule {
     public constructor(
         private readonly notificationLevel: NotificationLevel,
         private readonly amount: DurationInputArg1,
@@ -60,7 +61,7 @@ class CycleMessageRule implements MessageThrottleRule {
     }
 }
 
-class LimitRule implements MessageThrottleRule {
+export class LimitRule implements MessageThrottleRule {
     public constructor(private readonly limit: number) {}
 
     public filter(recipient: Recipient, messages: Message[]): Message[] {
@@ -68,18 +69,9 @@ class LimitRule implements MessageThrottleRule {
     }
 }
 
+@injectable()
 export class MessageThrottleService {
-    private readonly rules: MessageThrottleRule[];
-
-    public constructor() {
-        this.rules = [
-            new NeverMessageRule(),
-            new FrequencyMessageRule(NotificationLevel.Seldom, "week"),
-            new FrequencyMessageRule(NotificationLevel.Daily, "day"),
-            new CycleMessageRule(NotificationLevel.Often, 20, "minute"),
-            new LimitRule(1),
-        ];
-    }
+    public constructor(private readonly rules: MessageThrottleRule[]) {}
 
     public throttle(recipient: Recipient, messages: Message[]): Message[] {
         let filteredMessages = messages;

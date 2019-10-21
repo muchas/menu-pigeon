@@ -14,6 +14,16 @@ import { EventRepository } from "./Interfaces/EventRepository";
 import { EventMongoRepository } from "./Event/repositories/EventMongoRepository";
 import { PushNotificationStatusChecker } from "./PushNotification/services/PushNotificationStatusChecker";
 import { RecipientService } from "./Recipient/services/RecipientService";
+import {
+    CycleMessageRule,
+    FrequencyMessageRule,
+    LimitRule,
+    MessageThrottleService,
+    NeverMessageRule,
+} from "./PushNotification/services/MessageThrottleService";
+import { EventDistributor } from "./Event/services/EventDistributor";
+import { FollowedTopicsPolicy } from "./Event/TargetingPolicies/FollowedTopicsPolicy";
+import { NotificationLevel } from "queue/lib/Messages/Recipient";
 
 export const createContainer = (): Container => {
     env(`${__dirname}/../.env`);
@@ -103,6 +113,23 @@ export const createContainer = (): Container => {
         return new PushNotificationStatusChecker(transport, repository, recipientService);
     });
     container.bind(Expo).toDynamicValue(() => new Expo());
+
+    container
+        .bind(EventDistributor)
+        .toDynamicValue(() => new EventDistributor([new FollowedTopicsPolicy()]));
+
+    container
+        .bind(MessageThrottleService)
+        .toDynamicValue(
+            () =>
+                new MessageThrottleService([
+                    new NeverMessageRule(),
+                    new FrequencyMessageRule(NotificationLevel.Seldom, "week"),
+                    new FrequencyMessageRule(NotificationLevel.Daily, "day"),
+                    new CycleMessageRule(NotificationLevel.Often, 20, "minute"),
+                    new LimitRule(1),
+                ]),
+        );
 
     return container;
 };

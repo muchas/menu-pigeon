@@ -4,34 +4,31 @@ import { Message, MessagePriority } from "../../Entity/Message";
 import { LUNCH_OFFER_EVENT_TYPE, LunchOfferEvent } from "./LunchOfferEvent";
 import { min } from "moment-timezone";
 import { capitalize, sample } from "../../utils";
-import { Event } from "../../Interfaces/Event";
 import { LUNCH_NOTIFICATION_TYPE } from "./constants";
 import { NotificationLevel } from "queue/lib/Messages/Recipient";
+import { injectable } from "inversify";
 
-export class LunchOfferMessageComposer implements MessageComposer {
+@injectable()
+export class LunchOfferMessageComposer implements MessageComposer<LunchOfferEvent> {
     private readonly universalMessageTitles: string[] = [
         "Gotowy na lunch?",
         "Sprawdź dzisiejsze lunche!",
         "Wybierz swój lunch",
     ];
 
-    public compose(recipient: Recipient, events: Event[]): Message[] {
-        const offerEvents = events
-            .filter(event => event.eventType === LUNCH_OFFER_EVENT_TYPE)
-            .map(event => event as LunchOfferEvent);
-
-        const businessCount = new Set(offerEvents.map(e => e.content.businessId)).size;
+    public compose(recipient: Recipient, events: LunchOfferEvent[]): Message[] {
+        const businessCount = new Set(events.map(e => e.content.businessId)).size;
 
         if (businessCount <= 0) {
             return [];
         }
         if (businessCount === 1) {
-            const event = offerEvents[0];
+            const event = events[0];
             const businessName = event.content.businessName;
             return [
                 this.createMessage(
                     recipient,
-                    offerEvents,
+                    events,
                     sample([this.getRandomMessageTitle(), "Nowa oferta lunchowa"]),
                     `Oferta na dziś od ${businessName} jest już dostępna`,
                 ),
@@ -42,7 +39,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
             return [
                 this.createMessage(
                     recipient,
-                    offerEvents,
+                    events,
                     "Twoje codzienne podsumowanie",
                     this.getMessageBody(businessCount),
                 ),
@@ -52,7 +49,7 @@ export class LunchOfferMessageComposer implements MessageComposer {
         return [
             this.createMessage(
                 recipient,
-                offerEvents,
+                events,
                 this.getRandomMessageTitle(),
                 this.getMessageBody(businessCount),
             ),

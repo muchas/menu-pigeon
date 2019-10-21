@@ -3,6 +3,7 @@
    "scripts": {
       "build": "tsc",
       "coverage": "nyc mocha",
+      "slow-test": "mocha --grep @slow",
       "fast-test": "mocha --grep @slow --invert",
       "fast-watch": "mocha --grep @slow --invert --watch --watch-extensions ts",
       "junit": "MOCHA_FILE=test-results/mocha/results.xml nyc mocha --reporter mocha-junit-reporter",
