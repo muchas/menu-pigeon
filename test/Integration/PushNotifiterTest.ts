@@ -88,8 +88,8 @@ describe("PushNotifier", () => {
     });
 
     afterEach(async () => {
-        await tearDownWithAllDbs(container);
         clock.restore();
+        await tearDownWithAllDbs(container);
     });
 
     it("should send messages to interested recipients @slow", async () => {

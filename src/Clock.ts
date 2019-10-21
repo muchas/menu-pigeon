@@ -15,11 +15,7 @@ export abstract class Clock {
     }
 
     public async tick(): Promise<void> {
-        if (this.lastTimeout !== undefined) {
-            clearTimeout(this.lastTimeout);
-            this.lastTimeout = undefined;
-        }
-
+        this.clearLastTimeout();
         try {
             await this.performAction();
 
@@ -27,6 +23,13 @@ export abstract class Clock {
         } catch (e) {
             winston.error(e);
             winston.error("Clock stopped ticking");
+        }
+    }
+
+    private clearLastTimeout(): void {
+        if (this.lastTimeout !== undefined) {
+            clearTimeout(this.lastTimeout);
+            this.lastTimeout = undefined;
         }
     }
 }
